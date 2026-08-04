@@ -1,6 +1,12 @@
 # Memory Checkpoints During Goal Execution
 
-**Skill:** `memo-session-skill` (global, `~/.cursor/skills/memo-session-skill/`)
+**Skill:** [`memo-session-skill`](../../memo-session-skill/SKILL.md) — install:
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
+```
+
+Path after install: `~/.cursor/skills/memo-session-skill/` · integration: [memo-session goal-mode-integration](../../memo-session-skill/references/goal-mode-integration.md)
 
 Goal Mode already logs **what happened** in `GOAL.md` Progress Log. Memo-session captures **durable knowledge** (decisions, gotchas, workarounds) into `memory/` and wiki so the next agent turn — after context summarization or stop-hook — does not lose project context.
 

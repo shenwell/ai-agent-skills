@@ -246,6 +246,30 @@ If session limit hits but status is still `CONTINUE`, stop hook auto-continues.
 
 ---
 
+## Memory checkpoints (memo-session-skill)
+
+`GOAL.md` logs **what happened**. **[memo-session-skill](../memo-session-skill/SKILL.md)** saves **durable knowledge** (decisions, gotchas, workarounds) into `memory/` and wiki so the next turn — after summarization or stop-hook — does not lose project context.
+
+Install memo-session (if missing):
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
+```
+
+After bootstrap, `.cursor/goal.config.yml` sets `memory.skill: memo-session-skill` and checkpoint depths.
+
+| Event | Memo depth |
+|-------|------------|
+| Phase complete (exit criterion verified) | `full` |
+| `BLOCKED` / `COMPLETE` | `full` |
+| Session step limit / every N iterations | `light` (hot-cache only) |
+
+**Do not** run memo after every worker step — `GOAL.md` already records progress.
+
+Details: [memory-checkpoints](references/memory-checkpoints.md) · [goal-mode-integration](../memo-session-skill/references/goal-mode-integration.md)
+
+---
+
 ## Stopping rules
 
 Statuses: `DRAFT` → `INTAKE` → `PLANNING` → `PLANNED` → `ACTIVE` ⇄ `CONTINUE` → `COMPLETE` | `BLOCKED` | `FAILED` | `PAUSED`

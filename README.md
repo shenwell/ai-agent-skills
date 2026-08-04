@@ -16,7 +16,7 @@
 ║                                                               ║
 ║       Public Agent Skills collection for coding agents        ║
 ║    Cursor · Claude Code · Codex · Windsurf · and more ...     ║
-║   goal-mode · npx skills add shenwell/ai-agent-skills · MIT   ║
+║   goal-mode · memo-session-skill · npx skills add shenwell/ai-agent-skills · MIT   ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 ```
@@ -26,14 +26,16 @@
 [![skills.sh](https://img.shields.io/badge/skills.sh-npx%20skills%20add-black)](https://skills.sh/shenwell/ai-agent-skills)
 
 **Public [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.**  
-First skill: **`goal-mode`** — keep coding agents working until tests, lint, typecheck, or CI are green (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal)).
+- **`goal-mode`** — keep coding agents working until tests, lint, typecheck, or CI are green (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal)).  
+- **`memo-session-skill`** — turn session knowledge into durable `memory/`, wiki, and handoffs; pairs with goal-mode checkpoints.
 
 Stops the common failure mode: the agent tries once, claims “done,” and leaves a red build.
 
 ```
 shenwell/ai-agent-skills
 └── skills/
-    ├── goal-mode/          ← keep going until tests/lint/build are green
+    ├── goal-mode/              ← keep going until tests/lint/build are green
+    ├── memo-session-skill/     ← session → memory/wiki/handoff
     └── <next-skill>/
 ```
 
@@ -58,6 +60,13 @@ npx skills add shenwell/ai-agent-skills --skill goal-mode -a cursor -y
 `-a cursor` installs for Cursor; `-y` skips the interactive agent picker.  
 Other agents: add more `-a` flags, e.g. `-a cursor -a claude-code -a codex`.  
 List skills: `npx skills add shenwell/ai-agent-skills --list`
+
+**Recommended pair** for long autonomous runs:
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
+npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
+```
 
 
 ### 2. First run (in any project)
@@ -145,7 +154,44 @@ verify:
 budget:
   max_iterations: 50
   max_hours: 8
+memory:
+  skill: memo-session-skill
+  checkpoints:
+    enabled: true
+    on_phase_complete: full
+    on_complete: full
 ```
+
+---
+
+### `memo-session-skill` — session knowledge → memory
+
+Analyze the work session and route durable knowledge into `MEMORY.md`, `memory/` (HOT/WARM), project wiki, `AGENTS.md`, skills, and optional portfolio memory — with conflict gate and temperature limits.
+
+Package: [`skills/memo-session-skill/`](skills/memo-session-skill/) · skill README: [`skills/memo-session-skill/README.md`](skills/memo-session-skill/README.md)
+
+```
+  SESSION                    MEMO SESSION                      NEXT TURN
+     │                            │                                │
+     │  подведи итоги             │  preflight → classify → route  │
+     ├───────────────────────────►│  HOT / WARM / wiki / portfolio │
+     │                            ├───────────────────────────────►│
+     │                            │         handoff + changelog    │
+```
+
+| Trigger | What gets saved |
+|---------|-----------------|
+| «подведём итоги», «сохрани знания», handoff | Full pipeline |
+| goal-mode phase complete / BLOCKED / COMPLETE | `full` checkpoint (auto) |
+| Session step limit in goal-mode | `light` hot-cache update |
+
+Install:
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
+```
+
+Integration with goal-mode: [memo-session goal-mode-integration](skills/memo-session-skill/references/goal-mode-integration.md)
 
 ---
 
@@ -173,7 +219,8 @@ CONTRIBUTING.md
 .gitignore
 .github/ISSUE_TEMPLATE/
 skills/
-└── goal-mode/
+├── goal-mode/
+└── memo-session-skill/
 ```
 
 That is all [skills.sh](https://skills.sh) needs. Everything for `goal-mode` lives under `skills/goal-mode/`.
