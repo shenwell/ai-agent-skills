@@ -251,3 +251,7 @@ Path after install: `~/.cursor/skills/memo-session-skill/` or `~/.agents/skills/
 - Do not overwrite existing files wholesale without need.
 - Ask/Plan mode: read-only, preflight report, conflict analysis, recommendations **without** bootstrap or project file writes.
 - Agent mode: full pipeline including bootstrap and writes; user confirmation only on **hard conflicts** or removing lines from `.gitignore`.
+
+## Related skills
+
+**[goal-mode](https://skills.sh/shenwell/ai-agent-skills/goal-mode)** — autonomous runs until tests, lint, typecheck, or CI are green; optional memo checkpoints at phase complete, `BLOCKED`, or `COMPLETE`. [Source on GitHub](https://github.com/shenwell/ai-agent-skills/tree/main/skills/goal-mode)

@@ -347,3 +347,7 @@ See collection [README](../../README.md) for multi-IDE install.
 ## Troubleshooting
 
 [references/troubleshooting.md](references/troubleshooting.md)
+
+## Related skills
+
+**[memo-session-skill](https://skills.sh/shenwell/ai-agent-skills/memo-session-skill)** — persistent session memory across context resets; goal-mode invokes it at checkpoints. [Source on GitHub](https://github.com/shenwell/ai-agent-skills/tree/main/skills/memo-session-skill)
