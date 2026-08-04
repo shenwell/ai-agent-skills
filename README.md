@@ -135,7 +135,8 @@ README.md
 LICENSE
 CONTRIBUTING.md
 .gitignore
-assets/banner.png
+assets/
+.github/ISSUE_TEMPLATE/
 skills/
 └── goal-mode/
 ```
@@ -146,9 +147,8 @@ That is all [skills.sh](https://skills.sh) needs. Everything for `goal-mode` liv
 
 ## Social preview (GitHub)
 
-Recommended share image: [`assets/social-preview.png`](assets/social-preview.png) (1280×640).
-
-Set once in the repo: **Settings → General → Social preview → Upload image** (GitHub has no stable simple CLI for this). Until set, shares use the default Open Graph card.
+Файл: [`assets/social-preview.png`](assets/social-preview.png) (1280×640).  
+**Загружен** в Settings → Social preview (2026-08-04). При замене файла в git — перезалить в Settings вручную.
 
 ## License
 

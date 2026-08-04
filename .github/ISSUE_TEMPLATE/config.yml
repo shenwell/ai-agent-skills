@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: skills.sh / install help
+    url: https://github.com/shenwell/ai-agent-skills#quickstart--install-with-npx-skills
+    about: Install with npx skills add — see the README Quickstart.
+  - name: Agent Skills standard
+    url: https://agentskills.io/
+    about: Spec for SKILL.md packages (not specific to this repo).

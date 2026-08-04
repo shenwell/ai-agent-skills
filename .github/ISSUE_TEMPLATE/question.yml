@@ -1,0 +1,28 @@
+name: Question
+description: Ask about install, bootstrap, or how to use a skill
+title: "[q] "
+labels: ["question"]
+body:
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Install / npx skills
+        - goal-mode /goal usage
+        - Bootstrap / hooks
+        - skills.sh / badges
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you already tried
+      description: Optional

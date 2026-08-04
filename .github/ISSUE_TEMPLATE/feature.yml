@@ -1,0 +1,35 @@
+name: Feature request
+description: Idea for a new skill or an improvement to an existing one
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - Improve goal-mode
+        - New skill in this collection
+        - Repo / docs / discovery
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What pain does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: How should it work? Example commands or triggers help.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional — other skills or workflows you tried

@@ -1,0 +1,54 @@
+name: Bug report
+description: Something broken in a skill, install, bootstrap, or docs
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - goal-mode
+        - repo / docs (not a specific skill)
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: host
+    attributes:
+      label: Agent / host
+      options:
+        - Cursor
+        - Claude Code
+        - Codex
+        - Windsurf
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Expected vs actual. Include error text if any.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1. npx skills add shenwell/ai-agent-skills --skill …
+        2. …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Release tag (e.g. v1.2.0) or commit SHA if known
+      placeholder: v1.2.0
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: OS, Node version, install path (~/.cursor/skills vs ~/.agents/skills), screenshots
