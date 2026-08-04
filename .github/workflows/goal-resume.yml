@@ -1,0 +1,51 @@
+name: Goal Resume Check
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    inputs:
+      goal_id:
+        description: Goal folder name under goals/
+        required: true
+        default: example-eslint
+
+jobs:
+  goal-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check goal status
+        id: status
+        run: |
+          GOAL_ID="${{ github.event.inputs.goal_id || 'example-eslint' }}"
+          SCRIPT=".cursor/skills/goal-mode/scripts/goal-status.js"
+          if [ ! -f "$SCRIPT" ]; then
+            echo "Goal Mode not installed"
+            exit 1
+          fi
+          set +e
+          OUT=$(node "$SCRIPT" "goals/${GOAL_ID}" --json)
+          CODE=$?
+          set -e
+          echo "$OUT"
+          echo "exit_code=$CODE" >> "$GITHUB_OUTPUT"
+          SHOULD=$(echo "$OUT" | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{try{console.log(JSON.parse(s).should_continue)}catch{console.log('false')}})")
+          echo "should_continue=$SHOULD" >> "$GITHUB_OUTPUT"
+          STATUS=$(echo "$OUT" | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{try{console.log(JSON.parse(s).status)}catch{console.log('UNKNOWN')}})")
+          echo "goal_status=$STATUS" >> "$GITHUB_OUTPUT"
+
+      - name: Goal still active
+        if: steps.status.outputs.should_continue == 'true'
+        run: |
+          echo "::notice::Goal still active (status=${{ steps.status.outputs.goal_status }}). Trigger Cloud Agent with /goal resume or automation."
+
+      - name: Goal finished or blocked
+        if: steps.status.outputs.should_continue != 'true'
+        run: |
+          echo "No re-trigger needed. Status: ${{ steps.status.outputs.goal_status }}"

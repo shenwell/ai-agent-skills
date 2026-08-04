@@ -1,0 +1,33 @@
+# Goal Mode — model pool and role defaults
+# Способ 1 (UI): откройте .cursor/agents/goal-*.md → поле model → выпадашка Cursor
+# Способ 2: меняйте defaults ниже; агенты без model в frontmatter возьмут отсюда
+
+models:
+  # Пул моделей проекта — можно выбирать в выпадашке агентов
+  available:
+    - id: gpt-5.3-codex-high
+      label: Codex 5.3 High
+      for: [intake, master_plan, phase_plan]
+
+    - id: composer-2.5[fast=false]
+      label: Composer 2.5
+      for: [execute, verify]
+
+    - id: composer-2.5-fast
+      label: Composer 2.5 Fast
+      for: [execute]
+
+    - id: gpt-5.6-sol-medium
+      label: GPT-5.6 Sol Medium
+      for: [intake, master_plan, phase_plan, verify]
+
+  # Defaults по группам (fallback)
+  planning: gpt-5.3-codex-high
+  coding: composer-2.5[fast=false]
+
+  # Тонкая настройка по шагу (переопределяет planning/coding)
+  intake: gpt-5.3-codex-high
+  master_plan: gpt-5.3-codex-high
+  phase_plan: gpt-5.3-codex-high
+  execute: composer-2.5[fast=false]
+  verify: composer-2.5[fast=false]
