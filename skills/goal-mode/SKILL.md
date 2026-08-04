@@ -20,7 +20,7 @@ metadata:
 # Goal Mode
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/shenwell/skills/main/skills/goal-mode/assets/banner.png" alt="GOAL MODE" width="1024" />
+  <img src="assets/banner.png" alt="GOAL MODE" width="1024" />
 </p>
 
 ```

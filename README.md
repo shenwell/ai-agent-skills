@@ -1,7 +1,7 @@
 # shenwell/skills
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/shenwell/skills/main/assets/banner.png" alt="SKILLS" width="1024" />
+  <img src="assets/banner.png" alt="SKILLS" width="1024" />
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
