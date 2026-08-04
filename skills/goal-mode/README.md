@@ -1,5 +1,9 @@
 # goal-mode
 
+<p align="center">
+  <img src="assets/banner.svg" alt="GOAL MODE" width="840" />
+</p>
+
 Open **Goal Mode** for AI coding agents — durable-contract equivalent of [Claude Code `/goal`](https://code.claude.com/docs/en/goal).
 
 ## Install

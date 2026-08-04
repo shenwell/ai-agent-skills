@@ -1,20 +1,8 @@
 # shenwell/skills
 
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                                                                  ║
-║   ███████╗██╗  ██╗██╗██╗     ██╗     ███████╗                    ║
-║   ██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝                    ║
-║   ███████╗█████╔╝ ██║██║     ██║     ███████╗                    ║
-║   ╚════██║██╔═██╗ ██║██║     ██║     ╚════██║                    ║
-║   ███████║██║  ██╗██║███████╗███████╗███████║                    ║
-║   ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝                    ║
-║                                                                  ║
-║          Public Agent Skills collection                          ║
-║          npx skills add shenwell/skills                          ║
-║                                                                  ║
-╚══════════════════════════════════════════════════════════════════╝
-```
+<p align="center">
+  <img src="assets/banner.svg" alt="SKILLS — green to blue" width="840" />
+</p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
