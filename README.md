@@ -22,38 +22,47 @@ shenwell/ai-agent-skills
 
 ---
 
-## Quickstart — install with npx skills
+## Quickstart
+
+### 1. Install (one line)
 
 ```bash
-npx skills add shenwell/ai-agent-skills --list
 npx skills add shenwell/ai-agent-skills --skill goal-mode -g
-# or all skills in this repo:
-npx skills add shenwell/ai-agent-skills --all -g
 ```
 
-### After install — bootstrap the project (goal-mode)
+List skills in the repo: `npx skills add shenwell/ai-agent-skills --list`  
+Install all: `npx skills add shenwell/ai-agent-skills --all -g`
 
-```bash
-# use whichever path exists on your machine
-node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
-node ~/.agents/skills/goal-mode/scripts/goal-bootstrap.js
-node ~/.claude/skills/goal-mode/scripts/goal-bootstrap.js
-node ~/.codex/skills/goal-mode/scripts/goal-bootstrap.js
-# Windows:
-node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js
-```
+### 2. First run (in any project)
 
-Then:
+Open the project in Cursor (or your agent) and run:
 
 ```
 /goal Fix all ESLint errors in src; tests and build must pass
 ```
 
-| Host | Notes |
-|------|--------|
-| **Cursor** | Full stack after bootstrap: `/goal`, agents, hooks |
-| **Claude Code** | Use skill protocols + durable `GOAL.md`; optional native `/goal` for the stop condition |
-| **Codex / Windsurf / Copilot / others** | Skill + scripts; hooks are Cursor-specific |
+On the **first** `/goal` in a project the agent bootstraps automatically: copies `goal.config.yml`, hooks, `/goal` command, templates into `.cursor/`. You do **not** need a separate bootstrap command for normal use.
+
+| Host | What you get |
+|------|----------------|
+| **Cursor** | Full stack after first `/goal`: command, agents, hooks, config |
+| **Claude Code** | Skill protocols + durable `GOAL.md`; optional native `/goal` |
+| **Codex / Windsurf / others** | Skill + scripts; Cursor hooks are Cursor-only |
+
+<details>
+<summary>Optional — manual bootstrap</summary>
+
+If you want hooks/config **before** the first `/goal`, or the agent could not find the skill path:
+
+```bash
+# pick the path that exists after install
+node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
+node ~/.agents/skills/goal-mode/scripts/goal-bootstrap.js
+# Windows PowerShell:
+node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js
+```
+
+</details>
 
 ---
 
@@ -100,7 +109,7 @@ Package: [`skills/goal-mode/`](skills/goal-mode/) · skill README: [`skills/goal
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-Configure after bootstrap (`.cursor/goal.config.yml`):
+Configure after first `/goal` or manual bootstrap (`.cursor/goal.config.yml`):
 
 ```yaml
 verify:

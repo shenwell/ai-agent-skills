@@ -13,22 +13,36 @@
 Durable `GOAL.md` contract · phased plans · worker ⇄ verifier · time budget · auto-resume.  
 Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for **Cursor**, Claude Code, Codex, and other hosts.
 
-## Quickstart — install with npx skills
+## Quickstart
+
+### Install
 
 ```bash
 npx skills add shenwell/ai-agent-skills --skill goal-mode -g
-node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
-# also common after CLI install:
-node ~/.agents/skills/goal-mode/scripts/goal-bootstrap.js
 ```
 
-Then:
+### First run
+
+In your project:
 
 ```
 /goal Fix all ESLint errors in src; tests and build must pass
 ```
 
+The first `/goal` **bootstraps the project** (config, hooks, command) automatically. No separate `node …/goal-bootstrap.js` step for normal use.
+
 Collection: [AI Agent Skills](../../README.md) · full agent instructions: [`SKILL.md`](SKILL.md)
+
+<details>
+<summary>Optional — manual bootstrap</summary>
+
+```bash
+node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
+# or after CLI copy:
+node ~/.agents/skills/goal-mode/scripts/goal-bootstrap.js
+```
+
+</details>
 
 ## When to use
 

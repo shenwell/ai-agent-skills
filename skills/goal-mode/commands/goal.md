@@ -2,17 +2,27 @@
 
 **Single entry point for Goal Mode** — keep working until the goal is verifiably done (not after one attempt). Open alternative to Claude Code `/goal`.
 
-Works from the **global** skill (`~/.cursor/skills/goal-mode` or via `npx skills add`) in any project.
+## For users (after install)
 
-The user provides only the objective text. Everything else is automatic.
+```bash
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g
+```
 
-## Main command
+Then in any project:
 
 ```
 /goal <objective text>
 ```
 
 Example: `/goal Fix all ESLint errors in src; tests and build must pass`
+
+**First run:** Step 0 below runs automatically — no separate bootstrap command for the happy path.
+
+---
+
+Works from the **global** skill (`~/.cursor/skills/goal-mode` or via `npx skills add`) in any project.
+
+The user provides only the objective text. Everything else is automatic.
 
 ### Automatic pipeline
 
@@ -30,9 +40,9 @@ The user does **not** hand-write GOAL.md, plans, or `/goal plan`.
 
 ## Algorithm
 
-### Step 0 — Bootstrap (always first)
+### Step 0 — Bootstrap (always first; automatic on first `/goal`)
 
-If the project lacks `.cursor/goal.config.yml` or `.cursor/skills/goal-mode/scripts/goal-init.js`:
+If the project lacks `.cursor/goal.config.yml` or `.cursor/skills/goal-mode/scripts/goal-init.js`, run bootstrap **yourself** (do not ask the user to run a second install command):
 
 ```bash
 node "$HOME/.cursor/skills/goal-mode/scripts/goal-bootstrap.js" --json

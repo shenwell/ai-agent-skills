@@ -63,7 +63,7 @@ This skill gives the agent:
 2. Hierarchical planning (master → per-phase plans)
 3. Worker/verifier loop that refuses “done” without evidence
 4. Auto-continue + wall-clock time tracking (6h+)
-5. Project bootstrap after `npx skills add`
+5. Auto-bootstrap on first `/goal` in a project
 
 **Canonical docs:** [references/](references/) · [README](README.md) · collection [README](../../README.md)
 
@@ -73,14 +73,26 @@ This skill gives the agent:
 
 ```bash
 npx skills add shenwell/ai-agent-skills --skill goal-mode -g
-node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
-# Windows:
-node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js
 ```
 
-Then run `/goal <objective>` (example: `/goal Fix all ESLint errors; tests must pass`).
+## First run
 
-Other hosts (Claude Code, Codex, …): same `npx skills add`; bootstrap path may be `~/.agents/skills/…` or `~/.claude/skills/…` — see collection README.
+In the target project:
+
+```
+/goal Fix all ESLint errors; tests must pass
+```
+
+**First `/goal` bootstraps the project** (writes `.cursor/goal.config.yml`, hooks, command, templates). Do not require users to run `goal-bootstrap.js` for the happy path.
+
+Optional manual bootstrap (hooks before first `/goal`, or path troubleshooting):
+
+```bash
+node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js --json
+# or: ~/.agents/skills/…  |  Windows: $env:USERPROFILE\.cursor\skills\goal-mode\…
+```
+
+Other hosts (Claude Code, Codex, …): same install line; Cursor-only hooks apply only on Cursor — see collection README.
 
 ---
 
@@ -109,14 +121,15 @@ Other hosts (Claude Code, Codex, …): same `npx skills add`; bootstrap path may
 
 ---
 
-## Step 0 — Bootstrap (first use in a project)
+## Step 0 — Bootstrap (automatic on first `/goal`)
+
+Agent runs this when project files are missing — users only need install + `/goal`:
 
 ```
-  ┌──────────────┐     ┌──────────────────────────────────────────┐
-  │ npx skills   │────►│  goal-bootstrap.js                       │
-  │ add … -g     │     │  → goal.config.yml · hooks · agents      │
-  └──────────────┘     │  → /goal command · templates · goals/    │
-                       └──────────────────────────────────────────┘
+  ┌──────────────┐     ┌──────────────┐     ┌──────────────────────────┐
+  │ npx skills   │────►│ /goal <text> │────►│ goal-bootstrap.js        │
+  │ add … -g     │     │ (first time) │     │ → config · hooks · agents│
+  └──────────────┘     └──────────────┘     └──────────────────────────┘
 ```
 
 ```bash
