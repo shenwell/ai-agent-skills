@@ -10,7 +10,7 @@
 ║                                                                              ║
 ║     Session knowledge → MEMORY.md · memory/ · wiki · portfolio memory        ║
 ║              Pairs with goal-mode checkpoints · Cursor · MIT                 ║
-║                          v1.0.1 · August 2026                                ║
+║                          v1.0.2 · August 2026                                ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```

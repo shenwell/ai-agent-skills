@@ -1,6 +1,6 @@
 # Portfolio Librarian (subagent)
 
-Invoke via Task **only** for heavy portfolio work. Skill canon: `memo-session-skill`. **Do not** copy this file into projects or `D:/CURSOR/global-memory`.
+Invoke via Task **only** for heavy portfolio work. Skill canon: `memo-session-skill`. **Do not** copy this file into projects or `GLOBAL_MEMORY_ROOT`.
 
 ## When to invoke
 
@@ -11,7 +11,7 @@ Invoke via Task **only** for heavy portfolio work. Skill canon: `memo-session-sk
 
 ## Input
 
-- `GLOBAL_MEMORY_ROOT` = `D:/CURSOR/global-memory` (or override from project `AGENTS.md`).
+- `GLOBAL_MEMORY_ROOT` resolved from project `AGENTS.md` (see [references/global-memory.md](../references/global-memory.md)). If unset — do not invoke; parent runs degraded mode.
 - `project-slug` of the current workspace (from folder name or `projects-registry`).
 - User query or candidate list from memo-session.
 

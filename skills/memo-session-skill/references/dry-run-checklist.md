@@ -1,28 +1,30 @@
 # Dry-run checklist (portfolio + skill)
 
-Verification after global-memory rollout (2026-05-26).
+Verification after enabling optional portfolio memory.
+
+**Prerequisite:** `GLOBAL_MEMORY_ROOT:` set in a pilot project's `AGENTS.md` (see [global-memory.md](global-memory.md)). Substitute `$ROOT` below with that resolved path.
 
 ## Structure
 
-- [ ] `D:/CURSOR/global-memory/MEMORY.md` exists
-- [ ] `D:/CURSOR/global-memory/memory/changelog.md` exists
-- [ ] `D:/CURSOR/global-memory/memory/wiki/projects-registry.md` contains `local_path` and `git_remote`
-- [ ] `~/.cursor/skills/memo-session-skill/references/global-memory.md` points to `D:/CURSOR/global-memory`
+- [ ] `$ROOT/MEMORY.md` exists
+- [ ] `$ROOT/memory/changelog.md` exists
+- [ ] `$ROOT/memory/wiki/projects-registry.md` contains `local_path` and `git_remote`
+- [ ] Installed skill `references/global-memory.md` documents resolution from `AGENTS.md` only (no maintainer-specific default path)
 - [ ] `SKILL.md` contains Preflight §1.5, §1.6, scope, portfolio report §6
-- [ ] No `SKILL.md` inside `D:/CURSOR/global-memory`
+- [ ] No copy of `memo-session-skill/SKILL.md` inside `$ROOT`
 
 ## Search
 
-```powershell
-rg -i "GLOBAL_MEMORY_ROOT" "D:/CURSOR/global-memory"
-rg -i "projects-registry" "D:/CURSOR/global-memory/memory/wiki"
+```bash
+rg -i "GLOBAL_MEMORY_ROOT" "$ROOT"
+rg -i "projects-registry" "$ROOT/memory/wiki"
 ```
 
 ## Scope (manual scenario in a project)
 
-1. Open a project repo with `MEMORY.md`.
+1. Open a project repo with `MEMORY.md` and `GLOBAL_MEMORY_ROOT:` in `AGENTS.md`.
 2. Invoke memo-session after a task with an API gotcha → `scope: project` only.
-3. After a task with server/domain → `scope: portfolio`, line in global changelog with `from:<slug>`.
+3. After a task with server/domain → `scope: portfolio`, line in portfolio changelog with `from:<slug>`.
 4. Verify: one paragraph is not in both hot-caches.
 
 ## AGENTS.md

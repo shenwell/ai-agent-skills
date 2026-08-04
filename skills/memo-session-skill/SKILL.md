@@ -12,7 +12,7 @@ description: >-
   or long goal-mode runs. Do not use for one-line trivia, secrets, or replacing
   git history.
 metadata:
-  version: "1.0.1"
+  version: "1.0.2"
   author: productlaba
   category: knowledge-management
   tags: memory, session, handoff, wiki, portfolio, changelog, goal-mode
@@ -65,7 +65,7 @@ The skill starts the pipeline immediately in Agent mode; it stops only for **har
 
 ---
 
-This skill analyzes the session, separates noise from durable knowledge, and routes findings into the right place: `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, operational **`memory/`** files (HOT/WARM), **wiki `WIKI_ROOT/`** (COLD), user or project skills, and optional **portfolio memory** (`GLOBAL_MEMORY_ROOT`, default `D:/CURSOR/global-memory`). Project schema — in **`MEMORY.md`** (Preflight §3); portfolio schema — [references/portfolio-schema.md](references/portfolio-schema.md), path — [references/global-memory.md](references/global-memory.md).
+This skill analyzes the session, separates noise from durable knowledge, and routes findings into the right place: `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, operational **`memory/`** files (HOT/WARM), **wiki `WIKI_ROOT/`** (COLD), user or project skills, and optional **portfolio memory** (`GLOBAL_MEMORY_ROOT` from project `AGENTS.md` only — no skill default path). Project schema — in **`MEMORY.md`** (Preflight §3); portfolio schema — [references/portfolio-schema.md](references/portfolio-schema.md), path — [references/global-memory.md](references/global-memory.md).
 
 ## goal-mode pairing
 
@@ -140,21 +140,21 @@ See "Temperature limits" for thresholds. Exceeding limits **does not block** the
 
 ### 1.5. GLOBAL_MEMORY_ROOT (portfolio)
 
-1. Read [references/global-memory.md](references/global-memory.md) — default `D:/CURSOR/global-memory`.
-2. If project `AGENTS.md` has `GLOBAL_MEMORY_ROOT:` — use override.
-3. Verify directory exists and is readable. In Agent mode if scaffold missing — bootstrap portfolio per [references/portfolio-schema.md](references/portfolio-schema.md) (like project Preflight §3, with portfolio limits).
-4. If unavailable — record degraded mode, continue with project preflight only.
+1. Read [references/global-memory.md](references/global-memory.md).
+2. Resolve `GLOBAL_MEMORY_ROOT:` from project `AGENTS.md` only — **no baked-in default path** in this skill.
+3. If set: verify directory exists and is readable. In Agent mode if scaffold missing — bootstrap portfolio per [references/portfolio-schema.md](references/portfolio-schema.md) (like project Preflight §3, with portfolio limits).
+4. If unset, missing, or unreadable — **degraded mode**; continue with project preflight only; report "Portfolio skipped".
 
 ### 1.6. Project `AGENTS.md` check (memory flow)
 
 Checklist (mark ok / needs patch):
 
-- [ ] "Agent memory" / "Memory flow" block with read order **project → portfolio**
-- [ ] Link to `GLOBAL_MEMORY_ROOT` or `D:/CURSOR/global-memory`
-- [ ] Mention dual-write on memo-session without duplicate paragraphs
+- [ ] "Agent memory" / "Memory flow" block (project read order at minimum)
+- [ ] If portfolio is used: `GLOBAL_MEMORY_ROOT:` with a **user-defined** path (never a maintainer's machine path)
+- [ ] If portfolio is used: dual-write on memo-session without duplicate paragraphs
 - [ ] **No** requirement to copy `memo-session-skill` into the project
 
-In **Agent mode**, if block missing and workspace is a project repo (not `global-memory` itself): add template from [references/agents-md-template.md](references/agents-md-template.md) (do not rewrite entire `AGENTS.md`).
+In **Agent mode**, if block missing and workspace is a project repo (not the portfolio-memory repo itself): add template from [references/agents-md-template.md](references/agents-md-template.md) (do not rewrite entire `AGENTS.md`).
 
 ### 2b. Hygiene scan (portfolio)
 
@@ -275,7 +275,7 @@ Choose destination by audience and lifetime:
 - `memory/hot-cache.md`, `memory/warm-cache.md` — HOT and WARM; `memory/open-loops.md`, `memory/decisions.md`, `memory/changelog.md` — tasks, decisions, skill session journal.
 - `docs/` — **not** default channel; only explicit request or canon in `AGENTS.md` (see "docs/ and wiki").
 - `.cursor/skills/` or `~/.cursor/skills/` — user and project skills.
-- **`GLOBAL_MEMORY_ROOT`** (default `D:/CURSOR/global-memory`) — for `scope: portfolio` or body for `scope: both`:
+- **`GLOBAL_MEMORY_ROOT`** (only when set in `AGENTS.md`) — for `scope: portfolio` or body for `scope: both`:
   - registry, `local_path`, `git_remote` → `memory/wiki/projects-registry.md` + `project-<slug>.md`;
   - servers → `hosting-and-servers.md`; domains/certs → `domains-and-certificates.md`; URLs → `urls-and-environments.md`;
   - agent mistakes → `agent-mistakes-registry.md`; portfolio HOT/WARM — `memory/hot-cache.md`, `warm-cache.md`.

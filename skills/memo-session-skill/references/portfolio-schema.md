@@ -1,6 +1,6 @@
 # Portfolio memory schema
 
-Path: **`GLOBAL_MEMORY_ROOT`** = `D:/CURSOR/global-memory` (see [global-memory.md](global-memory.md)).
+Root path: **`GLOBAL_MEMORY_ROOT`** — resolved only from `GLOBAL_MEMORY_ROOT:` in project `AGENTS.md` (see [global-memory.md](global-memory.md)). No default path in this skill.
 
 ## Scope (required for every finding)
 
@@ -15,8 +15,8 @@ Path: **`GLOBAL_MEMORY_ROOT`** = `D:/CURSOR/global-memory` (see [global-memory.m
 
 ### Anti-dup
 
-- **Forbidden:** the same paragraph in project `hot-cache` and global.
-- **Allowed `both`:** link in project + full text in `project-<slug>.md` or global thematic wiki.
+- **Forbidden:** the same paragraph in project `hot-cache` and portfolio.
+- **Allowed `both`:** link in project + full text in `project-<slug>.md` or portfolio thematic wiki.
 
 ## Criteria for `scope: portfolio`
 
@@ -26,6 +26,8 @@ At least 2 of: non-obvious, reusable, concrete, verified — **and** topic:
 - repeatable agent mistake across all repos;
 - explicit request to "record globally".
 
+Requires `GLOBAL_MEMORY_ROOT` to be set and available; otherwise route to project memory or skip with degraded-mode note.
+
 ## `projects-registry.md`
 
 Columns:
@@ -33,7 +35,7 @@ Columns:
 | slug | name | git_remote | local_path | project_memory | last_verified | status |
 
 - **git_remote** — canonical across machines (full URL).
-- **local_path** — path on this PC.
+- **local_path** — path on this PC (machine-specific; lives in portfolio, not in public skills).
 - **status:** `active` | `archived` | `advisory`.
 
 Details live in `memory/wiki/project-<slug>.md`; do not duplicate long tables in the registry.
@@ -85,4 +87,4 @@ Changelog: same line format as project; in **reason** — `from:<slug>` of curre
 
 ## Subagent
 
-Heavy search/dedupe/hygiene: [../agents/portfolio-librarian.md](../agents/portfolio-librarian.md) — only from the skill catalog, do not copy into projects or global-memory.
+Heavy search/dedupe/hygiene: [../agents/portfolio-librarian.md](../agents/portfolio-librarian.md) — only from the skill catalog; do not copy into projects or the portfolio repo.
