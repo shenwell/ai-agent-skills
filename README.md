@@ -18,7 +18,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
-[![skills.sh](https://skills.sh/b/shenwell/goals-productlaba)](https://skills.sh/shenwell/goals-productlaba)
+[![skills.sh](https://skills.sh/b/shenwell/goal-mode)](https://skills.sh/shenwell/goal-mode)
 
 You give the agent an **objective**. Goal Mode turns it into a **contract**, a **plan**, an **evidence loop**, and a **stop condition** — then keeps working until the goal is actually done.
 
@@ -67,7 +67,7 @@ Goal Mode brings that idea to the open Agent Skills ecosystem:
 ### Via skills.sh / skills CLI (recommended)
 
 ```bash
-npx skills add shenwell/goals-productlaba --skill goal-mode -g
+npx skills add shenwell/goal-mode --skill goal-mode -g
 ```
 
 Then bootstrap the **current project** (hooks, config, templates):
@@ -213,7 +213,7 @@ node .cursor/skills/goal-mode/scripts/goal-time.js report goals/<id>
 ## Repository layout
 
 ```
-goals-productlaba/
+goal-mode/
 ├── skills/goal-mode/          # ← skills.sh / npx skills add entry
 │   ├── SKILL.md
 │   ├── scripts/

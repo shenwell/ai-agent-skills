@@ -1,10 +1,10 @@
 # Goal Mode: план фикса преждевременной остановки
 
-**Статус:** draft (для переноса в `goals-productlaba`)  
+**Статус:** draft (для переноса в `goal-mode`)  
 **Дата:** 2026-07-22  
 **Контекст:** повторяющийся инцидент — агент завершает ход после одной итерации при `status: CONTINUE`, хотя цель не достигнута. Пользователь ожидает непрерывное выполнение до `COMPLETE` / `BLOCKED` / `FAILED`.
 
-**Аудитория:** maintainers `goals-productlaba`, интеграторы Goal Mode в целевые репозитории.
+**Аудитория:** maintainers `goal-mode`, интеграторы Goal Mode в целевые репозитории.
 
 ---
 
@@ -390,7 +390,7 @@ skills: [goal-mode]
 
 ---
 
-## 6. План внедрения в goals-productlaba
+## 6. План внедрения в goal-mode
 
 ### Релиз v0.2.0-goal-mode (предлагаемый)
 
@@ -464,7 +464,7 @@ skills: [goal-mode]
 
 ---
 
-## 8. Документация для README goals-productlaba
+## 8. Документация для README goal-mode
 
 Добавить секцию **Execution modes**:
 
@@ -497,7 +497,7 @@ execution:
 ### install.ps1 / upgrade path
 
 ```powershell
-# При обновлении goals-productlaba:
+# При обновлении goal-mode:
 # 1. Merge goal.config.yml — добавить execution block если отсутствует
 # 2. Не перезаписывать active_goal и verify overrides
 # 3. Предупреждение если hooks.json loop_limit < max_iterations
@@ -555,9 +555,9 @@ execution:
 
 | Репозиторий / путь | Роль |
 |--------------------|------|
-| `goals-productlaba/` | Каноническая поставка Goal Mode |
-| `goals-productlaba/.cursor/skills/goal-mode/` | Skill + references |
-| `goals-productlaba/install.ps1` | Доставка в целевой проект |
+| `goal-mode/` | Каноническая поставка Goal Mode |
+| `goal-mode/.cursor/skills/goal-mode/` | Skill + references |
+| `goal-mode/install.ps1` | Доставка в целевой проект |
 | Целевой проект `goals/{id}/GOAL.md` | Контракт конкретной цели |
 | Инцидент: goprogress iteration 22→24 | Dogfood evidence |
 
@@ -606,4 +606,4 @@ Follow goal-mode skill exactly.
 
 ---
 
-*Документ подготовлен по инциденту goprogress (Goal Mode, phase 4, iterations 22–24). Перенос в goals-productlaba: `docs/wiki/goal-mode-premature-stop-fix-plan.md` или `docs/goal-mode-premature-stop-fix-plan.md`.*
+*Документ подготовлен по инциденту goprogress (Goal Mode, phase 4, iterations 22–24). Перенос в goal-mode: `docs/wiki/goal-mode-premature-stop-fix-plan.md` или `docs/goal-mode-premature-stop-fix-plan.md`.*

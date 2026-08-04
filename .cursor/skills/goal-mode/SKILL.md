@@ -67,7 +67,7 @@ Autonomy needs a **contract**, not only a prompt. This skill gives the agent:
 Resolve the skill root (global or project), then:
 
 ```bash
-# After: npx skills add <owner>/goals-productlaba --skill goal-mode -g
+# After: npx skills add <owner>/goal-mode --skill goal-mode -g
 node "$HOME/.agents/skills/goal-mode/scripts/goal-bootstrap.js" --json
 # Cursor global path (common):
 node "$HOME/.cursor/skills/goal-mode/scripts/goal-bootstrap.js" --json

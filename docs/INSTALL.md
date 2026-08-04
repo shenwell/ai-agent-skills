@@ -8,13 +8,13 @@ Goal Mode follows the [Agent Skills](https://agentskills.io/) format and install
 
 ```bash
 # List what will be discovered
-npx skills add shenwell/goals-productlaba --list
+npx skills add shenwell/goal-mode --list
 
 # Install goal-mode globally for your user
-npx skills add shenwell/goals-productlaba --skill goal-mode -g -y
+npx skills add shenwell/goal-mode --skill goal-mode -g -y
 
 # Or project-scoped (committed with the repo)
-npx skills add shenwell/goals-productlaba --skill goal-mode -y
+npx skills add shenwell/goal-mode --skill goal-mode -y
 ```
 
 After install, **bootstrap the project** so hooks/config/templates exist:
@@ -48,7 +48,7 @@ Follow the goal-mode skill. Objective: <your objective>
 
 ### Option A — skills CLI (recommended for publishing consumers)
 
-1. `npx skills add shenwell/goals-productlaba --skill goal-mode -g -y`
+1. `npx skills add shenwell/goal-mode --skill goal-mode -g -y`
 2. Bootstrap (above)
 3. Restart Cursor if `/goal` does not appear
 4. Edit `.cursor/goal.config.yml` verify commands
@@ -56,8 +56,8 @@ Follow the goal-mode skill. Objective: <your objective>
 ### Option B — clone installer
 
 ```powershell
-git clone https://github.com/shenwell/goals-productlaba.git
-cd goals-productlaba
+git clone https://github.com/shenwell/goal-mode.git
+cd goal-mode
 .\install-global.ps1          # user-global skill + agents + /goal
 # or into one project:
 .\install.ps1 -Target D:\path\to\your-app
@@ -88,7 +88,7 @@ Claude Code has a **native** [`/goal`](https://code.claude.com/docs/en/goal) com
 ### Install
 
 ```bash
-npx skills add shenwell/goals-productlaba --skill goal-mode -g -y
+npx skills add shenwell/goal-mode --skill goal-mode -g -y
 # skill often lands in ~/.claude/skills/goal-mode
 ```
 
@@ -111,7 +111,7 @@ See [VS-CLAUDE-CODE.md](VS-CLAUDE-CODE.md).
 ## OpenAI Codex / ChatGPT agent skills
 
 ```bash
-npx skills add shenwell/goals-productlaba --skill goal-mode -g -y
+npx skills add shenwell/goal-mode --skill goal-mode -g -y
 # often: ~/.codex/skills/goal-mode
 ```
 
@@ -122,7 +122,7 @@ Invoke by name (“use goal-mode”) or `/goal-mode` if your Codex build lists s
 ## Windsurf / Cascade
 
 ```bash
-npx skills add shenwell/goals-productlaba --skill goal-mode -g -y
+npx skills add shenwell/goal-mode --skill goal-mode -g -y
 ```
 
 If the CLI offers a Windsurf target, select it. Otherwise copy:
@@ -138,7 +138,7 @@ skills/goal-mode/  →  ~/.codeium/windsurf/skills/goal-mode/
 ## GitHub Copilot Chat (skills-compatible builds)
 
 ```bash
-npx skills add shenwell/goals-productlaba --skill goal-mode -g -y
+npx skills add shenwell/goal-mode --skill goal-mode -g -y
 ```
 
 Use the skill when asking Copilot to run an autonomous objective. Prefer **project-scoped** install so `goals/` stays in the repo.
@@ -161,7 +161,7 @@ Minimum viable path without Cursor hooks:
 ## Verify discovery
 
 ```bash
-npx skills add shenwell/goals-productlaba --list
+npx skills add shenwell/goal-mode --list
 # should show: goal-mode
 ```
 
@@ -177,7 +177,7 @@ npx skills list
 ```bash
 npx skills update
 # or re-add
-npx skills add shenwell/goals-productlaba --skill goal-mode -g -y --force
+npx skills add shenwell/goal-mode --skill goal-mode -g -y --force
 ```
 
 From a clone:
