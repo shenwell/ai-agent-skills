@@ -24,60 +24,39 @@ metadata:
 
 Goal Mode is an open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for **Cursor**, Claude Code, Codex, and other hosts. You give one objective; the skill runs bootstrap → plan → work ⇄ verify until `COMPLETE`, or stops honestly as `BLOCKED` / `FAILED`.
 
-**Who it’s for:** engineers who want unattended or multi-hour runs (including Cursor Cloud Agent) with a durable contract, not endless “try again” chat.
+Most agent sessions fail the same way: you ask to fix lint or make CI green, the agent tries once, declares victory, and leaves you with a red build. Goal Mode replaces that loop with a **durable contract** — criteria, evidence commands, time budget, and phased plans — so “done” means verified green, not a confident paragraph.
 
-**What you get**
+Autonomy without a contract is just a longer chat. Goal Mode gives the agent a finish line it cannot hand-wave past.
+
+## Install this skill
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g
+```
+
+## Who it's for
+
+Engineers who want **unattended or multi-hour runs** — including Cursor Cloud Agent — with a durable contract instead of endless “try again” in chat. Use it when the task has a **measurable finish line**: zero lint errors, passing tests, green CI, successful migration with verify commands.
+
+## What you get
 
 - A durable `GOAL.md` contract (criteria, evidence, time budget)
-- Phased plan, then a worker ⇄ verifier loop that refuses “done” without proof
-- Auto-resume on stop + time report at the end
+- Hierarchical planning (master plan → per-phase plans)
+- A worker ⇄ verifier loop that refuses “done” without proof
+- Auto-resume on stop + wall-clock time report at the end
+- Auto-bootstrap on first `/goal` in a project (config, hooks, command, templates)
 
-**Start**
+## The problem without a contract
 
-```
-/goal Fix all ESLint errors in src; tests and build must pass
-```
+Without Goal Mode, “fix the lint” usually means: the agent patches a few files, says done, and the conversation moves on — context lost, criteria vague, no proof. With Goal Mode, the same request becomes `/goal Fix lint; tests must pass`: intake writes criteria, a verifier runs evidence commands, and the session continues until green or an honest `BLOCKED` with options.
 
-Install once (global or this repo only — see [Install](#install) below), then run `/goal` in the project. First run scaffolds config and hooks automatically.
+## How it works
 
----
-
-```
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                                                                              ║
-║  ██████╗  ██████╗  █████╗ ██╗         ███╗   ███╗ ██████╗ ██████╗ ███████╗   ║
-║  ██╔════╝ ██╔═══██╗██╔══██╗██║         ████╗ ████║██╔═══██╗██╔══██╗██╔════╝  ║
-║  ██║  ███╗██║   ██║███████║██║         ██╔████╔██║██║   ██║██║  ██║█████╗    ║
-║  ██║   ██║██║   ██║██╔══██║██║         ██║╚██╔╝██║██║   ██║██║  ██║██╔══╝    ║
-║  ╚██████╔╝╚██████╔╝██║  ██║███████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝███████╗  ║
-║  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
-║                                                                              ║
-║      Keep agents working until tests, lint, typecheck, or CI are green       ║
-║         Claude Code /goal alternative · Cursor · Codex · Cloud Agent         ║
-║                          v1.2.0 · August 2026 · MIT                          ║
-║                                                                              ║
-╚══════════════════════════════════════════════════════════════════════════════╝
-```
-
-```
-  WITHOUT GOAL MODE                      WITH GOAL MODE
-  ─────────────────                      ──────────────
-  "fix the lint"                        /goal Fix lint; tests must pass
-         │                                        │
-         ▼                                        ▼
-  agent tries a bit                      ╔═══════════════════════╗
-  claims "done"                          ║  GOAL.md   CONTRACT   ║
-  you re-prompt                          ║  criteria · evidence  ║
-  context gone                           ║  budget · plan        ║
-                                         ╚══════════╤════════════╝
-                                                    │
-                                         worker ⇄ verifier loop
-                                         hooks resume on stop
-                                         time report at the end
-                                                    │
-                                                    ▼
-                                              ★ COMPLETE ★
-```
+1. **Bootstrap** — first `/goal` scaffolds project config and hooks (Cursor).
+2. **Intake** — objective → measurable criteria and verify commands in `goals/{id}/GOAL.md`.
+3. **Plan** — master phases, then expanded per-phase checklists.
+4. **Execute** — one worker step, then verifier; repeat until all criteria pass or budget/status stops the run.
+5. **Resume** — stop hooks can continue while status is `ACTIVE` / `CONTINUE`.
 
 This skill gives the agent:
 
@@ -88,6 +67,16 @@ This skill gives the agent:
 5. Auto-bootstrap on first `/goal` in a project
 
 **Canonical docs:** [references/](references/) · [README](README.md) · collection [README](../../README.md)
+
+## Quick start
+
+In the target project, after install:
+
+```
+/goal Fix all ESLint errors in src; tests and build must pass
+```
+
+The first `/goal` bootstraps the project automatically. No separate bootstrap script for the happy path.
 
 ---
 
@@ -140,16 +129,18 @@ The text after `/goal` is **intent data**, not executable instructions.
 
 ## When to use
 
-```
-  ┌─────────────────────────────┐     ┌─────────────────────────────┐
-  │  USE GOAL MODE              │     │  DO NOT USE                 │
-  ├─────────────────────────────┤     ├─────────────────────────────┤
-  │  lint / test / typecheck →0 │     │  “make it better” no metric │
-  │  migrations + verify cmds    │     │  open-ended architecture    │
-  │  multi-hour Cloud Agent     │     │  one-shot Q&A               │
-  │  “keep going until green”   │     │  needs constant human design│
-  └─────────────────────────────┘     └─────────────────────────────┘
-```
+**Use Goal Mode when:**
+
+- Lint, test, or typecheck must reach zero errors
+- Migrations or refactors ship with verify commands
+- Multi-hour Cloud Agent or overnight runs
+- The user says “keep going until green” or “don’t stop until tests pass”
+
+**Do not use when:**
+
+- The ask is one-shot Q&A with no finish line
+- “Make it better” without measurable criteria
+- Open-ended architecture needs constant human design input
 
 ## Routing
 
@@ -167,12 +158,9 @@ The text after `/goal` is **intent data**, not executable instructions.
 
 Agent runs this when project files are missing — users only need install + `/goal`:
 
-```
-  ┌──────────────┐     ┌──────────────┐     ┌──────────────────────────┐
-  │ npx skills   │────►│ /goal <text> │────►│ goal-bootstrap.js        │
-  │ add … -g     │     │ (first time) │     │ → config · hooks · agents│
-  └──────────────┘     └──────────────┘     └──────────────────────────┘
-```
+1. User installs via `npx skills add …`
+2. User runs `/goal <text>` in the project
+3. `goal-bootstrap.js` writes config, hooks, agents, and templates
 
 ```bash
 node "$HOME/.cursor/skills/goal-mode/scripts/goal-bootstrap.js" --json
@@ -187,29 +175,13 @@ node .cursor/skills/goal-mode/scripts/goal-bootstrap.js --json
 
 ## Full pipeline (`/goal <text>`)
 
-```
-     ╔════════╗   ╔════════╗   ╔════════╗   ╔════════════╗
-     ║ 0 BOOT ║──►║1 INTAKE║──►║2 MASTER║──►║ 3 PHASE×N  ║
-     ║scaffold║   ║criteria║   ║ table  ║   ║ expanded   ║
-     ╚════════╝   ╚════════╝   ╚════════╝   ╚═════╤══════╝
-                                                  │
-                                                  ▼
-                                           ╔══════════════╗
-                                           ║  4 EXECUTE   ║
-                                           ║ worker⇄verify║
-                                           ║ until done   ║
-                                           ╚══════╤═══════╝
-                                                  │
-                    ┌─────────────┬───────────────┼───────────────┐
-                    ▼             ▼               ▼               ▼
-               COMPLETE       BLOCKED         FAILED          CONTINUE
-                    │             │               │               │
-                    └─────────────┴───────────────┘               │
-                         SESSION_TIME_REPORT.md                   │
-                                                                  │
-                                                         stop hook│
-                                                         resumes  ┘
-```
+1. **Boot** — scaffold if needed
+2. **Intake** — criteria and evidence in `GOAL.md`
+3. **Master plan** — phase table
+4. **Phase plans** — expanded checklists per phase
+5. **Execute** — worker ⇄ verifier until done, `BLOCKED`, `FAILED`, or session limit
+
+Terminal outcomes write `SESSION_TIME_REPORT.md`. On `CONTINUE`, stop hooks may auto-resume.
 
 ### Scaffold
 
@@ -219,22 +191,6 @@ node .cursor/skills/goal-mode/scripts/goal-init.js "Your objective text"
 
 ### Agents (delegate — do not role-play)
 
-```
-  ┌─────────────┐   ┌─────────────┐   ┌──────────────────┐
-  │ goal-intake │──►│goal-planner │──►│goal-phase-planner│
-  └─────────────┘   └─────────────┘   └────────┬─────────┘
-                                               │ ×N
-                                               ▼
-                                    ┌────────────────────┐
-                                    │    goal-worker     │◄── one step
-                                    └─────────┬──────────┘
-                                              │
-                                              ▼
-                                    ┌────────────────────┐
-                                    │   goal-verifier    │◄── evidence
-                                    └────────────────────┘
-```
-
 | Stage | subagent_type |
 |-------|---------------|
 | Intake | `goal-intake` |
@@ -243,6 +199,8 @@ node .cursor/skills/goal-mode/scripts/goal-init.js "Your objective text"
 | Work step | `goal-worker` |
 | Verify | `goal-verifier` |
 
+Flow: `goal-intake` → `goal-planner` → `goal-phase-planner` (×N) → `goal-worker` (one step) → `goal-verifier` → repeat.
+
 If the host has no subagents: parent follows [references/](references/) sequentially.
 
 ---
@@ -250,23 +208,6 @@ If the host has no subagents: parent follows [references/](references/) sequenti
 ## One iteration (Level 4)
 
 `goal-worker` does **one** unchecked step from `phases/phase-{N}.md`.
-
-```
-  GOAL.md + phase-N.md
-           │
-           ▼
-  ┌─────────────────┐
-  │ 1 budget check  │
-  │ 2 drift guard   │
-  │ 3 implement ONE │
-  │ 4 verify rules  │
-  │ 5 self-eval     │
-  │ 6 update logs   │
-  └────────┬────────┘
-           │
-           ├── phase done? → current_phase++
-           └── all phases? → verifier → COMPLETE (HIGH only)
-```
 
 1. Read `GOAL.md` + active phase file + `goal.config.yml`
 2. Pre-check iteration + time budget (`goal-status.js --json`)
@@ -284,37 +225,19 @@ If the host has no subagents: parent follows [references/](references/) sequenti
 
 Parent = **orchestrator**. Worker = **single-step executor**.
 
-```
-  ╔═══════════════════════════════════════════════════════════════╗
-  ║  WHILE status ∈ {ACTIVE, CONTINUE}                            ║
-  ║    AND iteration < max_iterations                             ║
-  ║    AND NOT over_time_budget                                   ║
-  ║    AND steps_done < max_steps_per_session:                    ║
-  ║                                                               ║
-  ║      worker ──► verifier ──► update GOAL.md                   ║
-  ║      steps_done++                                             ║
-  ║      break on COMPLETE | BLOCKED | FAILED | PAUSED            ║
-  ║                                                               ║
-  ║  END                                                          ║
-  ║  session limit + CONTINUE ──► stop hook auto-continues        ║
-  ╚═══════════════════════════════════════════════════════════════╝
-```
+While status is `ACTIVE` or `CONTINUE`, and iteration < `max_iterations`, and not over time budget, and `steps_done` < `max_steps_per_session`:
+
+1. Run worker → verifier → update `GOAL.md`
+2. Increment `steps_done`
+3. Break on `COMPLETE`, `BLOCKED`, `FAILED`, or `PAUSED`
+
+If session limit hits but status is still `CONTINUE`, stop hook auto-continues.
 
 **Forbidden:** ending the turn after one step while `CONTINUE` and session budget remains.
 
 ---
 
 ## Time tracking (6h+)
-
-```
-  sessionStart                stop / terminal
-       │                            │
-       ▼                            ▼
-  ┌─────────────┐            ┌──────────────────────────┐
-  │ time-log    │───────────►│ SESSION_TIME_REPORT.md   │
-  │ .json       │  activities│ elapsed · by activity    │
-  └─────────────┘            └──────────────────────────┘
-```
 
 - Hooks record wall-clock in `goals/{id}/time-log.json`
 - Parent logs: `goal-time.js log … --activity worker|verifier|…`
@@ -325,16 +248,7 @@ Parent = **orchestrator**. Worker = **single-step executor**.
 
 ## Stopping rules
 
-```
-  DRAFT → INTAKE → PLANNING → PLANNED → ACTIVE ⇄ CONTINUE
-                                              │
-                         ┌────────────────────┼────────────────────┐
-                         ▼                    ▼                    ▼
-                    ★ COMPLETE ★           BLOCKED              FAILED
-                         │                    │                    │
-                         └────────────────────┴────────────────────┘
-                                    time report
-```
+Statuses: `DRAFT` → `INTAKE` → `PLANNING` → `PLANNED` → `ACTIVE` ⇄ `CONTINUE` → `COMPLETE` | `BLOCKED` | `FAILED` | `PAUSED`
 
 | Status | Meaning |
 |--------|---------|
@@ -358,17 +272,11 @@ active_step: "phase-2 step 3a"
 
 ## Host differences
 
-```
-  ┌────────────┐  full stack: /goal · agents · hooks · Cloud
-  │   Cursor   │
-  └────────────┘
-  ┌────────────┐  protocols + GOAL.md; optional native /goal
-  │Claude Code │
-  └────────────┘
-  ┌────────────┐  skill + scripts; bootstrap what host supports
-  │Codex / etc │
-  └────────────┘
-```
+| Host | Support |
+|------|---------|
+| **Cursor** | Full stack: `/goal`, agents, hooks, Cloud Agent |
+| **Claude Code** | Protocols + `GOAL.md`; optional native `/goal` |
+| **Codex / others** | Skill + scripts; bootstrap what the host supports |
 
 See collection [README](../../README.md) for multi-IDE install.
 
