@@ -41,7 +41,7 @@ Autonomy needs a **contract**, not only a prompt. This skill gives the agent:
    │                               │         COMPLETE + report     │
 ```
 
-**Canonical docs:** [references/](references/) · [INSTALL.md](../../docs/INSTALL.md) · [VS Claude Code](../../docs/VS-CLAUDE-CODE.md)
+**Canonical docs:** [references/](references/) · repo [README](../../README.md)
 
 ## When to use
 
@@ -183,7 +183,7 @@ active_step: "phase-2 step 3a"
 | **Claude Code** | Skill protocols + GOAL.md contract; map loop to Stop hooks / native `/goal` if available |
 | **Codex / Copilot / Windsurf / others** | Skill instructions + scripts; bootstrap what the host supports |
 
-See [docs/INSTALL.md](../../docs/INSTALL.md).
+See the collection [README](../../README.md) for multi-IDE install.
 
 ## Troubleshooting
 
