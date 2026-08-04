@@ -9,7 +9,7 @@
 ║  ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝     ╚══════╝╚══════╝╚══════╝╚══════╝ ║
 ║                                                                              ║
 ║   Persistent AI agent memory · cross-session · MEMORY.md · memory/ · wiki    ║
-║         Standalone · git-tracked · Cursor · MIT · v1.0.5                     ║
+║         Standalone · git-tracked · Cursor · MIT · v1.1.0                     ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -84,8 +84,9 @@ Collection: [AI Agent Skills](../../README.md) · protocol: [`SKILL.md`](SKILL.m
 ## Layout
 
 ```
-SKILL.md              ← agent protocol (required)
-references/           ← trust-boundary, portfolio, global-memory, templates
+SKILL.md              ← pipeline skeleton + Agent execution contract (~280 lines)
+references/           ← normative protocol (preflight, routing, conflict gate, …)
+  README.md           ← index: step → reference file
 agents/               ← portfolio-librarian (optional subagent)
 ```
 

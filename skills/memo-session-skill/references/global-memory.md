@@ -38,7 +38,7 @@ The portfolio store **does not replace** per-project memory. It holds:
 ## Writing (on memo-session)
 
 - Only facts with `scope: portfolio` or body for `scope: both`.
-- Dated journals (`changelog`, `decisions`, `open-loops`, …): **newest first** — see `SKILL.md` "Dated entries"; changelog reason includes `from:<project-slug>`.
+- Dated journals (`changelog`, `decisions`, `open-loops`, …): **newest first** — see [dated-entries.md](dated-entries.md); changelog reason includes `from:<project-slug>`.
 - Details: [portfolio-schema.md](portfolio-schema.md).
 
 ## Search

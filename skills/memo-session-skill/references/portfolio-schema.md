@@ -58,7 +58,7 @@ Details live in `memory/wiki/project-<slug>.md`; do not duplicate long tables in
 | Agent behavior in this repo | Project `AGENTS.md` |
 | Code, API, migrations | Project |
 
-Source priority — as in `SKILL.md`, plus portfolio `decisions.md` and wiki between project `MEMORY.md` and project hot-cache.
+Source priority — as in [conflict-gate.md](conflict-gate.md), plus portfolio `decisions.md` and wiki between project `MEMORY.md` and project hot-cache.
 
 ## Entry metadata (recommended)
 
@@ -81,7 +81,7 @@ Do not change project limits.
 
 Paths: `GLOBAL_MEMORY_ROOT/memory/changelog.md`, `decisions.md`, `open-loops.md`, dated sections in `hot-cache.md`, `agent-mistakes-registry.md`.
 
-**Order:** as in `SKILL.md` → **"Dated entries"** (newest first; `## Active` in open-loops pinned at top).
+**Order:** as in [dated-entries.md](dated-entries.md) (newest first; `## Active` in open-loops pinned at top).
 
 Changelog: same line format as project; in **reason** — `from:<slug>` of current workspace.
 

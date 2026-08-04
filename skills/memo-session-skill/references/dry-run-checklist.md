@@ -10,7 +10,8 @@ Verification after enabling optional portfolio memory.
 - [ ] `$ROOT/memory/changelog.md` exists
 - [ ] `$ROOT/memory/wiki/projects-registry.md` contains `local_path` and `git_remote`
 - [ ] Installed skill `references/global-memory.md` documents resolution from `AGENTS.md` only (no maintainer-specific default path)
-- [ ] `SKILL.md` contains Preflight §1.5, §1.6, scope, portfolio report §6
+- [ ] `SKILL.md` contains Agent execution contract, routing table, Steps 1–6 with links to `references/`
+- [ ] `references/preflight-protocol.md` contains §1.5, §1.6; `references/report-formats.md` contains portfolio report §6
 - [ ] No copy of `memo-session-skill/SKILL.md` inside `$ROOT`
 
 ## Search
@@ -29,4 +30,4 @@ rg -i "projects-registry" "$ROOT/memory/wiki"
 
 ## AGENTS.md
 
-In a pilot project insert [agents-md-template.md](agents-md-template.md); repeat memo-session → Preflight §1.6 ok.
+In a pilot project insert [agents-md-template.md](agents-md-template.md); repeat memo-session → preflight §1.6 ok ([preflight-protocol.md](preflight-protocol.md)).
