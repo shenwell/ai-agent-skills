@@ -1,8 +1,25 @@
-# AI Agent Skills
-
-<p align="center">
-  <img src="assets/banner.png" alt="AI Agent Skills — public Agent Skills collection for Cursor, Claude Code, and Codex" width="1024" />
-</p>
+```
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   █████╗ ██╗     █████╗  ██████╗ ███████╗███╗   ██╗████████╗  ║
+║  ██╔══██╗██║    ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝  ║
+║   ███████║██║    ███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║    ║
+║   ██╔══██║██║    ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║    ║
+║   ██║  ██║██║    ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║    ║
+║   ╚═╝  ╚═╝╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝    ║
+║          ███████╗██╗  ██╗██╗██╗     ██╗     ███████╗          ║
+║          ██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝          ║
+║          ███████╗█████╔╝ ██║██║     ██║     ███████╗          ║
+║          ╚════██║██╔═██╗ ██║██║     ██║     ╚════██║          ║
+║          ███████║██║  ██╗██║███████╗███████╗███████║          ║
+║          ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝          ║
+║                                                               ║
+║       Public Agent Skills collection for coding agents        ║
+║    Cursor • Claude Code • Codex • Windsurf • and more ...     ║
+║   goal-mode • npx skills add shenwell/ai-agent-skills • MIT   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)

@@ -1,8 +1,19 @@
-# goal-mode
-
-<p align="center">
-  <img src="assets/banner.png" alt="goal-mode Agent Skill — keep Cursor and Claude Code agents working until tests and CI are green" width="1024" />
-</p>
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║   ██████╗  ██████╗  █████╗ ██╗         ███╗   ███╗ ██████╗ ██████╗ ███████╗  ║
+║  ██╔════╝ ██╔═══██╗██╔══██╗██║         ████╗ ████║██╔═══██╗██╔══██╗██╔════╝  ║
+║   ██║  ███╗██║   ██║███████║██║         ██╔████╔██║██║   ██║██║  ██║█████╗   ║
+║   ██║   ██║██║   ██║██╔══██║██║         ██║╚██╔╝██║██║   ██║██║  ██║██╔══╝   ║
+║  ╚██████╔╝╚██████╔╝██║  ██║███████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝███████╗  ║
+║   ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝  ║
+║                                                                              ║
+║      Keep agents working until tests, lint, typecheck, or CI are green       ║
+║         Claude Code /goal alternative • Cursor • Codex • Cloud Agent         ║
+║                          v1.2.0 • August 2026 • MIT                          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
