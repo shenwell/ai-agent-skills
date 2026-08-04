@@ -1,15 +1,17 @@
-# shenwell/skills
+# AI Agent Skills
 
 <p align="center">
-  <img src="assets/banner.png" alt="SKILLS" width="1024" />
+  <img src="assets/banner.png" alt="AI Agent Skills" width="1024" />
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
-[![skills.sh](https://skills.sh/b/shenwell/skills)](https://skills.sh/shenwell/skills)
+[![skills.sh](https://skills.sh/b/shenwell/ai-agent-skills)](https://skills.sh/shenwell/ai-agent-skills)
+
+Public collection of [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.
 
 ```
-shenwell/skills
+shenwell/ai-agent-skills
 └── skills/
     ├── goal-mode/          ← Claude Code /goal equivalent (open)
     └── <next-skill>/
@@ -20,10 +22,10 @@ shenwell/skills
 ## Install
 
 ```bash
-npx skills add shenwell/skills --list
-npx skills add shenwell/skills --skill goal-mode -g
+npx skills add shenwell/ai-agent-skills --list
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g
 # or all skills in this repo:
-npx skills add shenwell/skills --all -g
+npx skills add shenwell/ai-agent-skills --all -g
 ```
 
 ### After install — bootstrap the project (goal-mode)
@@ -109,7 +111,7 @@ skills/my-skill/SKILL.md   # name + description frontmatter (required)
 1. Create the folder + `SKILL.md`
 2. `npx skills add . --list`
 3. Document it above
-4. Push → `npx skills add shenwell/skills --skill my-skill`
+4. Push → `npx skills add shenwell/ai-agent-skills --skill my-skill`
 
 ---
 

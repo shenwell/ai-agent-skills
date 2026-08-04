@@ -9,7 +9,7 @@ Open **Goal Mode** for AI coding agents — durable-contract equivalent of [Clau
 ## Install
 
 ```bash
-npx skills add shenwell/skills --skill goal-mode -g
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g
 node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
 ```
 
