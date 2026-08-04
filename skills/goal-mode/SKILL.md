@@ -20,6 +20,28 @@ metadata:
 
 # Goal Mode
 
+**Keep the agent working until the finish line is actually green** — tests, lint, typecheck, or CI — instead of one attempt and a false “done.”
+
+Goal Mode is an open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for **Cursor**, Claude Code, Codex, and other hosts. You give one objective; the skill runs bootstrap → plan → work ⇄ verify until `COMPLETE`, or stops honestly as `BLOCKED` / `FAILED`.
+
+**Who it’s for:** engineers who want unattended or multi-hour runs (including Cursor Cloud Agent) with a durable contract, not endless “try again” chat.
+
+**What you get**
+
+- A durable `GOAL.md` contract (criteria, evidence, time budget)
+- Phased plan, then a worker ⇄ verifier loop that refuses “done” without proof
+- Auto-resume on stop + time report at the end
+
+**Start**
+
+```
+/goal Fix all ESLint errors in src; tests and build must pass
+```
+
+Install once (global or this repo only — see [Install](#install) below), then run `/goal` in the project. First run scaffolds config and hooks automatically.
+
+---
+
 <p align="center">
   <img src="assets/banner.png" alt="GOAL MODE" width="1024" />
 </p>
@@ -30,12 +52,6 @@ metadata:
 ║   contract → plan → work ⇄ verify → done ║
 ╚══════════════════════════════════════════╝
 ```
-
-Agents often stop after one try or claim “done” without proof.  
-Goal Mode keeps them on a **verifiable finish line** until green — or honestly `BLOCKED` / `FAILED`.
-
-Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal).  
-Autonomy needs a **contract**, not only a prompt.
 
 ```
   WITHOUT GOAL MODE                      WITH GOAL MODE
