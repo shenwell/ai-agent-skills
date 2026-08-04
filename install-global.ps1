@@ -80,6 +80,6 @@ Write-Host '  2. First run bootstraps hooks + config into the project'
 Write-Host '  3. Manual: node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js'
 Write-Host ""
 Write-Host "Public install via skills.sh:"
-Write-Host '  npx skills add shenwell/goal-mode --skill goal-mode -g'
+Write-Host '  npx skills add shenwell/skills --skill goal-mode -g'
 Write-Host ""
 Write-Host "Reinstall: .\install-global.ps1 -Force"

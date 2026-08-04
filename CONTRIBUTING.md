@@ -1,28 +1,45 @@
 # Contributing
 
-Thanks for improving Goal Mode.
+This repository is a **public skills collection**: https://github.com/shenwell/skills
 
 ## Layout
 
-- **Public skill package:** `skills/goal-mode/` (what [skills.sh](https://skills.sh) / `npx skills add` installs)
-- **Cursor working copy:** `.cursor/skills/goal-mode/` (keep in sync with the public package)
-- **Docs:** `docs/INSTALL.md`, `docs/VS-CLAUDE-CODE.md`
+```
+skills/<skill-name>/SKILL.md   ← what npx skills / skills.sh installs
+.cursor/skills/<skill-name>/   ← Cursor maintainer copy (keep in sync)
+docs/                          ← install + comparison docs
+```
 
-After editing the skill, sync both trees (or edit `skills/goal-mode` and copy to `.cursor`).
+## Add a new skill
+
+1. Create `skills/my-skill/SKILL.md` with `name` + `description` frontmatter (`name` must match the folder).
+2. Add optional `scripts/`, `references/`, `agents/`.
+3. Verify discovery:
+
+   ```bash
+   npx skills add . --list
+   ```
+
+4. List it under **Available skills** in `README.md`.
+5. Open a PR or push to `main`.
+
+## Edit `goal-mode`
+
+Prefer editing `skills/goal-mode/`, then sync:
 
 ```powershell
 Copy-Item -Path .\skills\goal-mode\* -Destination .\.cursor\skills\goal-mode\ -Recurse -Force
 .\install-global.ps1 -Force
 ```
 
-## Principles
+### Principles (goal-mode)
 
-1. **Contract over vibes** — stopping rules live in `GOAL.md` + verify commands.
-2. **Worker ≠ verifier** — never let the implementer alone declare COMPLETE.
-3. **English for public surfaces** — README, SKILL.md, INSTALL, comparison docs.
-4. **Scripts stay deterministic** — no network calls in hooks without clear need.
+1. **Contract over vibes** — stop conditions live in `GOAL.md` + verify commands.
+2. **Worker ≠ verifier** — implementer alone must not declare COMPLETE.
+3. **English for public surfaces** — README, SKILL.md, INSTALL docs.
+4. **Scripts stay deterministic** — no surprise network in hooks.
 
-## Test locally
+### Test
 
 ```bash
 npx skills add . --list

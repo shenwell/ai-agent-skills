@@ -1,39 +1,98 @@
-# Goal Mode
+# shenwell/skills
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
 ║                                                                  ║
-║   ██████╗  ██████╗  █████╗ ██╗         ███╗   ███╗ ██████╗       ║
-║  ██╔════╝ ██╔═══██╗██╔══██╗██║         ████╗ ████║██╔═══██╗      ║
-║  ██║  ███╗██║   ██║███████║██║         ██╔████╔██║██║   ██║      ║
-║  ██║   ██║██║   ██║██╔══██║██║         ██║╚██╔╝██║██║   ██║      ║
-║  ╚██████╔╝╚██████╔╝██║  ██║███████╗    ██║ ╚═╝ ██║╚██████╔╝      ║
-║   ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝       ║
+║   ███████╗██╗  ██╗██╗██╗     ██╗     ███████╗                    ║
+║   ██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝                    ║
+║   ███████╗█████╔╝ ██║██║     ██║     ███████╗                    ║
+║   ╚════██║██╔═██╗ ██║██║     ██║     ╚════██║                    ║
+║   ███████║██║  ██╗██║███████╗███████╗███████║                    ║
+║   ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝                    ║
 ║                                                                  ║
-║     Open Goal Mode for AI coding agents                          ║
-║     The durable-contract equivalent of Claude Code /goal         ║
+║          Public Agent Skills collection                          ║
+║          Install with:  npx skills add shenwell/skills           ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
-[![skills.sh](https://skills.sh/b/shenwell/goal-mode)](https://skills.sh/shenwell/goal-mode)
+[![skills.sh](https://skills.sh/b/shenwell/skills)](https://skills.sh/shenwell/skills)
 
-You give the agent an **objective**. Goal Mode turns it into a **contract**, a **plan**, an **evidence loop**, and a **stop condition** — then keeps working until the goal is actually done.
+Open [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and other compatible agents.  
+Browse on [skills.sh](https://skills.sh/shenwell/skills).
 
-Inspired by [Claude Code `/goal`](https://code.claude.com/docs/en/goal). Built to run on **Cursor** first, usable from **any Agent Skills–compatible IDE**.
+```
+shenwell/skills
+└── skills/
+    ├── goal-mode/          ← Claude Code /goal equivalent (open)
+    └── <your-next-skill>/  ← add more packages here
+```
 
 ---
 
-## Why this exists
+## Install
 
-Claude Code `/goal` changed the game: the model that **works** is not the same mechanism that decides **done**.
+```bash
+# List skills in this repo
+npx skills add shenwell/skills --list
 
-Goal Mode brings that idea to the open Agent Skills ecosystem:
+# Install one skill (global)
+npx skills add shenwell/skills --skill goal-mode -g
 
-| Idea | Claude Code `/goal` | This repo |
-|------|---------------------|-----------|
+# Install everything from this collection
+npx skills add shenwell/skills --all -g
+```
+
+Multi-IDE details → **[docs/INSTALL.md](docs/INSTALL.md)**
+
+---
+
+## Available skills
+
+### `goal-mode`
+
+**Open Goal Mode** — durable-contract equivalent of [Claude Code `/goal`](https://code.claude.com/docs/en/goal).
+
+You give an objective. The skill builds a `GOAL.md` contract, hierarchical plan, worker⇄verifier loop, time budget, and auto-resume until `COMPLETE` / `BLOCKED` / `FAILED`.
+
+```bash
+npx skills add shenwell/skills --skill goal-mode -g
+node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
+```
+
+Then in chat:
+
+```
+/goal Fix all ESLint errors in src; tests and build must pass
+```
+
+| | |
+|-|-|
+| Package | [`skills/goal-mode/`](skills/goal-mode/) |
+| vs Claude Code | [docs/VS-CLAUDE-CODE.md](docs/VS-CLAUDE-CODE.md) |
+| Publish notes | [docs/PUBLISH.md](docs/PUBLISH.md) |
+
+```
+  YOU                          GOAL MODE                         DONE
+   │                               │                               │
+   │  /goal Fix lint errors        │                               │
+   ├──────────────────────────────►│  intake → plan → execute      │
+   │                               │  worker ⇄ verifier            │
+   │                               ├──────────────────────────────►│
+   │                               │         COMPLETE + report     │
+```
+
+---
+
+## Goal Mode — why it exists
+
+Claude Code `/goal` separates **doing work** from **deciding done**.  
+`goal-mode` brings that to the open skills ecosystem with a **git-durable** contract:
+
+| Idea | Claude Code `/goal` | `goal-mode` |
+|------|---------------------|-------------|
 | Keep going across turns | Native Stop-hook evaluator | Session loop + stop hooks + automation |
 | Verifiable finish line | Condition string | `GOAL.md` criteria + verify commands |
 | Durable state | Session-scoped | Git-tracked `goals/{id}/` |
@@ -60,184 +119,87 @@ Goal Mode brings that idea to the open Agent Skills ecosystem:
                                          COMPLETE (proven)
 ```
 
----
-
-## Install (30 seconds)
-
-### Via skills.sh / skills CLI (recommended)
-
-```bash
-npx skills add shenwell/goal-mode --skill goal-mode -g
-```
-
-Then bootstrap the **current project** (hooks, config, templates):
-
-```bash
-# macOS / Linux (path may be ~/.agents/skills or ~/.cursor/skills)
-node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
-
-# Windows PowerShell
-node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js
-```
-
-### Cursor one-liner (this machine / clone)
-
-```powershell
-.\install-global.ps1
-```
-
-Full multi-IDE instructions → **[docs/INSTALL.md](docs/INSTALL.md)**  
-Claude Code comparison → **[docs/VS-CLAUDE-CODE.md](docs/VS-CLAUDE-CODE.md)**
-
----
-
-## Quick start
-
-In Cursor chat:
-
-```
-/goal Fix all ESLint errors in src/components; npm test and npm run build must pass
-```
-
-Or ask the agent:
-
-```
-Use goal-mode: eliminate TypeScript errors in packages/api until tsc exits 0
-```
-
-Pipeline (automatic):
-
-```
-     ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
-     │ BOOTSTRAP│──►│  INTAKE  │──►│  MASTER  │──►│  PHASES  │──►│ EXECUTE  │
-     │ project  │   │ criteria │   │  table   │   │ expanded │   │ loop     │
-     └──────────┘   └──────────┘   └──────────┘   └──────────┘   └────┬─────┘
-                                                                      │
-                         ┌────────────────────────────────────────────┘
-                         ▼
-              ┌────────────────────┐
-              │  COMPLETE / BLOCKED│
-              │  + time report     │
-              └────────────────────┘
-```
-
----
-
-## Architecture (ink)
+### Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         GOAL MODE PIPELINE                              │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  CONTRACT          goals/{id}/GOAL.md  +  goal.config.yml               │
-│                    criteria · evidence · budget · lifecycle             │
-├─────────────────────────────────────────────────────────────────────────┤
 │  COMMAND           /goal <text>                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│  SKILL             goal-mode  — when to stop, how to iterate            │
-├─────────────────────────────────────────────────────────────────────────┤
+│  SKILL             goal-mode — when to stop, how to iterate             │
 │  AGENTS            intake → planner → phase-planner → worker → verifier │
-├─────────────────────────────────────────────────────────────────────────┤
-│  HOOKS             sessionStart (context)  +  stop (auto-continue)      │
-├─────────────────────────────────────────────────────────────────────────┤
+│  HOOKS             sessionStart + stop (auto-continue)                  │
 │  SCRIPTS           init · status · verify · time · bootstrap            │
-├─────────────────────────────────────────────────────────────────────────┤
-│  LONG RUN          Cloud Agent · automation re-trigger · max_hours      │
+│  LONG RUN          Cloud Agent · automation · max_hours                 │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Lifecycle
-
-```
- DRAFT ──► INTAKE ──► PLANNING ──► PLANNED ──► ACTIVE ──► CONTINUE ──┐
-                                                         │           │
-                                                         └───────────┘
-                                                               │
-                    ┌──────────────┬──────────────┬────────────┤
-                    ▼              ▼              ▼            │
-               COMPLETE        BLOCKED         FAILED          │
-                    │              │              │            │
-                    └──────────────┴──────────────┴────────────┘
-                              SESSION_TIME_REPORT.md
-```
-
----
-
-## What good goals look like
-
-| Good | Poor |
-|------|------|
-| `npm run lint` exits 0 on `src/` | “Clean up the frontend” |
-| All tests green + build succeeds | “Ship the feature” (no criteria) |
-| Migrate module X; typecheck passes | Architectural choice with no verify |
-
----
-
-## Configure verify commands
-
-Edit `.cursor/goal.config.yml` after bootstrap:
+### Configure (after bootstrap)
 
 ```yaml
+# .cursor/goal.config.yml
 verify:
   test:  { command: "npm test", required: true }
   lint:  { command: "npm run lint", required: true }
-  build: { command: "npm run build", required: false }
-
 budget:
   max_iterations: 50
   max_hours: 8
-
 execution:
   mode: run_until_complete
-  max_steps_per_session: 10
-
-time_tracking:
-  enabled: true
-  report_on_terminal: true
 ```
 
----
-
-## Time report
-
-After a run finishes (or budget hits):
+### Time report
 
 ```bash
 node .cursor/skills/goal-mode/scripts/goal-time.js report goals/<id>
 ```
 
-→ `goals/<id>/SESSION_TIME_REPORT.md` — wall-clock time and activity breakdown.
+→ `goals/<id>/SESSION_TIME_REPORT.md`
+
+---
+
+## Adding another public skill
+
+```
+skills/
+└── my-skill/
+    ├── SKILL.md          # required (name + description frontmatter)
+    ├── scripts/          # optional
+    ├── references/       # optional
+    └── agents/           # optional
+```
+
+1. Create `skills/<name>/SKILL.md`
+2. `npx skills add . --list` — confirm discovery
+3. Document it in this README under **Available skills**
+4. Push — install with `npx skills add shenwell/skills --skill <name>`
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## Repository layout
 
 ```
-goal-mode/
-├── skills/goal-mode/          # ← skills.sh / npx skills add entry
-│   ├── SKILL.md
-│   ├── scripts/
-│   ├── references/
-│   ├── agents/                # Cursor subagents (bundled)
-│   ├── commands/goal.md
-│   ├── templates/
-│   └── project-scaffold/      # hooks + config for bootstrap
+skills/                      # ← this GitHub repo
+├── README.md
+├── LICENSE
 ├── docs/
-│   ├── INSTALL.md
-│   └── VS-CLAUDE-CODE.md
-├── .cursor/                   # Cursor-native copy for this repo
+├── skills/
+│   └── goal-mode/           # public skill packages (skills.sh entry)
+├── .cursor/                 # Cursor-native copy for maintainers
 ├── templates/
-├── goals/                     # active goals live here in consumer projects
+├── goals/                   # example goals
 ├── install-global.ps1
-├── install.ps1
-└── LICENSE
+└── install.ps1
 ```
 
 ---
 
-## Security note
+## Security
 
-This skill includes **scripts** that run shell commands (verify, status, hooks). Review them before installing in sensitive environments. Prefer pinning a git commit when installing.
+Skills may include **scripts** that run shell commands. Review them before installing. Pin a git commit for production use.
 
 ---
 
@@ -245,4 +207,4 @@ This skill includes **scripts** that run shell commands (verify, status, hooks).
 
 MIT — see [LICENSE](LICENSE).
 
-Not affiliated with Anthropic or Claude Code. “Goal Mode” here means an open, contract-based autonomous loop inspired by the `/goal` workflow.
+Not affiliated with Anthropic or Claude Code.
