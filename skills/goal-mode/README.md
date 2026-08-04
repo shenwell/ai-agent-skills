@@ -18,8 +18,10 @@ Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) 
 ### Install
 
 ```bash
-npx skills add shenwell/ai-agent-skills --skill goal-mode -g
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 ```
+
+Other agents: `-a claude-code`, `-a codex`, … (repeat `-a`). `-y` skips the agent picker.
 
 ### First run
 

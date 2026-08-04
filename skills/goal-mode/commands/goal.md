@@ -5,10 +5,10 @@
 ## For users (after install)
 
 ```bash
-npx skills add shenwell/ai-agent-skills --skill goal-mode -g
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 ```
 
-Then in any project:
+Other agents: `-a claude-code`, `-a codex`, … Then in any project:
 
 ```
 /goal <objective text>

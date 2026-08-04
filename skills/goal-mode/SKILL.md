@@ -72,8 +72,10 @@ This skill gives the agent:
 ## Install
 
 ```bash
-npx skills add shenwell/ai-agent-skills --skill goal-mode -g
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 ```
+
+Other hosts: add `-a claude-code`, `-a codex`, etc. `-y` skips the interactive agent list.
 
 ## First run
 
