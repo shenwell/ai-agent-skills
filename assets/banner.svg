@@ -1,22 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="840" height="180" viewBox="0 0 840 180" role="img" aria-labelledby="title">
-  <title id="title">shenwell/skills</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="185" viewBox="0 0 1024 185">
   <defs>
-    <linearGradient id="ink" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="ink" x1="0%" y1="50%" x2="100%" y2="50%">
       <stop offset="0%" stop-color="#22c55e"/>
-      <stop offset="45%" stop-color="#14b8a6"/>
+      <stop offset="50%" stop-color="#14b8a6"/>
       <stop offset="100%" stop-color="#3b82f6"/>
     </linearGradient>
-    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.12"/>
-    </linearGradient>
   </defs>
-  <rect width="840" height="180" rx="16" fill="#0b1220"/>
-  <rect x="1" y="1" width="838" height="178" rx="15" fill="url(#glow)" stroke="url(#ink)" stroke-width="1.5"/>
-  <text x="420" y="88" text-anchor="middle"
-    font-family="ui-sans-serif, system-ui, Segoe UI, Helvetica, Arial, sans-serif"
-    font-size="64" font-weight="800" letter-spacing="8" fill="url(#ink)">SKILLS</text>
-  <text x="420" y="128" text-anchor="middle"
-    font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
-    font-size="15" fill="#94a3b8">Public Agent Skills  ·  npx skills add shenwell/skills</text>
+  <rect width="1024" height="185" fill="#000000"/>
+  <text x="512" y="95" text-anchor="middle"
+    font-family="Segoe UI, Helvetica, Arial, sans-serif"
+    font-size="64" font-weight="800" letter-spacing="6" fill="url(#ink)">SKILLS</text>
+  <text x="512" y="138" text-anchor="middle"
+    font-family="Consolas, Menlo, monospace"
+    font-size="14" fill="#a3a3a3">Public Agent Skills · npx skills add shenwell/skills</text>
 </svg>

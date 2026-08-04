@@ -1,7 +1,7 @@
 # goal-mode
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/shenwell/skills/main/skills/goal-mode/assets/banner.png" alt="GOAL MODE" width="840" />
+  <img src="https://raw.githubusercontent.com/shenwell/skills/main/skills/goal-mode/assets/banner.png" alt="GOAL MODE" width="1024" />
 </p>
 
 Open **Goal Mode** for AI coding agents — durable-contract equivalent of [Claude Code `/goal`](https://code.claude.com/docs/en/goal).
