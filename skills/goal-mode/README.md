@@ -8,9 +8,9 @@
 ║  ╚██████╔╝╚██████╔╝██║  ██║███████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝███████╗  ║
 ║  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
 ║                                                                              ║
-║      Keep agents working until tests, lint, typecheck, or CI are green       ║
-║         Claude Code /goal alternative · Cursor · Codex · Cloud Agent         ║
-║                          v1.2.0 · August 2026 · MIT                          ║
+║   Autonomous coding agent — verify until done · verifiable finish line         ║
+║      Claude Code /goal alternative · Cursor · Codex · Cloud Agent            ║
+║                          v1.3.0 · August 2026 · MIT                          ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -19,9 +19,9 @@
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
 [![skills.sh](https://img.shields.io/badge/skills.sh-npx%20skills%20add-black)](https://skills.sh/shenwell/ai-agent-skills/goal-mode)
 
-**goal-mode** is an [Agent Skill](https://agentskills.io/) that keeps coding agents working until a **verifiable** finish line — tests green, lint clean, typecheck clean, or CI passing — instead of stopping after one attempt or claiming “done” without proof.
+**goal-mode** is an [Agent Skill](https://agentskills.io/) — an **autonomous coding agent** that **verifies until done**: a **verifiable finish line** (tests green, lint clean, typecheck clean, CI passing) instead of stopping after one attempt or claiming “done” without proof.
 
-Durable `GOAL.md` contract · phased plans · worker ⇄ verifier · time budget · auto-resume.  
+Durable **GOAL.md contract** · phased plans · **worker ⇄ verifier proof loop** · time budget · auto-resume.  
 Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for **Cursor**, Claude Code, Codex, and other hosts.
 
 ## Quickstart
@@ -65,15 +65,47 @@ node ~/.agents/skills/goal-mode/scripts/goal-bootstrap.js
 
 </details>
 
+## The problem
+
+| Symptom | What you see |
+|---------|----------------|
+| Agent stops after one attempt | You type “continue” again |
+| Agent claims done without tests | Tests are still red |
+| One attempt, then silence | Broken build, lost context |
+
+Goal Mode fixes this with a **goal-driven coding agent** loop: contract → plan → work ⇄ verify → done.
+
+## Goal Mode vs Cursor Agent Mode
+
+| | Cursor Agent Mode | Goal Mode |
+|---|-------------------|-----------|
+| Finish line | User keeps prompting | GOAL.md acceptance criteria |
+| Verification | Agent self-reports | Separate verifier + evidence commands |
+| Long runs | May stop early | `run_until_complete` + hook resume |
+| Best for | Exploratory edits | CI until green, migrations, fix-until-pass |
+
 ## When to use
 
-- “Keep going until tests pass” / “don’t stop until green”
-- Fix all lint or type errors; make CI green
-- Unattended / overnight / Cloud Agent multi-hour runs
+- “Keep going until tests pass” / “don’t stop until green” / “verify until done”
+- Fix all lint or type errors; make CI green; **autonomous CI repair**
+- Unattended / **overnight coding agent** / Cloud Agent multi-hour runs
+- Refactor or migrate until all tests pass
 - Resume a goal across sessions
 
-**Prefer over** one-shot chat for long refactors and migrations.  
+**Prefer over** one-shot chat or Cursor Agent Mode for long refactors and migrations.  
 **Do not use** for one-shot Q&A or vague “make it better” without a measurable finish line.
+
+## FAQ
+
+**What is goal mode?** An autonomous agent pattern that loops until acceptance criteria pass — with a separate verifier.
+
+**Alternative to Claude Code `/goal` for Cursor?** Install this skill, run `/goal <objective>`.
+
+**How to make an agent not stop until tests pass?** `/goal` with explicit criteria; verifier re-runs tests each iteration.
+
+**Worker-verifier loop?** Worker does one plan step; verifier runs evidence commands in a fresh pass.
+
+Full FAQ in [`SKILL.md`](SKILL.md).
 
 ## Layout
 
