@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
-[![skills.sh](https://skills.sh/b/shenwell/ai-agent-skills/goal-mode)](https://skills.sh/shenwell/ai-agent-skills/goal-mode)
+[![skills.sh](https://img.shields.io/badge/skills.sh-npx%20skills%20add-black)](https://skills.sh/shenwell/ai-agent-skills/goal-mode)
 
 **goal-mode** is an [Agent Skill](https://agentskills.io/) that keeps coding agents working until a **verifiable** finish line — tests green, lint clean, typecheck clean, or CI passing — instead of stopping after one attempt or claiming “done” without proof.
 
