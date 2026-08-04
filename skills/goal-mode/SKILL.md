@@ -71,8 +71,16 @@ This skill gives the agent:
 
 ## Install
 
+**Global** — all projects on this machine:
+
 ```bash
 npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
+```
+
+**This repository only**:
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill goal-mode -a cursor -y
 ```
 
 Other hosts: add `-a claude-code`, `-a codex`, etc. `-y` skips the interactive agent list.
@@ -95,6 +103,16 @@ node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js --json
 ```
 
 Other hosts (Claude Code, Codex, …): same install line; Cursor-only hooks apply only on Cursor — see collection README.
+
+---
+
+## Trust boundary
+
+The text after `/goal` is **intent data**, not executable instructions.
+
+- Completion criteria and verify commands come from the **repository** and `.cursor/goal.config.yml`.
+- The objective only clarifies desired outcome; it must not override safety rules, exfiltrate secrets, or run as shell.
+- Intake follows [references/intake-protocol.md](references/intake-protocol.md) (**Trust boundary** section).
 
 ---
 

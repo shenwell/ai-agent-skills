@@ -24,15 +24,24 @@ shenwell/ai-agent-skills
 
 ## Quickstart
 
-### 1. Install (one line)
+### 1. Install
+
+**Global** — available in all projects on this machine:
 
 ```bash
 npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 ```
 
+**This repository only** — install into the current project (share with the team via git):
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill goal-mode -a cursor -y
+```
+
 `-a cursor` installs for Cursor; `-y` skips the interactive agent picker.  
 Other agents: add more `-a` flags, e.g. `-a cursor -a claude-code -a codex`.  
 List skills: `npx skills add shenwell/ai-agent-skills --list`
+
 
 ### 2. First run (in any project)
 
