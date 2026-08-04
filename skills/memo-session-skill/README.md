@@ -9,7 +9,7 @@
 ║  ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝     ╚══════╝╚══════╝╚══════╝╚══════╝ ║
 ║                                                                              ║
 ║   Persistent AI agent memory · cross-session · MEMORY.md · memory/ · wiki    ║
-║         Standalone · git-tracked · Cursor · MIT · v1.0.4                     ║
+║         Standalone · git-tracked · Cursor · MIT · v1.0.5                     ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -79,15 +79,7 @@ Collection: [AI Agent Skills](../../README.md) · protocol: [`SKILL.md`](SKILL.m
 5. **Conflict gate** — clean / soft / hard before writes
 6. **Handoff** — report for the next session
 
-## Security (skills.sh audits)
-
-| Auditor | Typical result |
-|---------|----------------|
-| Gen Agent Trust Hub | Pass (SAFE) |
-| Snyk | Pass |
-| Socket | May show LOW **Warn** on skills that write local files — review [Socket detail](https://skills.sh/shenwell/ai-agent-skills/memo-session-skill/security/socket) |
-
-This skill is **standalone** — it does not install other skills during execution. Optional [goal-mode integration](references/goal-mode-integration.md) is documented separately.
+**Standalone** — does not install other skills during execution. Optional [goal-mode integration](references/goal-mode-integration.md) is documented separately.
 
 ## Layout
 

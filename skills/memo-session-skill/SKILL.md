@@ -15,7 +15,7 @@ description: >-
   Do not use for one-line trivia, secrets, managed vector memory setup, or replacing
   git history.
 metadata:
-  version: "1.0.4"
+  version: "1.0.5"
   author: productlaba
   category: knowledge-management
   tags: ai-agent-memory, persistent-memory, cross-session, memory-routing,
