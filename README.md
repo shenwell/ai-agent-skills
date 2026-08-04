@@ -26,7 +26,7 @@
 [![skills.sh](https://img.shields.io/badge/skills.sh-npx%20skills%20add-black)](https://skills.sh/shenwell/ai-agent-skills)
 
 **Public [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.**  
-- **`goal-mode`** — keep coding agents working until tests, lint, typecheck, or CI are green (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal)).  
+- **`goal-mode`** — autonomous coding agent, **verify until done**: verifiable finish line, worker⇄verifier proof loop (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for Cursor).  
 - **`memo-session-skill`** — turn session knowledge into durable `memory/`, wiki, and handoffs; pairs with goal-mode checkpoints.
 
 Stops the common failure mode: the agent tries once, claims “done,” and leaves a red build.
@@ -112,9 +112,9 @@ node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js
 
 ## Available skills
 
-### `goal-mode` — Claude Code `/goal` alternative
+### `goal-mode` — autonomous coding agent, verify until done
 
-Keep the agent working until a **verifiable** finish line — tests green, lint clean, build passing, migration done — with a durable contract, verifier, and auto-resume.
+Keep the agent working until a **verifiable finish line** — tests green, lint clean, build passing, migration done — with a **GOAL.md contract**, **worker⇄verifier proof loop**, and auto-resume. Open alternative to Claude Code `/goal` for Cursor and other hosts.
 
 Package: [`skills/goal-mode/`](skills/goal-mode/) · skill README: [`skills/goal-mode/README.md`](skills/goal-mode/README.md)
 
@@ -173,7 +173,7 @@ Package: [`skills/memo-session-skill/`](skills/memo-session-skill/) · skill REA
 ```
   SESSION                    MEMO SESSION                      NEXT TURN
      │                            │                                │
-     │  подведи итоги             │  preflight → classify → route  │
+     │  wrap up the session       │  preflight → classify → route  │
      ├───────────────────────────►│  HOT / WARM / wiki / portfolio │
      │                            ├───────────────────────────────►│
      │                            │         handoff + changelog    │
@@ -181,7 +181,7 @@ Package: [`skills/memo-session-skill/`](skills/memo-session-skill/) · skill REA
 
 | Trigger | What gets saved |
 |---------|-----------------|
-| «подведём итоги», «сохрани знания», handoff | Full pipeline |
+| "wrap up the session", "save what we learned", handoff | Full pipeline |
 | goal-mode phase complete / BLOCKED / COMPLETE | `full` checkpoint (auto) |
 | Session step limit in goal-mode | `light` hot-cache update |
 
