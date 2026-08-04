@@ -13,9 +13,11 @@ Public collection of [Agent Skills](https://agentskills.io/) for Cursor, Claude 
 ```
 shenwell/ai-agent-skills
 └── skills/
-    ├── goal-mode/          ← Claude Code /goal equivalent (open)
+    ├── goal-mode/          ← keep going until tests/lint/build are green
     └── <next-skill>/
 ```
+
+**Pain this collection solves first:** agents that stop halfway or claim “done” without proof.
 
 ---
 
@@ -58,7 +60,7 @@ Then:
 
 ### `goal-mode`
 
-Open Goal Mode — durable-contract equivalent of [Claude Code `/goal`](https://code.claude.com/docs/en/goal).
+Keep the agent working until a **verifiable** finish line — tests green, lint clean, build passing, migration done — with a durable contract, verifier, and auto-resume. Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal).
 
 Package: [`skills/goal-mode/`](skills/goal-mode/)
 

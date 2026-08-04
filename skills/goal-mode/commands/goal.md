@@ -1,6 +1,6 @@
 # goal
 
-**Single entry point for Goal Mode** — open equivalent of Claude Code `/goal`.
+**Single entry point for Goal Mode** — keep working until the goal is verifiably done (not after one attempt). Open alternative to Claude Code `/goal`.
 
 Works from the **global** skill (`~/.cursor/skills/goal-mode` or via `npx skills add`) in any project.
 

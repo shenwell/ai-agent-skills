@@ -1,20 +1,21 @@
 ---
 name: goal-mode
 description: >-
-  Autonomous Goal Mode for AI coding agents — the open equivalent of Claude Code
-  /goal. Turns a plain-language objective into a durable contract (GOAL.md),
-  hierarchical plan, evidence-based work loop, independent verifier, time budget,
-  and auto-resume until COMPLETE, BLOCKED, or FAILED. Use when the user says
-  /goal, "goal mode", "run until done", "autonomous agent", "keep going until
-  tests pass", Claude Code /goal alternative, long-running refactor/migration/
-  lint fix, Cloud Agent unattended work, or asks to plan then execute with
-  verifiable stop conditions.
-disable-model-invocation: true
+  Keep coding agents working until tests, lint, typecheck, or CI are green —
+  instead of stopping after one try or claiming "done" without proof. Durable
+  GOAL.md contract, phased plan, worker/verifier loop, time budget, auto-resume
+  (Cursor Cloud Agent). Open alternative to Claude Code /goal. Use when the user
+  says /goal, "goal mode", "keep going until tests pass", "don't stop until
+  green", "fix CI", "fix all lint errors", "green build", "unattended
+  refactor", "overnight agent", "resume the goal", or wants multi-hour autonomous
+  execution with verification before completion. Prefer over one-shot chat for
+  long refactors/migrations. Do not use for one-shot Q&A or vague "make it better"
+  without a measurable finish line.
 metadata:
-  version: "1.0.0"
+  version: "1.2.0"
   author: productlaba
   category: autonomous-execution
-  tags: goal, autonomous, claude-code, cursor, verifier, planning
+  tags: goal, autonomous, claude-code, cursor, verifier, planning, cloud-agent, ci
 ---
 
 # Goal Mode
@@ -30,7 +31,10 @@ metadata:
 ╚══════════════════════════════════════════╝
 ```
 
-Inspired by [Claude Code `/goal`](https://code.claude.com/docs/en/goal).  
+Agents often stop after one try or claim “done” without proof.  
+Goal Mode keeps them on a **verifiable finish line** until green — or honestly `BLOCKED` / `FAILED`.
+
+Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal).  
 Autonomy needs a **contract**, not only a prompt.
 
 ```
@@ -62,6 +66,21 @@ This skill gives the agent:
 5. Project bootstrap after `npx skills add`
 
 **Canonical docs:** [references/](references/) · [README](README.md) · collection [README](../../README.md)
+
+---
+
+## Install
+
+```bash
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g
+node ~/.cursor/skills/goal-mode/scripts/goal-bootstrap.js
+# Windows:
+node $env:USERPROFILE\.cursor\skills\goal-mode\scripts\goal-bootstrap.js
+```
+
+Then run `/goal <objective>` (example: `/goal Fix all ESLint errors; tests must pass`).
+
+Other hosts (Claude Code, Codex, …): same `npx skills add`; bootstrap path may be `~/.agents/skills/…` or `~/.claude/skills/…` — see collection README.
 
 ---
 
