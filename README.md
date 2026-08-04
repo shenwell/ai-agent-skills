@@ -1,14 +1,17 @@
 # AI Agent Skills
 
 <p align="center">
-  <img src="assets/banner.png" alt="AI Agent Skills" width="1024" />
+  <img src="assets/banner.png" alt="AI Agent Skills — public Agent Skills collection for Cursor, Claude Code, and Codex" width="1024" />
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
 [![skills.sh](https://skills.sh/b/shenwell/ai-agent-skills)](https://skills.sh/shenwell/ai-agent-skills)
 
-Public collection of [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.
+**Public [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.**  
+First skill: **`goal-mode`** — keep coding agents working until tests, lint, typecheck, or CI are green (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal)).
+
+Stops the common failure mode: the agent tries once, claims “done,” and leaves a red build.
 
 ```
 shenwell/ai-agent-skills
@@ -17,11 +20,9 @@ shenwell/ai-agent-skills
     └── <next-skill>/
 ```
 
-**Pain this collection solves first:** agents that stop halfway or claim “done” without proof.
-
 ---
 
-## Install
+## Quickstart — install with npx skills
 
 ```bash
 npx skills add shenwell/ai-agent-skills --list
@@ -56,13 +57,21 @@ Then:
 
 ---
 
+## Who this is for
+
+- Engineers who want an agent to **keep going until green** (lint, tests, CI), not stop after one attempt
+- Teams using **Cursor Cloud Agent** or long unattended runs
+- Anyone looking for an open **Claude Code `/goal` alternative** with a durable contract + verifier
+
+---
+
 ## Available skills
 
-### `goal-mode`
+### `goal-mode` — Claude Code `/goal` alternative
 
-Keep the agent working until a **verifiable** finish line — tests green, lint clean, build passing, migration done — with a durable contract, verifier, and auto-resume. Open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal).
+Keep the agent working until a **verifiable** finish line — tests green, lint clean, build passing, migration done — with a durable contract, verifier, and auto-resume.
 
-Package: [`skills/goal-mode/`](skills/goal-mode/)
+Package: [`skills/goal-mode/`](skills/goal-mode/) · skill README: [`skills/goal-mode/README.md`](skills/goal-mode/README.md)
 
 ```
   YOU                          GOAL MODE                         DONE
@@ -115,6 +124,8 @@ skills/my-skill/SKILL.md   # name + description frontmatter (required)
 3. Document it above
 4. Push → `npx skills add shenwell/ai-agent-skills --skill my-skill`
 
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ---
 
 ## Layout
@@ -122,18 +133,22 @@ skills/my-skill/SKILL.md   # name + description frontmatter (required)
 ```
 README.md
 LICENSE
+CONTRIBUTING.md
 .gitignore
+assets/banner.png
 skills/
 └── goal-mode/
 ```
 
-That is all skills.sh needs. Everything for `goal-mode` lives under `skills/goal-mode/`.
+That is all [skills.sh](https://skills.sh) needs. Everything for `goal-mode` lives under `skills/goal-mode/`.
 
 ---
 
-## Security
+## Social preview (GitHub)
 
-Skills may include **scripts** that run shell commands. Review before installing.
+Recommended share image: [`assets/social-preview.png`](assets/social-preview.png) (1280×640).
+
+Set once in the repo: **Settings → General → Social preview → Upload image** (GitHub has no stable simple CLI for this). Until set, shares use the default Open Graph card.
 
 ## License
 
