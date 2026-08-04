@@ -5,13 +5,14 @@ description: >-
   MEMORY.md, memory/ HOT/WARM layers, project wiki, AGENTS.md, skills, and optional
   portfolio memory — instead of losing context when the chat resets. Routes
   decisions, gotchas, and open loops with conflict gate and temperature limits.
-  Use when the user says "подведём итоги", "сохрани знания", "handoff", "open loops",
-  "обнови память", or after goal-mode phase complete / BLOCKED / COMPLETE checkpoints.
-  Also use for portfolio/global memory, bootstrap project memory, or session changelog.
-  Prefer after non-trivial debugging, user corrections, or long goal-mode runs.
-  Do not use for one-line trivia, secrets, or replacing git history.
+  Use when the user says "wrap up the session", "save what we learned", "handoff",
+  "open loops", "update memory", or after goal-mode phase complete / BLOCKED /
+  COMPLETE checkpoints. Also use for portfolio/global memory, bootstrap project
+  memory, or session changelog. Prefer after non-trivial debugging, user corrections,
+  or long goal-mode runs. Do not use for one-line trivia, secrets, or replacing
+  git history.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   author: productlaba
   category: knowledge-management
   tags: memory, session, handoff, wiki, portfolio, changelog, goal-mode
@@ -21,7 +22,7 @@ metadata:
 
 **Turn session noise into durable knowledge** — decisions, gotchas, workarounds, and handoffs — routed into the right place instead of lost when context resets.
 
-Most agent sessions end with valuable context trapped in chat: a workaround that took an hour to find, a user correction (“never do X”), an infra detail, an open blocker. Memo Session Skill runs a **preflight → classify → route → conflict gate** pipeline so knowledge lands in `MEMORY.md`, `memory/` (HOT/WARM), project wiki (COLD), `AGENTS.md`, skills, or optional **portfolio memory** — with temperature limits and no duplicate paragraphs across channels.
+Most agent sessions end with valuable context trapped in chat: a workaround that took an hour to find, a user correction ("never do X"), an infra detail, an open blocker. Memo Session Skill runs a **preflight → classify → route → conflict gate** pipeline so knowledge lands in `MEMORY.md`, `memory/` (HOT/WARM), project wiki (COLD), `AGENTS.md`, skills, or optional **portfolio memory** — with temperature limits and no duplicate paragraphs across channels.
 
 Pairs with **[goal-mode](../goal-mode/SKILL.md)** for automatic checkpoints after phase complete, `BLOCKED`, or `COMPLETE`. See [references/goal-mode-integration.md](references/goal-mode-integration.md).
 
@@ -57,574 +58,572 @@ Engineers and maintainers who want **session handoffs that survive context reset
 After a non-trivial session:
 
 ```
-подведи итоги сессии
+wrap up the session
 ```
 
 The skill starts the pipeline immediately in Agent mode; it stops only for **hard conflicts** (contradictions with approved memory, secrets, git policy).
 
 ---
 
-**Язык:** отвечай пользователю на русском.
+This skill analyzes the session, separates noise from durable knowledge, and routes findings into the right place: `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, operational **`memory/`** files (HOT/WARM), **wiki `WIKI_ROOT/`** (COLD), user or project skills, and optional **portfolio memory** (`GLOBAL_MEMORY_ROOT`, default `D:/CURSOR/global-memory`). Project schema — in **`MEMORY.md`** (Preflight §3); portfolio schema — [references/portfolio-schema.md](references/portfolio-schema.md), path — [references/global-memory.md](references/global-memory.md).
 
-Этот скилл анализирует сессию, отделяет шум от долговременного знания и предлагает, куда сохранить выводы: в `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, операционные файлы **`memory/`** (HOT/WARM), **вики `WIKI_ROOT/`** (COLD), пользовательские или проектные скиллы, а также в **портфельную память** (`GLOBAL_MEMORY_ROOT`, по умолчанию `D:/CURSOR/global-memory`). Схема проекта — в **`MEMORY.md`** (Preflight §3); схема портфеля — [references/portfolio-schema.md](references/portfolio-schema.md), путь — [references/global-memory.md](references/global-memory.md).
+## goal-mode pairing
 
-## Связь с goal-mode
+Goal Mode records **execution progress** in `GOAL.md`. Memo-session saves **durable knowledge** in `memory/` and wiki.
 
-Goal Mode фиксирует **ход выполнения** в `GOAL.md`. Memo-session сохраняет **устойчивое знание** в `memory/` и вики.
-
-| Событие goal-mode | Глубина memo |
-|-------------------|--------------|
-| Фаза завершена | `full` — полный пайплайн |
+| goal-mode event | Memo depth |
+|-----------------|------------|
+| Phase complete | `full` — full pipeline |
 | `BLOCKED` / `COMPLETE` | `full` |
-| Лимит шагов сессии / каждые N итераций | `light` — hot-cache + open-loops |
+| Session step limit / every N iterations | `light` — hot-cache + open-loops |
 
-Конфиг: `.cursor/goal.config.yml` → `memory.skill: memo-session-skill`. Подробности: [references/goal-mode-integration.md](references/goal-mode-integration.md) · [goal-mode memory-checkpoints](../goal-mode/references/memory-checkpoints.md).
+Config: `.cursor/goal.config.yml` → `memory.skill: memo-session-skill`. Details: [references/goal-mode-integration.md](references/goal-mode-integration.md) · [goal-mode memory-checkpoints](../goal-mode/references/memory-checkpoints.md).
 
-## Быстрый Принцип
+## Core principle
 
-Порядок пайплайна: **контекст → preflight (проект + портфель) → дайджест → фильтр и scope → классификация → маршрутизация → conflict gate (проект, затем портфель) → запись (clean/soft) → changelog проекта и при необходимости портфеля → отчёт и handoff**.
+Pipeline order: **context → preflight (project + portfolio) → digest → filter and scope → classify → route → conflict gate (project, then portfolio) → write (clean/soft) → project and optional portfolio changelog → report and handoff**.
 
-Если `GLOBAL_MEMORY_ROOT` недоступен — **degraded mode**: проектный пайплайн без записи в портфель; в отчёте «Портфель пропущен».
+If `GLOBAL_MEMORY_ROOT` is unavailable — **degraded mode**: project pipeline without portfolio writes; report "Portfolio skipped".
 
-При запуске в **Agent mode** сразу начинай пайплайн: после чтения контекста выполни **preflight** (gitignore, hygiene, bootstrap), затем анализируй сессию, маршрутизируй и применяй clean/soft updates без отдельного согласования.
+In **Agent mode**, start the pipeline immediately: after reading context run **preflight** (gitignore, hygiene, bootstrap), then analyze the session, route, and apply clean/soft updates without separate approval.
 
-В **Ask/Plan mode** выполняй только чтение, preflight-отчёт и анализ **без** bootstrap и без записи в файлы.
+In **Ask/Plan mode**, read-only, preflight report, and analysis **without** bootstrap or file writes.
 
-Останавливайся за подтверждением только на hard conflicts: противоречия с утверждённой памятью, safety rules, секретами, git-политикой или ситуациями, где невозможно выбрать канон без пользователя.
+Stop for confirmation only on hard conflicts: contradictions with approved memory, safety rules, secrets, git policy, or cases where canon cannot be chosen without the user.
 
-Не превращай memory в дневник команд. Сохраняй выводы, решения, проверенные workaround'ы, open loops, предпочтения пользователя и повторяемые паттерны.
+Do not turn memory into a command diary. Save findings, decisions, verified workarounds, open loops, user preferences, and repeatable patterns.
 
-## Когда Использовать
+## When to use
 
-Используй этот скилл явно или автоматически, когда пользователь просит:
+Use this skill explicitly or automatically when the user asks to:
 
-- подвести итоги сессии;
-- сохранить знания;
-- обновить документацию, memory или скиллы после работы;
-- сформировать handoff на следующую сессию;
-- разобраться, что из чата стоит зафиксировать.
+- wrap up the session;
+- save what we learned;
+- update docs, memory, or skills after work;
+- produce a handoff for the next session;
+- decide what from the chat is worth recording.
 
-Предлагай применить скилл сам, если в сессии были нетривиальная отладка, workaround, коррекция от пользователя, новое правило процесса, повторяемая ручная процедура, архитектурное решение, незакрытый блокер или регрессионный баг.
+Suggest the skill yourself if the session had non-trivial debugging, a workaround, user correction, new process rule, repeatable manual procedure, architectural decision, open blocker, or regression bug.
 
-## Шаг 1: Понять Контекст
+## Step 1: Understand context
 
-Если есть workspace, перед выводами прочитай минимум:
+If a workspace exists, before conclusions read at minimum:
 
-- `AGENTS.md` или `README.md`, если они есть;
-- `.cursor/rules/`, если есть;
-- существующий `MEMORY.md` и/или `memory/`, если есть;
-- **папку проектной вики** — путь бери из `AGENTS.md` / `README.md`; если явно не задан, используй дефолт **`memory/wiki/`**;
-- проектные скиллы `.cursor/skills/*/SKILL.md`, если релевантно.
-- **Портфель:** разреши `GLOBAL_MEMORY_ROOT` (Preflight §1.5); если доступен — прочитай `MEMORY.md`, при необходимости `memory/hot-cache.md` и `memory/wiki/projects-registry.md` портфеля. Текущий workspace = **project memory**; портфель = **portfolio memory**. Не путай каналы.
+- `AGENTS.md` or `README.md` if present;
+- `.cursor/rules/` if present;
+- existing `MEMORY.md` and/or `memory/` if present;
+- **project wiki folder** — path from `AGENTS.md` / `README.md`; if not set explicitly, default **`memory/wiki/`**;
+- project skills `.cursor/skills/*/SKILL.md` if relevant.
+- **Portfolio:** resolve `GLOBAL_MEMORY_ROOT` (Preflight §1.5); if available — read `MEMORY.md`, and as needed `memory/hot-cache.md` and `memory/wiki/projects-registry.md` of the portfolio. Current workspace = **project memory**; portfolio = **portfolio memory**. Do not mix channels.
 
-Определи **project-slug** текущего репо (имя папки или строка в `projects-registry.md`) для changelog `from:<slug>`.
+Determine **project-slug** of the current repo (folder name or row in `projects-registry.md`) for changelog `from:<slug>`.
 
-Определи тип проекта: код, инфраструктура, документация, handbook, knowledge vault, SEO/GEO или смешанный репозиторий. Дефолтный канон из раздела «Каноническая структура» применяй для новых артефактов; если в репозитории уже согласована другая схема, не ломай её без soft/hard conflict процедуры.
+Determine project type: code, infrastructure, documentation, handbook, knowledge vault, SEO/GEO, or mixed repository. Apply default canon from "Canonical structure" for new artifacts; if the repo already has an agreed schema, do not break it without soft/hard conflict procedure.
 
-## Preflight (сразу после чтения контекста)
+## Preflight (immediately after reading context)
 
-Выполняй **на каждом запуске** после шага 1, до дайджеста сессии.
+Run **on every invocation** after step 1, before session digest.
 
-### 1. Проверка `.gitignore`
+### 1. `.gitignore` check
 
-Прочитай `.gitignore` (и при необходимости `.git/info/exclude`). Если **`MEMORY.md`**, **корень `memory/`** или **корень папки вики** (фактический `WIKI_ROOT`, см. канон) попадают под ignore — **не правь файл молча**: выведи заметный блок в отчёте и предложи удалить соответствующие строки **только после явного согласия пользователя**. Если этих путей **нет** в ignore — **ничего не меняй** в ignore.
+Read `.gitignore` (and if needed `.git/info/exclude`). If **`MEMORY.md`**, **`memory/` root**, or **wiki root** (actual `WIKI_ROOT`, see canon) is ignored — **do not edit the file silently**: show a prominent block in the report and propose removing those lines **only after explicit user consent**. If these paths are **not** ignored — **do not change** ignore.
 
 ### 2. Hygiene scan
 
-- Посчитай строки в `MEMORY.md`, `memory/hot-cache.md`, `memory/warm-cache.md`, `memory/open-loops.md`, `memory/decisions.md` (если файлы есть).
-- Проверь наличие **`memory/changelog.md`** (см. «Журнал изменений памяти» в каноне) и **`WIKI_ROOT/index.md`**.
-- Если в `MEMORY.md` или `WIKI_ROOT/index.md` есть markdown-ссылки на пути внутри репозитория — отметь битые ссылки (файл отсутствует), включая ссылку на **`memory/changelog.md`**, если она есть.
-- **Legacy:** если найден старый журнал `WIKI_ROOT/changelog.md` или `wiki/changelog.md` при уже принятом каноне **`memory/changelog.md`** — не удаляй без явного запроса; вынеси в **Memory hygiene** одну строку «мигрировать записи в `memory/changelog.md`».
-- **Legacy:** если есть `memory/feedback/`, `memory/projects/`, `memory/references/`, `memory/archive/` — не удаляй; предложи перенос содержимого в `WIKI_ROOT/*.md` и ссылку из `index.md` (строка в начало changelog после решения пользователя).
+- Count lines in `MEMORY.md`, `memory/hot-cache.md`, `memory/warm-cache.md`, `memory/open-loops.md`, `memory/decisions.md` (if files exist).
+- Check for **`memory/changelog.md`** (see "Memory changelog" in canon) and **`WIKI_ROOT/index.md`**.
+- If `MEMORY.md` or `WIKI_ROOT/index.md` has markdown links to paths inside the repo — flag broken links (missing file), including link to **`memory/changelog.md`** if present.
+- **Legacy:** if old journal `WIKI_ROOT/changelog.md` or `wiki/changelog.md` exists with accepted canon **`memory/changelog.md`** — do not delete without explicit request; add one line to **Memory hygiene** "migrate entries to `memory/changelog.md`".
+- **Legacy:** if `memory/feedback/`, `memory/projects/`, `memory/references/`, `memory/archive/` exist — do not delete; propose moving content to `WIKI_ROOT/*.md` and link from `index.md` (line at top of changelog after user decision).
 
-Пороги см. «Лимиты температур». Превышение **не блокирует** пайплайн: вынеси в блок **`Memory hygiene`** demote HOT→WARM, promote WARM→вики, сжать индекс.
+See "Temperature limits" for thresholds. Exceeding limits **does not block** the pipeline: add **`Memory hygiene`** block — demote HOT→WARM, promote WARM→wiki, compress index.
 
-### 1.5. GLOBAL_MEMORY_ROOT (портфель)
+### 1.5. GLOBAL_MEMORY_ROOT (portfolio)
 
-1. Прочитай [references/global-memory.md](references/global-memory.md) — дефолт `D:/CURSOR/global-memory`.
-2. Если в `AGENTS.md` проекта есть `GLOBAL_MEMORY_ROOT:` — используй override.
-3. Проверь, что каталог существует и доступен для чтения. В Agent mode при отсутствии каркаса — bootstrap портфеля по [references/portfolio-schema.md](references/portfolio-schema.md) (как проектный Preflight §3, с портфельными лимитами).
-4. Если недоступен — зафиксируй degraded mode, дальше только проектный preflight.
+1. Read [references/global-memory.md](references/global-memory.md) — default `D:/CURSOR/global-memory`.
+2. If project `AGENTS.md` has `GLOBAL_MEMORY_ROOT:` — use override.
+3. Verify directory exists and is readable. In Agent mode if scaffold missing — bootstrap portfolio per [references/portfolio-schema.md](references/portfolio-schema.md) (like project Preflight §3, with portfolio limits).
+4. If unavailable — record degraded mode, continue with project preflight only.
 
-### 1.6. Проверка `AGENTS.md` проекта (поток памяти)
+### 1.6. Project `AGENTS.md` check (memory flow)
 
-Чеклист (отметь ok / needs patch):
+Checklist (mark ok / needs patch):
 
-- [ ] Блок «Память агента» / «Поток памяти» с порядком чтения **проект → портфель**
-- [ ] Ссылка на `GLOBAL_MEMORY_ROOT` или `D:/CURSOR/global-memory`
-- [ ] Упоминание dual-write при memo-session без дублирования абзацев
-- [ ] **Нет** требования копировать `memo-session-skill` в проект
+- [ ] "Agent memory" / "Memory flow" block with read order **project → portfolio**
+- [ ] Link to `GLOBAL_MEMORY_ROOT` or `D:/CURSOR/global-memory`
+- [ ] Mention dual-write on memo-session without duplicate paragraphs
+- [ ] **No** requirement to copy `memo-session-skill` into the project
 
-В **Agent mode**, если блока нет и workspace — проектный репо (не сам `global-memory`): добавь шаблон из [references/agents-md-template.md](references/agents-md-template.md) (не переписывай весь `AGENTS.md`).
+In **Agent mode**, if block missing and workspace is a project repo (not `global-memory` itself): add template from [references/agents-md-template.md](references/agents-md-template.md) (do not rewrite entire `AGENTS.md`).
 
-### 2b. Hygiene scan (портфель)
+### 2b. Hygiene scan (portfolio)
 
-Если `GLOBAL_MEMORY_ROOT` доступен — те же проверки, что §2, для портфеля; лимиты — «Лимиты портфеля». Отдельный блок **Portfolio hygiene** в отчёте.
+If `GLOBAL_MEMORY_ROOT` available — same checks as §2 for portfolio; limits — "Portfolio limits". Separate **Portfolio hygiene** block in report.
 
-### 3. Bootstrap каркаса (только Agent mode)
+### 3. Bootstrap scaffold (Agent mode only)
 
-Если отсутствует любой обязательный элемент канона — **создай недостающее** коротким шаблоном (заголовок + 2–5 строк назначения). Существующие файлы **не перезаписывай** целиком. **Не** создавай подпапки `memory/feedback/`, `projects/`, `references/`, `archive/` — долговременное знание только во вики (COLD).
+If any required canon element is missing — **create missing** with short template (heading + 2–5 lines of purpose). **Do not** overwrite existing files wholesale. **Do not** create `memory/feedback/`, `projects/`, `references/`, `archive/` — durable knowledge only in wiki (COLD).
 
-Для **`memory/warm-cache.md`** при создании:
+For **`memory/warm-cache.md`** on create:
 
 ```markdown
 # Warm cache
 
-Средняя память: demote из HOT; promote стабильное во вики (COLD).
+Medium memory: demote from HOT; promote stable items to wiki (COLD).
 ```
 
-Для **`memory/changelog.md`** при создании достаточно минимального каркаса (полный формат только в каноне «Журнал изменений памяти»):
+For **`memory/changelog.md`** on create, minimal scaffold is enough (full format only in canon "Memory changelog"):
 
 ```markdown
 # Changelog
 
-Журнал изменений памяти проекта.
+Project memory change journal.
 
 ## YYYY-MM
 
 ```
 
-Подставь текущий месяц вместо `YYYY-MM`.
+Substitute current month for `YYYY-MM`.
 
-Если отсутствует **`MEMORY.md`** — создай шаблон **инструкции для агента** (≤60 строк при первом bootstrap; в долгую ≤200):
+If **`MEMORY.md`** missing — create **agent instruction** template (≤60 lines on first bootstrap; ≤200 long-term):
 
 ```markdown
-# Память проекта
+# Project memory
 
-Вход в память репозитория. Не дублирует вики и не заменяет git log.
+Entry point for repository memory. Does not duplicate wiki or replace git log.
 
-## Температуры
+## Temperatures
 
-| Слой | Файл / место | Смысл |
-|------|----------------|--------|
-| HOT | [hot-cache](memory/hot-cache.md) | Контекст ближайших 1–3 сессий |
-| WARM | [warm-cache](memory/warm-cache.md) | Средняя память; demote из HOT |
-| COLD | [Вики](memory/wiki/index.md) | Передаваемые статьи (`WIKI_ROOT/*.md`) |
+| Layer | File / place | Meaning |
+|-------|----------------|--------|
+| HOT | [hot-cache](memory/hot-cache.md) | Context for next 1–3 sessions |
+| WARM | [warm-cache](memory/warm-cache.md) | Medium memory; demote from HOT |
+| COLD | [Wiki](memory/wiki/index.md) | Transferable articles (`WIKI_ROOT/*.md`) |
 
-Demote вниз (HOT→WARM), promote в вики (WARM→COLD). WARM — буллеты и ссылки, не эссе.
+Demote down (HOT→WARM), promote to wiki (WARM→COLD). WARM — bullets and links, not essays.
 
-## Поток агента
+## Agent flow
 
-1. Читать этот файл → `hot-cache` → при необходимости `warm-cache` → `open-loops` / `decisions`.
-2. Срочное новое → HOT.
-3. HOT переполнен или пункт остыл → WARM (в HOT при необходимости одна строка-ссылка).
-4. Стабильное / процесс / ADR / длинный текст → страница вики + ссылка в `index.md` / здесь.
-5. Правила поведения («не делай X») → `AGENTS.md` / `.cursor/rules/`, не в warm-cache.
-6. После правок скилла → [changelog](memory/changelog.md) и прочие журналы с датой — **в начало** (см. «Записи по дате и времени»). Коммит — только по просьбе пользователя.
+1. Read this file → `hot-cache` → as needed `warm-cache` → `open-loops` / `decisions`.
+2. Urgent new item → HOT.
+3. HOT full or item cooled → WARM (one link line in HOT if needed).
+4. Stable / process / ADR / long text → wiki page + link in `index.md` / here.
+5. Behavior rules ("never do X") → `AGENTS.md` / `.cursor/rules/`, not warm-cache.
+6. After skill edits → [changelog](memory/changelog.md) and other journals with date — **at top** (see "Dated entries"). Commit — only on user request.
 
-Лимиты и conflict gate: скилл **memo-session-skill**.
+Limits and conflict gate: **memo-session-skill**.
 
-## Карта
+## Map
 
 - [changelog](memory/changelog.md) · [hot-cache](memory/hot-cache.md) · [warm-cache](memory/warm-cache.md)
 - [open-loops](memory/open-loops.md) · [decisions](memory/decisions.md)
-- [Вики — вход](memory/wiki/index.md)
+- [Wiki — entry](memory/wiki/index.md)
 ```
 
-## Шаг 2: Дайджест Сессии
+## Step 2: Session digest
 
-Собери короткий human-readable summary:
+Produce a short human-readable summary:
 
-- что сделали;
-- что узнали;
-- что проверено фактами;
-- что осталось гипотезой;
-- что сломалось или было неожиданным;
-- какие решения приняты;
-- какие обещания, блокеры и follow-up остались открытыми.
+- what was done;
+- what was learned;
+- what was verified by facts;
+- what remains hypothesis;
+- what broke or was unexpected;
+- decisions made;
+- open promises, blockers, and follow-ups.
 
-Отдельно отмечай коррекции пользователя: "не делай X", "всегда делай Y", "вот это правильный подход". Это кандидаты в **`AGENTS.md`**, **`.cursor/rules/`** или страницу вики `user-preferences.md`, не в `warm-cache`.
+Separately note user corrections: "never do X", "always do Y", "this is the right approach". These are candidates for **`AGENTS.md`**, **`.cursor/rules/`**, or wiki page `user-preferences.md`, not `warm-cache`.
 
-## Шаг 3: Фильтр Качества
+## Step 3: Quality filter
 
-Сохраняй только знания, которые проходят минимум 2 из 4 критериев:
+Save only knowledge that passes at least 2 of 4 criteria:
 
-- **Неочевидно:** это нельзя легко восстановить из кода, README или git log.
-- **Переиспользуемо:** пригодится в будущих сессиях.
-- **Конкретно:** содержит действие, пример, файл, команду, условие или проверяемый факт.
-- **Верифицировано:** проверено в этой сессии или явно утверждено пользователем.
+- **Non-obvious:** cannot be easily recovered from code, README, or git log.
+- **Reusable:** useful in future sessions.
+- **Concrete:** contains action, example, file, command, condition, or verifiable fact.
+- **Verified:** checked in this session or explicitly approved by the user.
 
-Пятый критерий обязателен: **правильный канал**. Даже сильное знание не должно попасть в memory, если ему место в `AGENTS.md`, документации, тесте или `references/` существующего скилла.
+Fifth criterion is mandatory: **right channel**. Even strong knowledge must not go to memory if it belongs in `AGENTS.md`, documentation, test, or existing skill `references/`.
 
-Шестой критерий обязателен: **`scope`** — `project` | `portfolio` | `both` | `skill` | `rule` | `session-only` (см. [references/portfolio-schema.md](references/portfolio-schema.md)). Перед записью **anti-dup**: один абзац не должен оказаться и в hot-cache проекта, и в портфеле; для `both` — ссылка в проекте, тело в `GLOBAL_MEMORY_ROOT/memory/wiki/project-<slug>.md`.
+Sixth criterion is mandatory: **`scope`** — `project` | `portfolio` | `both` | `skill` | `rule` | `session-only` (see [references/portfolio-schema.md](references/portfolio-schema.md)). Before write **anti-dup**: one paragraph must not appear in both project hot-cache and portfolio; for `both` — link in project, body in `GLOBAL_MEMORY_ROOT/memory/wiki/project-<slug>.md`.
 
-## Шаг 4: Классификация По Температуре
+## Step 4: Temperature classification
 
-Для каждого вывода выбери класс:
+For each finding choose class:
 
-- `session-only` — полезно для отчёта, но не сохранять.
-- `HOT` — нужно в ближайших 1–3 сессиях → `memory/hot-cache.md`.
-- `WARM` — ещё нужно агенту, но не в HOT → `memory/warm-cache.md` (буллеты, не статья).
-- `COLD` — устойчивое передаваемое знание → **`WIKI_ROOT/`** (плоская вики).
-- `durable-doc` — канон проекта: по умолчанию **вики**; `AGENTS.md` / `.cursor/rules/` для правил агента; `docs/` — только если явно в `AGENTS.md` или просьба пользователя (см. «docs/ и вики»).
-- `regression` — баг, который лучше закрепить тестом.
-- `skill-update` — короткое правило, триггер или gotcha в существующий `SKILL.md`.
-- `skill-reference` — объёмная тема в `references/<topic>.md` существующего скилла плюс ссылка из `SKILL.md`.
+- `session-only` — useful for report, do not save.
+- `HOT` — needed in next 1–3 sessions → `memory/hot-cache.md`.
+- `WARM` — still needed by agent, not in HOT → `memory/warm-cache.md` (bullets, not article).
+- `COLD` — durable transferable knowledge → **`WIKI_ROOT/`** (flat wiki).
+- `durable-doc` — project canon: default **wiki**; `AGENTS.md` / `.cursor/rules/` for agent rules; `docs/` — only if explicit in `AGENTS.md` or user request (see "docs/ and wiki").
+- `regression` — bug better fixed with a test.
+- `skill-update` — short rule, trigger, or gotcha in existing `SKILL.md`.
+- `skill-reference` — large topic in `references/<topic>.md` of existing skill plus link from `SKILL.md`.
 
-Для каждого сохраняемого вывода укажи **`scope`** (обязательно). Температура HOT/WARM/COLD применяется **внутри** выбранного канала (проект или портфель).
+For each saved finding specify **`scope`** (required). HOT/WARM/COLD temperature applies **within** chosen channel (project or portfolio).
 
-## Шаг 5: Маршрутизация
+## Step 5: Routing
 
-Выбирай место по аудитории и сроку жизни:
+Choose destination by audience and lifetime:
 
-- `AGENTS.md` — стек, архитектура, терминология, проектные best practices, API gotchas, safety rules.
-- `.cursor/rules/*.md` — правила поведения агента в этом репозитории.
-- `tests/` — regression-тесты на найденные баги.
-- `scripts/` — только если сессия выявила повторяемую ручную процедуру и пользователь просит автоматизировать.
-- `MEMORY.md` — **инструкция агенту** + карта памяти (см. bootstrap Preflight §3); **в git**.
-- **`WIKI_ROOT/`** — **COLD**: передаваемые статьи (см. «Вики: плоская структура»); **в git**.
-- `memory/hot-cache.md`, `memory/warm-cache.md` — HOT и WARM; `memory/open-loops.md`, `memory/decisions.md`, `memory/changelog.md` — задачи, решения, журнал сессии скилла.
-- `docs/` — **не** канал по умолчанию; только явная просьба или канон в `AGENTS.md` (см. «docs/ и вики»).
-- `.cursor/skills/` или `~/.cursor/skills/` — пользовательские и проектные скиллы.
-- **`GLOBAL_MEMORY_ROOT`** (`D:/CURSOR/global-memory` по умолчанию) — при `scope: portfolio` или теле для `scope: both`:
-  - реестр, `local_path`, `git_remote` → `memory/wiki/projects-registry.md` + `project-<slug>.md`;
-  - серверы → `hosting-and-servers.md`; домены/сертификаты → `domains-and-certificates.md`; URL → `urls-and-environments.md`;
-  - ошибки агента → `agent-mistakes-registry.md`; HOT/WARM портфеля — `memory/hot-cache.md`, `warm-cache.md`.
+- `AGENTS.md` — stack, architecture, terminology, project best practices, API gotchas, safety rules.
+- `.cursor/rules/*.md` — agent behavior rules in this repository.
+- `tests/` — regression tests for bugs found.
+- `scripts/` — only if session revealed repeatable manual procedure and user asks to automate.
+- `MEMORY.md` — **agent instruction** + memory map (see Preflight §3 bootstrap); **in git**.
+- **`WIKI_ROOT/`** — **COLD**: transferable articles (see "Wiki: flat structure"); **in git**.
+- `memory/hot-cache.md`, `memory/warm-cache.md` — HOT and WARM; `memory/open-loops.md`, `memory/decisions.md`, `memory/changelog.md` — tasks, decisions, skill session journal.
+- `docs/` — **not** default channel; only explicit request or canon in `AGENTS.md` (see "docs/ and wiki").
+- `.cursor/skills/` or `~/.cursor/skills/` — user and project skills.
+- **`GLOBAL_MEMORY_ROOT`** (default `D:/CURSOR/global-memory`) — for `scope: portfolio` or body for `scope: both`:
+  - registry, `local_path`, `git_remote` → `memory/wiki/projects-registry.md` + `project-<slug>.md`;
+  - servers → `hosting-and-servers.md`; domains/certs → `domains-and-certificates.md`; URLs → `urls-and-environments.md`;
+  - agent mistakes → `agent-mistakes-registry.md`; portfolio HOT/WARM — `memory/hot-cache.md`, `warm-cache.md`.
 
-**Не** копировать `SKILL.md` или папку скилла в `GLOBAL_MEMORY_ROOT`. **Не** дублировать проектный hot-cache в портфель.
+**Do not** copy `SKILL.md` or skill folder into `GLOBAL_MEMORY_ROOT`. **Do not** duplicate project hot-cache in portfolio.
 
-| Тема | Scope |
-|------|--------|
-| API, классы, миграции, баг одного сервиса | `project` |
-| Сервер, домен, cert, URL, другой репо, git_remote | `portfolio` |
-| Инвентарь проекта «снаружи» | `both` (ссылка в проекте + карточка в портфеле) |
-| «Всегда делай Y» для всех репо | `portfolio` или User Rules / `agent-mistakes-registry.md` |
+| Topic | Scope |
+|-------|--------|
+| API, classes, migrations, bug in one service | `project` |
+| Server, domain, cert, URL, other repo, git_remote | `portfolio` |
+| Project inventory "from outside" | `both` (link in project + card in portfolio) |
+| "Always do Y" for all repos | `portfolio` or User Rules / `agent-mistakes-registry.md` |
 
-Не правь вручную `~/.cursor/skills-cursor/`. Если системный скилл оказался неточным, зафиксируй workaround в проектной документации, memory или пользовательском скилле.
+Do not manually edit `~/.cursor/skills-cursor/`. If a system skill was wrong, record workaround in project docs, memory, or user skill.
 
-## Каноническая структура проекта
+## Canonical project structure
 
-**`WIKI_ROOT`:** корень проектной вики. Путь бери из `AGENTS.md` / `README.md`; если **нигде** явно не задан, используй **`memory/wiki/`** (вики **внутри** `memory/`, не отдельный корень репозитория).
+**`WIKI_ROOT`:** project wiki root. Path from `AGENTS.md` / `README.md`; if **nowhere** set explicitly, use **`memory/wiki/`** (wiki **inside** `memory/`, not separate repo root).
 
-**Журнал сессии скилла:** всегда **`memory/changelog.md`** (корень дерева `memory/`). **Не** создавай и **не** используй `WIKI_ROOT/changelog.md` для новых проектов; путь журнала **не** зависит от переопределения `WIKI_ROOT`.
+**Skill session journal:** always **`memory/changelog.md`** (root of `memory/` tree). **Do not** create or use `WIKI_ROOT/changelog.md` for new projects; journal path **does not** depend on `WIKI_ROOT` override.
 
-**Обязательный каркас** (создание недостающего — в **Preflight §3**, только Agent mode):
+**Required scaffold** (create missing — in **Preflight §3**, Agent mode only):
 
-| Путь | Назначение |
-|------|------------|
-| `MEMORY.md` | Индекс памяти: навигация и структура (ссылки), см. ниже |
-| `memory/changelog.md` | Журнал: намеренные правки скилла; новые строки **в начало** месяца/файла; **единственный** путь журнала |
-| `WIKI_ROOT/index.md` | Входная страница вики (при дефолте — `memory/wiki/index.md`) |
-| `memory/hot-cache.md` | HOT: контекст ближайших сессий |
-| `memory/warm-cache.md` | WARM: средняя память (demote из HOT) |
-| `memory/open-loops.md` | Незакрытые задачи (не температура) |
-| `memory/decisions.md` | Короткий лог решений; ADR → вики `adr-*.md` |
+| Path | Purpose |
+|------|---------|
+| `MEMORY.md` | Memory index: navigation and structure (links), see below |
+| `memory/changelog.md` | Journal: intentional skill edits; new lines **at top** of month/file; **only** journal path |
+| `WIKI_ROOT/index.md` | Wiki entry page (default — `memory/wiki/index.md`) |
+| `memory/hot-cache.md` | HOT: context for upcoming sessions |
+| `memory/warm-cache.md` | WARM: medium memory (demote from HOT) |
+| `memory/open-loops.md` | Open tasks (not a temperature) |
+| `memory/decisions.md` | Short decision log; ADR → wiki `adr-*.md` |
 
-**`MEMORY.md`:** полная схема памяти и поток работы агента — **в репозитории** (шаблон Preflight §3). При bootstrap и при пустом файле создай/дополни по шаблону. В скилле не дублируй всю таблицу — только норматив и отсылка к `MEMORY.md`. После новых страниц во вики обновляй карту ссылок и `WIKI_ROOT/index.md`.
+**`MEMORY.md`:** full memory schema and agent workflow — **in repository** (Preflight §3 template). On bootstrap and empty file create/supplement per template. Do not duplicate full table in skill — only normative reference to `MEMORY.md`. After new wiki pages update link map and `WIKI_ROOT/index.md`.
 
-### Температуры: HOT, WARM, COLD
+### Temperatures: HOT, WARM, COLD
 
-- **HOT → WARM:** переполнение `hot-cache` или пункт давно не использовался в HOT — перенести в `warm-cache`, в HOT при необходимости оставить одну строку со ссылкой.
-- **WARM → COLD (вики):** процесс end-to-end, ADR, справка, расследование после стабилизации — плоская страница `WIKI_ROOT/<kebab>.md`.
-- **HOT → COLD:** сразу, если тема большая — страница вики + одна строка в HOT.
-- **Устаревшее во вики:** префикс `archived-*.md` или удаление (git хранит историю); отдельной папки `archive/` нет.
+- **HOT → WARM:** `hot-cache` overflow or item unused in HOT for long — move to `warm-cache`, one link line in HOT if needed.
+- **WARM → COLD (wiki):** end-to-end process, ADR, reference, investigation after stabilization — flat page `WIKI_ROOT/<kebab>.md`.
+- **HOT → COLD:** immediately if topic is large — wiki page + one line in HOT.
+- **Stale wiki:** prefix `archived-*.md` or delete (git keeps history); no separate `archive/` folder.
 
-После любых новых или переименованных файлов в `memory/` или под `WIKI_ROOT/` обновляй **`MEMORY.md`**, если там есть индексные ссылки на эти пути.
+After any new or renamed files in `memory/` or under `WIKI_ROOT/` update **`MEMORY.md`** if it has index links to those paths.
 
-### Вики: плоская структура и наполнение (COLD)
+### Wiki: flat structure and content (COLD)
 
-**Вики = слой COLD** — единственное место для передаваемых статей и справок (вместо бывших `memory/projects/`, `references/`, `archive/`).
+**Wiki = COLD layer** — only place for transferable articles and references (replaces former `memory/projects/`, `references/`, `archive/`).
 
-**Структура:** все страницы — только **в корне** `WIKI_ROOT/` (обязательный **`index.md`**; журнал — **`memory/changelog.md`**, не во вики). Без вложенных каталогов для новых тем. Имена — **`kebab-case.md`**. Legacy-дерево под старым `WIKI_ROOT` не трогать без запроса пользователя.
+**Structure:** all pages — only **at root** of `WIKI_ROOT` (required **`index.md`**; journal — **`memory/changelog.md`**, not in wiki). No nested directories for new topics. Names — **`kebab-case.md`**. Do not touch legacy tree under old `WIKI_ROOT` without user request.
 
-**Что класть во вики (да):**
+**Wiki yes:**
 
-- Сквозные процессы end-to-end, ADR, глоссарий, стабильные справки и расследования после фиксации.
-- Связные статьи, вынесенные из `MEMORY.md` / demote из WARM по лимитам.
+- Cross-cutting end-to-end processes, ADR, glossary, stable references and investigations after fix.
+- Connected articles demoted from `MEMORY.md` / WARM at limits.
 
-**Чего во вики не класть (нет):**
+**Wiki no:**
 
-- Нестабильные гипотезы без проверки — только отчёт сессии или одна строка в `open-loops`.
-- Правила агента — `AGENTS.md` / `.cursor/rules/`; срочный контекст — HOT/WARM, не вики.
+- Unstable unverified hypotheses — report only or one line in `open-loops`.
+- Agent rules — `AGENTS.md` / `.cursor/rules/`; urgent context — HOT/WARM, not wiki.
 
-### docs/ и вики
+### docs/ and wiki
 
-- **`WIKI_ROOT/`** — канон знания для memo-session (runbook, процессы, ADR в репозитории проекта).
-- **`docs/`** — **не создавать и не наполнять** этим скиллом по умолчанию (часто MkDocs/Docusaurus/API-доки фреймворка). Если `docs/` уже есть — **ссылка из вики**, без дубля.
-- Запись в `docs/`: явная просьба пользователя или hard requirement в `AGENTS.md` («канон = docs/») → conflict gate.
+- **`WIKI_ROOT/`** — knowledge canon for memo-session (runbook, processes, ADR in project repo).
+- **`docs/`** — **do not create or fill** by this skill by default (often MkDocs/Docusaurus/framework API docs). If `docs/` exists — **link from wiki**, no duplicate.
+- Write to `docs/`: explicit user request or hard requirement in `AGENTS.md` ("canon = docs/") → conflict gate.
 
-**Обязательные действия агента при новой странице:** создать или дополнить файл в корне `WIKI_ROOT/` по шаблону ниже; добавить **ссылку** на него в **`WIKI_ROOT/index.md`** (оглавление или тематический список); при необходимости — одна строка-ссылка в **`MEMORY.md`**.
+**Required actions for new page:** create or extend file at `WIKI_ROOT/` root per template below; add **link** in **`WIKI_ROOT/index.md`** (TOC or topic list); if needed — one link line in **`MEMORY.md`**.
 
-**Минимальный шаблон новой страницы:**
+**Minimal new page template:**
 
 ```markdown
-# Заголовок темы
+# Topic title
 
-**Назначение:** одна строка, зачем эта страница.
-**Аудитория:** разработчики / агент / оба.
+**Purpose:** one line why this page exists.
+**Audience:** developers / agent / both.
 
-## Содержание
+## Content
 …
 
-## Ссылки
+## Links
 - …
 ```
 
-### Записи по дате и времени
+### Dated entries
 
-**Единственное место в этом скилле с полным описанием порядка.** Во всех остальных разделах — только отсылки сюда.
+**Only place in this skill with full order description.** All other sections — references here only.
 
-**Принцип:** где фиксируются события с **датой и/или временем**, порядок **от нового к старому** (reverse chronological). Новая запись — **в начало** соответствующего списка или блока; новый период (`## YYYY-MM`, `## YYYY-MM-DD`, строка таблицы с датой) — **выше** более старых.
+**Principle:** where events are recorded with **date and/or time**, order **newest to oldest** (reverse chronological). New entry — **at top** of list or block; new period (`## YYYY-MM`, `## YYYY-MM-DD`, table row with date) — **above** older ones.
 
-**Журнальные файлы** (обязательно):
+**Journal files** (required):
 
-| Файл | Как писать новое |
+| File | How to write new |
 |------|------------------|
-| `memory/changelog.md` | Строка `YYYY-MM-DD \| …` — **первая** под `## YYYY-MM`; месяц без секции — новый `## YYYY-MM` сразу после вводного блока, **выше** старых месяцев |
-| `memory/decisions.md` | Секция `## YYYY-MM-DD` (или `YYYY-MM`) — **выше** более старых дат; внутри секции порядок как в источнике сессии |
-| `memory/open-loops.md` | **`## Активно`** (или `Active`) — **всегда** сразу после вводного блока, до архива закрытых; блоки «Закрыто в сессии …» / с датой в заголовке — **новее выше** |
-| `memory/hot-cache.md` / `warm-cache.md` | Только при секциях `## YYYY-MM-DD`: новый день **выше**; буллеты внутри дня — новые **в начало** |
-| `memory/wiki/agent-mistakes-registry.md` | Буллеты с `last_verified` — новые **в начало** списка |
-| `GLOBAL_MEMORY_ROOT/memory/*` | Те же правила для портфеля |
-| `~/.cursor/skills/memo-session-skill/references/changelog.md` | Как `memory/changelog.md` (эволюция скилла) |
+| `memory/changelog.md` | Line `YYYY-MM-DD \| …` — **first** under `## YYYY-MM`; month without section — new `## YYYY-MM` right after intro, **above** older months |
+| `memory/decisions.md` | Section `## YYYY-MM-DD` (or `YYYY-MM`) — **above** older dates; within section order as in session source |
+| `memory/open-loops.md` | **`## Active`** — **always** right after intro, before closed archive; blocks "Closed in session …" / dated headers — **newer above** |
+| `memory/hot-cache.md` / `warm-cache.md` | Only with `## YYYY-MM-DD` sections: new day **above**; bullets within day — new **at top** |
+| `memory/wiki/agent-mistakes-registry.md` | Bullets with `last_verified` — new **at top** of list |
+| `GLOBAL_MEMORY_ROOT/memory/*` | Same rules for portfolio |
+| `~/.cursor/skills/memo-session-skill/references/changelog.md` | Like `memory/changelog.md` (skill evolution) |
 
-**Таблица с колонкой даты** (например `memory/decisions.md` у проекта): новые строки данных — **сразу под** строкой-разделителем `|---|`, **выше** старых строк.
+**Table with date column** (e.g. project `memory/decisions.md`): new data rows — **right under** `|---|` separator, **above** older rows.
 
-**Не сортировать** по дате без явного журнального заголовка: тематические `##` во вики (`Фаза N`, `Prod`, `SEO`), `open-loops` / `hot-cache` по фазам или подсистемам без даты в заголовке; справочные страницы `WIKI_ROOT/*.md`.
+**Do not sort** by date without explicit journal header: thematic `##` in wiki (`Phase N`, `Prod`, `SEO`), `open-loops` / `hot-cache` by phase or subsystem without date in header; reference pages `WIKI_ROOT/*.md`.
 
-#### `memory/changelog.md` (детали)
+#### `memory/changelog.md` (details)
 
-- **Путь:** только **`memory/changelog.md`**. Не веди параллельный журнал под `WIKI_ROOT/` или в корневом `wiki/`.
-- **Назначение:** краткая история **намеренных** правок скилла: `MEMORY.md`, `memory/**`, `WIKI_ROOT/**`, `AGENTS.md`, `.cursor/rules/`, `.cursor/skills/`; `docs/` — только если скилл их реально менял. Не дублируй git diff.
-- **Строка:** `YYYY-MM-DD | действие | затронутые пути | причина`. Без секретов, токенов, паролей, PII.
-- **Когда вносить (Agent mode):** после правок скилла в сессии (bootstrap, hygiene, soft/hard conflict после выбора). Не добавляй «pending» при нерешённом hard conflict. Исключение: только создание пустого журнала при bootstrap — одна строка.
-- **Минимум:** за сессию с правками скилла — **не меньше одной** осмысленной строки; иначе файл не трогай.
-- **Мета:** не путать с **`references/changelog.md`** этого скилла — проектный/портфельный журнал **только** `memory/changelog.md`.
+- **Path:** only **`memory/changelog.md`**. Do not keep parallel journal under `WIKI_ROOT/` or root `wiki/`.
+- **Purpose:** short history of **intentional** skill edits: `MEMORY.md`, `memory/**`, `WIKI_ROOT/**`, `AGENTS.md`, `.cursor/rules/`, `.cursor/skills/`; `docs/` — only if skill actually changed them. Do not duplicate git diff.
+- **Line:** `YYYY-MM-DD | action | affected paths | reason`. No secrets, tokens, passwords, PII.
+- **When to add (Agent mode):** after skill edits in session (bootstrap, hygiene, soft/hard conflict after choice). No "pending" on unresolved hard conflict. Exception: only empty journal on bootstrap — one line.
+- **Minimum:** session with skill edits — **at least one** meaningful line; otherwise do not touch file.
+- **Meta:** do not confuse with **`references/changelog.md`** of this skill — project/portfolio journal **only** `memory/changelog.md`.
 
-## Лимиты температур
+## Temperature limits
 
-Пороги **не блокируют** пайплайн сами по себе. При превышении добавь блок **`Memory hygiene`**: demote HOT→WARM, promote WARM→вики, сжать индекс.
+Thresholds **do not block** the pipeline alone. On exceed add **`Memory hygiene`** block: demote HOT→WARM, promote WARM→wiki, compress index.
 
-| Слой | Место | Лимит | При превышении |
-|------|-------|-------|----------------|
-| Индекс | `MEMORY.md` | ≤200 строк | сжать; детали → вики |
-| HOT | `memory/hot-cache.md` | ≤80 строк | demote → `warm-cache` или ссылка + вики |
-| WARM | `memory/warm-cache.md` | ≤120 строк | promote → вики; сжать буллеты |
-| Open loops | `memory/open-loops.md` | ≤120 строк | закрыть решённые; контекст → warm или вики |
-| Decisions | `memory/decisions.md` | мягко ≤80 | ADR во вики `adr-*.md` |
-| COLD | `WIKI_ROOT/*.md` | ~400/файл мягко | split на две плоские страницы |
+| Layer | Place | Limit | On exceed |
+|-------|-------|-------|-----------|
+| Index | `MEMORY.md` | ≤200 lines | compress; details → wiki |
+| HOT | `memory/hot-cache.md` | ≤80 lines | demote → `warm-cache` or link + wiki |
+| WARM | `memory/warm-cache.md` | ≤120 lines | promote → wiki; compress bullets |
+| Open loops | `memory/open-loops.md` | ≤120 lines | close resolved; context → warm or wiki |
+| Decisions | `memory/decisions.md` | soft ≤80 | ADR to wiki `adr-*.md` |
+| COLD | `WIKI_ROOT/*.md` | ~400/file soft | split into two flat pages |
 
-### Лимиты портфеля (`GLOBAL_MEMORY_ROOT` только)
+### Portfolio limits (`GLOBAL_MEMORY_ROOT` only)
 
-| Слой | Место | Лимит | При превышении |
-|------|-------|-------|----------------|
-| Индекс | `MEMORY.md` | ≤300 | сжать; детали → wiki |
-| HOT | `memory/hot-cache.md` | ≤150 | demote → warm или wiki |
+| Layer | Place | Limit | On exceed |
+|-------|-------|-------|-----------|
+| Index | `MEMORY.md` | ≤300 | compress; details → wiki |
+| HOT | `memory/hot-cache.md` | ≤150 | demote → warm or wiki |
 | WARM | `memory/warm-cache.md` | ≤250 | promote → wiki |
-| Open loops | `memory/open-loops.md` | ≤200 | закрыть решённые |
+| Open loops | `memory/open-loops.md` | ≤200 | close resolved |
 | Decisions | `memory/decisions.md` | ≤150 | ADR → `adr-*.md` |
-| COLD | `memory/wiki/*.md` | ~700/файл | split |
+| COLD | `memory/wiki/*.md` | ~700/file | split |
 
-## Git: MEMORY.md и вики
+## Git: MEMORY.md and wiki
 
-**Политика по умолчанию для проектного воркспейса:**
+**Default policy for project workspace:**
 
-1. Файл **`MEMORY.md`** в корне проекта, **всё дерево `memory/`** (включая **`memory/changelog.md`** и дефолтную вики **`memory/wiki/`**) и **`WIKI_ROOT/`** (если вынесен из `memory/` в legacy) должны находиться **внутри git-репозитория проекта** и предназначены для выкладки на **GitHub или функциональный аналог** (GitLab, Gitea, Forgejo, Bitbucket, Azure DevOps и т.п.).
-2. **`WIKI_ROOT`** задаётся в `AGENTS.md` или `README.md`. Если не задан, дефолт — **`memory/wiki/`**. Не плоди несколько несвязанных «вики» без явного решения в документации.
-3. **Не добавляй** `MEMORY.md`, корень **`memory/`** и корень **`WIKI_ROOT`** в `.gitignore` без явной просьбы пользователя. Preflight проверяет ignore отдельно; если пути **не** в ignore — **не меняй** `.gitignore`.
-4. **Секреты** в эти пути не записывай; для чувствительного — вне репозитория или в принятом в проекте секрет-хранилище.
-5. **Коммит и push** выполняй только по **явному запросу** пользователя; сам факт правки файлов в рабочем дереве не означает автоматический коммит.
+1. **`MEMORY.md`** at project root, **entire `memory/` tree** (including **`memory/changelog.md`** and default wiki **`memory/wiki/`**) and **`WIKI_ROOT/`** (if legacy outside `memory/`) must be **inside project git repo** and intended for **GitHub or functional equivalent** (GitLab, Gitea, Forgejo, Bitbucket, Azure DevOps, etc.).
+2. **`WIKI_ROOT`** set in `AGENTS.md` or `README.md`. If unset, default — **`memory/wiki/`**. Do not spawn multiple unrelated "wikis" without explicit doc decision.
+3. **Do not add** `MEMORY.md`, **`memory/`** root, and **`WIKI_ROOT`** root to `.gitignore` without explicit user request. Preflight checks ignore separately; if paths **not** ignored — **do not change** `.gitignore`.
+4. **No secrets** in these paths; for sensitive data — outside repo or project secret store.
+5. **Commit and push** only on **explicit user request**; editing files in working tree does not mean automatic commit.
 
-Если воркспейс **не** git-репозиторий или знания осознанно остаются только локально — явно отметь это в handoff и не навязывай push.
+If workspace is **not** a git repo or knowledge stays local by design — note in handoff and do not insist on push.
 
-## Decisions И Open Loops
+## Decisions and open loops
 
-Решения фиксируй с происхождением:
+Record decisions with provenance:
 
-- `approved_by: user` — пользователь явно утвердил; можно считать каноном.
-- `approved_by: inferred` или без поля — advisory; показывай как предположение, не как правило.
+- `approved_by: user` — user explicitly approved; treat as canon.
+- `approved_by: inferred` or no field — advisory; show as assumption, not rule.
 
-Новые секции в `memory/decisions.md` и закрытые блоки в `memory/open-loops.md` — **в начало** по правилам «Записи по дате и времени» (`## Активно` в open-loops не опускать вниз).
+New sections in `memory/decisions.md` and closed blocks in `memory/open-loops.md` — **at top** per "Dated entries" (`## Active` in open-loops must not sink down).
 
-Open loops фиксируй как actionable items: владелец, следующий шаг, блокер, абсолютная дата, если дата известна.
+Record open loops as actionable items: owner, next step, blocker, absolute date if known.
 
-## Автозапуск И Conflict Gate
+## Auto-start and conflict gate
 
-Запуск этого скилла сам по себе является разрешением начать пайплайн: читать контекст, выполнять **preflight**, анализировать сессию, классифицировать выводы, сверять память и готовить обновления. Не спрашивай "начать?" и не требуй подтверждения на clean updates.
+Invoking this skill is permission to start the pipeline: read context, run **preflight**, analyze session, classify findings, reconcile memory, prepare updates. Do not ask "start?" or require confirmation for clean updates.
 
-После preflight и маршрутизации, **перед записью** новых фактов из сессии выполни conflict gate:
+After preflight and routing, **before writing** new facts from session run conflict gate:
 
-1. **Проект:** `MEMORY.md`, `WIKI_ROOT`, `memory/`, `AGENTS.md`, `.cursor/rules/`, проектные скиллы.
-2. **Портфель** (если `GLOBAL_MEMORY_ROOT` доступен): `GLOBAL_MEMORY_ROOT/MEMORY.md`, `memory/`, `memory/wiki/`, `AGENTS.md` портфеля.
+1. **Project:** `MEMORY.md`, `WIKI_ROOT`, `memory/`, `AGENTS.md`, `.cursor/rules/`, project skills.
+2. **Portfolio** (if `GLOBAL_MEMORY_ROOT` available): `GLOBAL_MEMORY_ROOT/MEMORY.md`, `memory/`, `memory/wiki/`, portfolio `AGENTS.md`.
 
-Канон по типу: инвентарь/серверы/domains/URL/git_remote → **портфель**; поведение агента в этом репо → **проект** `AGENTS.md`; код/API → **проект**.
+Canon by type: inventory/servers/domains/URL/git_remote → **portfolio**; agent behavior in this repo → project `AGENTS.md`; code/API → **project**.
 
-Классифицируй результат:
+Classify result:
 
-- `clean` — противоречий нет. В Agent mode применяй изменения автоматически; коммит/push всё равно только по явному запросу.
-- `soft conflict` — есть дубль, устаревшая формулировка или очевидное уточнение. Можно обновить автоматически, если новая версия подтверждена текущей сессией; отметь в handoff как `Resolved automatically`.
-- `hard conflict` — есть противоречие с `approved_by: user`, `AGENTS.md`, `.cursor/rules/`, safety rule, git-политикой, секретами или невозможно определить канон. Не записывай спорный фрагмент; покажи conflict report и попроси пользователя выбрать.
+- `clean` — no contradictions. In Agent mode apply changes automatically; commit/push still only on explicit request.
+- `soft conflict` — duplicate, stale wording, or obvious clarification. May update automatically if new version confirmed by current session; note in handoff as `Resolved automatically`.
+- `hard conflict` — contradicts `approved_by: user`, `AGENTS.md`, `.cursor/rules/`, safety rule, git policy, secrets, or canon cannot be determined. Do not write disputed fragment; show conflict report and ask user to choose.
 
-Приоритет источников для авторазрешения:
+Source priority for auto-resolution:
 
-1. Явная текущая инструкция пользователя в этой сессии.
-2. Решения с `approved_by: user` в `memory/decisions.md`, плоская страница `adr-*.md` под `WIKI_ROOT/` или другой канонический документ проекта.
-3. `AGENTS.md` и `.cursor/rules/`.
-4. `MEMORY.md` как индекс.
-5. `memory/hot-cache.md`, затем `memory/warm-cache.md`.
-6. Страницы `WIKI_ROOT/` (COLD), включая `archived-*.md`.
-7. Вывод агента без подтверждения — только advisory.
+1. Explicit current user instruction in this session.
+2. Decisions with `approved_by: user` in `memory/decisions.md`, flat `adr-*.md` under `WIKI_ROOT/`, or other project canonical doc.
+3. `AGENTS.md` and `.cursor/rules/`.
+4. `MEMORY.md` as index.
+5. `memory/hot-cache.md`, then `memory/warm-cache.md`.
+6. `WIKI_ROOT/` pages (COLD), including `archived-*.md`.
+7. Agent conclusion without confirmation — advisory only.
 
-Если текущая инструкция пользователя меняет прежнее утверждённое правило, не затирай старое молча: зафиксируй новое решение как supersedes и отрази это в handoff.
+If current user instruction changes prior approved rule, do not overwrite silently: record new decision as supersedes and reflect in handoff.
 
-**Запись в журнал (только Agent mode, после фактических правок файлов):**
+**Journal write (Agent mode only, after actual file edits):**
 
-- **Проект:** `memory/changelog.md`, при необходимости `decisions` / `open-loops` / датированный `hot-cache` — по **«Записи по дате и времени»**.
-- **Портфель:** `GLOBAL_MEMORY_ROOT/memory/changelog.md` (и те же журналы портфеля) — тот же порядок; в **причине** changelog обязательно `from:<project-slug>` (slug текущего workspace, не `global-memory`, если сессия велась в другом репо).
+- **Project:** `memory/changelog.md`, and as needed `decisions` / `open-loops` / dated `hot-cache` — per **"Dated entries"**.
+- **Portfolio:** `GLOBAL_MEMORY_ROOT/memory/changelog.md` (and same portfolio journals) — same order; in changelog **reason** mandatory `from:<project-slug>` (slug of current workspace, not `global-memory`, if session was in another repo).
 
-При **hard** conflict — запись в журнал **только после** выбора пользователя.
+On **hard** conflict — journal entry **only after** user choice.
 
-Формат hard conflict:
+Hard conflict format:
 
 ```markdown
-## Требуется Решение По Конфликтам
+## Conflict resolution required
 
-| # | Тема | Уже в памяти | Новое из сессии | Почему конфликт | Варианты |
-|---|------|--------------|-----------------|-----------------|----------|
+| # | Topic | Already in memory | New from session | Why conflict | Options |
+|---|-------|-------------------|------------------|--------------|---------|
 ```
 
-## Анализ Скиллов
+## Skill analysis
 
-Если в сессии использовались скиллы:
+If skills were used in the session:
 
-1. Собери список глобальных `~/.cursor/skills/*/SKILL.md` и проектных `.cursor/skills/*/SKILL.md`
-2. Для каждого нового факта спроси: "какой скилл тематически владеет этим знанием?"
-3. Короткий gotcha или правило на 1-5 строк клади как `skill-update` в `SKILL.md`.
-4. Объёмную тему на 10+ строк клади как `skill-reference` в `references/<topic>.md` и добавляй ссылку из `SKILL.md`.
-5. Если скилл рассмотрен и правки не нужны, упомяни это в отчёте.
+1. List global `~/.cursor/skills/*/SKILL.md` and project `.cursor/skills/*/SKILL.md`
+2. For each new fact ask: "which skill thematically owns this knowledge?"
+3. Short gotcha or rule (1–5 lines) → `skill-update` in `SKILL.md`.
+4. Large topic (10+ lines) → `skill-reference` in `references/<topic>.md` and link from `SKILL.md`.
+5. If skill reviewed and no edits needed, mention in report.
 
-Новый скилл предлагай только если паттерн повторялся 2+ раза, состоит из 3+ шагов и имеет чёткий вход/выход.
+Propose new skill only if pattern repeated 2+ times, 3+ steps, clear input/output.
 
-## Мета: обновление этого скилла
+## Meta: updating this skill
 
-После сессии, где активно использовался `memo-session-skill`, включи в план правок сам файл `~/.cursor/skills/memo-session-skill/SKILL.md`, если выполнилось хотя бы одно из условий:
+After a session where `memo-session-skill` was actively used, include edits to `~/.cursor/skills/memo-session-skill/SKILL.md` if any of:
 
-- пользователь поправил workflow, порядок шагов или формат вывода;
-- сработал ложный или слабый триггер: описание не отражает реальный use case;
-- всплыла дыра: неочевидный кейс не попал ни в один канал из раздела «Маршрутизация»;
-- повторяющийся конфликт с другим скиллом или с `AGENTS.md` / правилами.
+- user corrected workflow, step order, or output format;
+- false or weak trigger: description does not match real use case;
+- gap: non-obvious case missed all channels in "Routing";
+- recurring conflict with another skill or `AGENTS.md` / rules.
 
-Правила правок:
+Edit rules:
 
-- **`description` в frontmatter:** только **добавляй** новые триггер-фразы или уточнения; существующий текст не переписывай целиком, чтобы не сломать подбор скилла.
-- **Тело `SKILL.md`:** короткие уточнения — в существующие секции; если правка разрастается в историю или длинные примеры, вынеси в **`~/.cursor/skills/memo-session-skill/references/changelog.md`** (это журнал **эволюции этого скилла**, не путать с **`memory/changelog.md`** проекта) или другой `references/<тема>.md` и добавь **одну** ссылку из `SKILL.md` в подходящий раздел.
-- Не раздувай скилл сверх необходимости: цель — точечные правки после реальных сессий.
+- **`description` in frontmatter:** only **add** new trigger phrases or clarifications; do not rewrite existing text wholesale to avoid breaking skill matching.
+- **`SKILL.md` body:** short clarifications in existing sections; if edit grows into history or long examples, move to **`~/.cursor/skills/memo-session-skill/references/changelog.md`** (this skill's **evolution journal**, not project **`memory/changelog.md`**) or other `references/<topic>.md` and add **one** link from `SKILL.md` in appropriate section.
+- Do not bloat skill unnecessarily: goal is targeted fixes after real sessions.
 
-## Формат Отчёта И Conflict Report
+## Report and conflict report format
 
-При clean/soft updates не блокируйся на предварительном согласовании. После применения покажи, что изменено:
+On clean/soft updates do not block on prior approval. After applying show what changed:
 
 ```markdown
-## Обновления По Итогам Сессии
+## Session wrap-up updates
 
-### 1. Документация, память, тесты
+### 1. Documentation, memory, tests
 
-| # | Файл | Тип | Статус | Изменение |
-|---|------|-----|--------|-----------|
+| # | File | Type | Status | Change |
+|---|------|------|--------|--------|
 
-### 2. Скиллы
+### 2. Skills
 
-| # | Файл | Тип | Статус | Изменение |
-|---|------|-----|--------|-----------|
+| # | File | Type | Status | Change |
+|---|------|------|--------|--------|
 
-### 3. Скиллы, рассмотренные без правок
+### 3. Skills reviewed without edits
 
-- `skill-name` — рассмотрен, правки не нужны.
+- `skill-name` — reviewed, no edits needed.
 
 ### 4. Memory hygiene
 
-- Пороги: что превышено; demote HOT→WARM, promote WARM→вики.
-- Preflight: gitignore (ok / needs user), bootstrap (что создано), битые ссылки в индексе.
+- Thresholds: what exceeded; demote HOT→WARM, promote WARM→wiki.
+- Preflight: gitignore (ok / needs user), bootstrap (what created), broken index links.
 
 ### 5. Changelog
 
-- Проект: **`memory/changelog.md`**
-- Портфель: **`GLOBAL_MEMORY_ROOT/memory/changelog.md`** (или «пропущен»)
-- Кратко: сколько строк, за какие события (формат — «Журнал изменений памяти»).
+- Project: **`memory/changelog.md`**
+- Portfolio: **`GLOBAL_MEMORY_ROOT/memory/changelog.md`** (or "skipped")
+- Brief: how many lines, for which events (format — "Memory changelog").
 
-### 6. Портфельная память
+### 6. Portfolio memory
 
-| # | Файл | scope | Статус | Изменение |
-|---|------|-------|--------|-----------|
+| # | File | scope | Status | Change |
+|---|------|-------|--------|--------|
 | … | … | project/portfolio/both | … | … |
 
-- `GLOBAL_MEMORY_ROOT`: путь, доступен / degraded
-- AGENTS.md check: ok / patched / skipped (если workspace = global-memory)
+- `GLOBAL_MEMORY_ROOT`: path, available / degraded
+- AGENTS.md check: ok / patched / skipped (if workspace = global-memory)
 ```
 
-Типы: `doc-update`, `portfolio-update`, `rule-update`, `memory-new`, `memory-update`, `regression`, `skill-update`, `skill-reference`, `skill-new-incident`, `status`.
+Types: `doc-update`, `portfolio-update`, `rule-update`, `memory-new`, `memory-update`, `regression`, `skill-update`, `skill-reference`, `skill-new-incident`, `status`.
 
-Если есть hard conflicts, добавь отдельный блок `Требуется Решение По Конфликтам` и не применяй спорные изменения до выбора пользователя.
+If hard conflicts exist, add separate `Conflict resolution required` block and do not apply disputed changes until user choice.
 
-## Формат Анализа Без Записи
+## Analysis-only format
 
-Если пользователь просит только анализ, используй:
+If user asks analysis only, use:
 
 ```markdown
-## Краткий Дайджест
+## Brief digest
 
-## Ключевые Знания
+## Key knowledge
 
-## Открытые Петли
+## Open loops
 
-## Решения
+## Decisions
 
-## Что Стоит Сохранить
+## Worth saving
 
-## Handoff На Следующую Сессию
+## Handoff for next session
 ```
 
 ## Handoff
 
-В конце крупной сессии дай короткий handoff:
+At end of large session provide short handoff:
 
-- `HOT`: что важно держать в голове прямо сейчас.
-- `Open loops`: незакрытые задачи и блокеры.
-- `Decisions`: утверждённые решения и advisory-решения отдельно.
-- `Next actions`: 1-5 конкретных следующих шагов.
-- `Suggested memory updates`: что сохранить и куда.
-- `Memory hygiene`: итог preflight (gitignore, битые ссылки, bootstrap) и действия по лимитам температур.
-- `Changelog`: проект и портфель — обновлены / пропущены (почему).
-- `Portfolio HOT` / `Portfolio open loops` / `Portfolio hygiene` — если портфель доступен.
+- `HOT`: what to keep in mind right now.
+- `Open loops`: open tasks and blockers.
+- `Decisions`: approved and advisory decisions separately.
+- `Next actions`: 1–5 concrete next steps.
+- `Suggested memory updates`: what to save and where.
+- `Memory hygiene`: preflight summary (gitignore, broken links, bootstrap) and temperature limit actions.
+- `Changelog`: project and portfolio — updated / skipped (why).
+- `Portfolio HOT` / `Portfolio open loops` / `Portfolio hygiene` — if portfolio available.
 
-## Поиск по портфельной памяти
+## Portfolio memory search
 
-Без записи или по запросу пользователя:
+Without writes or on user request:
 
-1. Разреши `GLOBAL_MEMORY_ROOT` (§1.5).
-2. Поиск: `rg -i "<запрос>"` по `GLOBAL_MEMORY_ROOT/MEMORY.md`, `GLOBAL_MEMORY_ROOT/memory`, `GLOBAL_MEMORY_ROOT/memory/wiki` (или `Select-String` на Windows, см. [references/global-memory.md](references/global-memory.md)).
-3. Открой `memory/wiki/projects-registry.md` → `local_path`, `git_remote`, `project_memory`.
-4. При необходимости прочитай `MEMORY.md` найденного проекта.
-5. Ответ: файл, суть, `last_verified` / verified | advisory | unknown.
+1. Resolve `GLOBAL_MEMORY_ROOT` (§1.5).
+2. Search: `rg -i "<query>"` over `GLOBAL_MEMORY_ROOT/MEMORY.md`, `GLOBAL_MEMORY_ROOT/memory`, `GLOBAL_MEMORY_ROOT/memory/wiki` (or `Select-String` on Windows, see [references/global-memory.md](references/global-memory.md)).
+3. Open `memory/wiki/projects-registry.md` → `local_path`, `git_remote`, `project_memory`.
+4. If needed read `MEMORY.md` of found project.
+5. Answer: file, summary, `last_verified` / verified | advisory | unknown.
 
-## Субагент portfolio-librarian
+## portfolio-librarian subagent
 
-Опционально, см. [agents/portfolio-librarian.md](agents/portfolio-librarian.md). Вызывай при ≥3 portfolio-записях, dedupe, hygiene портфеля, явном поиске. **Не** копируй промпт в проекты или `GLOBAL_MEMORY_ROOT`. Запись выполняет родительский memo-session после отчёта субагента.
+Optional, see [agents/portfolio-librarian.md](agents/portfolio-librarian.md). Invoke for ≥3 portfolio entries, dedupe, portfolio hygiene, explicit search. **Do not** copy prompt into projects or `GLOBAL_MEMORY_ROOT`. Parent memo-session performs writes after subagent report.
 
-## Install (детали)
+## Install (details)
 
-**Глобально:**
+**Global:**
 
 ```bash
 npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
 ```
 
-**Только репозиторий:**
+**Repository only:**
 
 ```bash
 npx skills add shenwell/ai-agent-skills --skill memo-session-skill -a cursor -y
 ```
 
-Путь после install: `~/.cursor/skills/memo-session-skill/` или `~/.agents/skills/memo-session-skill/`.
+Path after install: `~/.cursor/skills/memo-session-skill/` or `~/.agents/skills/memo-session-skill/`.
 
-## Ограничения
+## Limitations
 
-- Не записывай секреты, токены, приватные ключи, пароли и connection strings.
-- Не делай коммиты и push без явного запроса; при этом `MEMORY.md`, дерево **`memory/`** и **`WIKI_ROOT/`** по умолчанию **должны быть отслеживаемыми в git** (не прятать в `.gitignore` без причины).
-- Не используй относительные даты вроде "сегодня"; пиши абсолютные даты.
-- Не дублируй знание между `AGENTS.md`, вики, memory и скиллами; `docs/` не дублируй без явного канона проекта.
-- Не дублируй абзацы между проектным `memory/` и `GLOBAL_MEMORY_ROOT`; `scope: both` = ссылка + тело в портфеле.
-- Не копируй `memo-session-skill` в `GLOBAL_MEMORY_ROOT` или в проектные репо — только ссылка в `agent-process.md` / `AGENTS.md`.
-- Не перезаписывай существующие файлы целиком без необходимости.
-- В Ask/Plan mode: только чтение, preflight-отчёт, conflict analysis и рекомендации **без** bootstrap и без записи в файлы проекта.
-- В Agent mode: полный пайплайн включая bootstrap и запись; отдельное подтверждение пользователя нужно только при **hard conflicts** или при удалении строк из `.gitignore`.
+- Do not record secrets, tokens, private keys, passwords, connection strings.
+- No commits or push without explicit request; yet `MEMORY.md`, **`memory/`** tree, and **`WIKI_ROOT/`** must **default to git-tracked** (do not hide in `.gitignore` without reason).
+- No relative dates like "today"; use absolute dates.
+- Do not duplicate knowledge across `AGENTS.md`, wiki, memory, skills; do not duplicate `docs/` without explicit project canon.
+- Do not duplicate paragraphs between project `memory/` and `GLOBAL_MEMORY_ROOT`; `scope: both` = link + body in portfolio.
+- Do not copy `memo-session-skill` into `GLOBAL_MEMORY_ROOT` or project repos — only link in `agent-process.md` / `AGENTS.md`.
+- Do not overwrite existing files wholesale without need.
+- Ask/Plan mode: read-only, preflight report, conflict analysis, recommendations **without** bootstrap or project file writes.
+- Agent mode: full pipeline including bootstrap and writes; user confirmation only on **hard conflicts** or removing lines from `.gitignore`.

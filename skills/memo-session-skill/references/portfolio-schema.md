@@ -1,44 +1,44 @@
-# Схема портфельной памяти
+# Portfolio memory schema
 
-Путь: **`GLOBAL_MEMORY_ROOT`** = `D:/CURSOR/global-memory` (см. [global-memory.md](global-memory.md)).
+Path: **`GLOBAL_MEMORY_ROOT`** = `D:/CURSOR/global-memory` (see [global-memory.md](global-memory.md)).
 
-## Scope (обязательно для каждого вывода)
+## Scope (required for every finding)
 
-| Scope | Куда писать |
-|-------|-------------|
-| `project` | Только текущий репозиторий (`memory/`, вики проекта) |
-| `portfolio` | Только `GLOBAL_MEMORY_ROOT` |
-| `both` | Тело в global; в проекте **одна строка-ссылка** на `memory/wiki/project-<slug>.md` или реестр |
-| `skill` | `~/.cursor/skills/` или `.cursor/skills/` |
+| Scope | Where to write |
+|-------|----------------|
+| `project` | Current repository only (`memory/`, project wiki) |
+| `portfolio` | `GLOBAL_MEMORY_ROOT` only |
+| `both` | Body in global; in project **one link line** to `memory/wiki/project-<slug>.md` or registry |
+| `skill` | `~/.cursor/skills/` or `.cursor/skills/` |
 | `rule` | `AGENTS.md` / `.cursor/rules/` |
-| `session-only` | Только отчёт, без записи |
+| `session-only` | Report only, no write |
 
 ### Anti-dup
 
-- **Запрещено:** один и тот же абзац в `hot-cache` проекта и global.
-- **Разрешено `both`:** ссылка в проекте + полный текст в `project-<slug>.md` или тематической wiki global.
+- **Forbidden:** the same paragraph in project `hot-cache` and global.
+- **Allowed `both`:** link in project + full text in `project-<slug>.md` or global thematic wiki.
 
-## Критерии `scope: portfolio`
+## Criteria for `scope: portfolio`
 
-Минимум 2 из: неочевидно, переиспользуемо, конкретно, верифицировано — **и** тема:
+At least 2 of: non-obvious, reusable, concrete, verified — **and** topic:
 
-- другой репозиторий, сервер, домен, сертификат, URL, интеграция;
-- повторяемая ошибка агента во всех репо;
-- явная просьба «зафиксировать глобально».
+- another repository, server, domain, certificate, URL, integration;
+- repeatable agent mistake across all repos;
+- explicit request to "record globally".
 
 ## `projects-registry.md`
 
-Колонки:
+Columns:
 
 | slug | name | git_remote | local_path | project_memory | last_verified | status |
 
-- **git_remote** — канон между машинами (полный URL).
-- **local_path** — путь на этом ПК.
+- **git_remote** — canonical across machines (full URL).
+- **local_path** — path on this PC.
 - **status:** `active` | `archived` | `advisory`.
 
-Детали — в `memory/wiki/project-<slug>.md`, не дублировать длинные таблицы в реестре.
+Details live in `memory/wiki/project-<slug>.md`; do not duplicate long tables in the registry.
 
-## Обязательные wiki-страницы (bootstrap)
+## Required wiki pages (bootstrap)
 
 - `projects-registry.md`
 - `hosting-and-servers.md`
@@ -46,43 +46,43 @@
 - `urls-and-environments.md`
 - `agent-mistakes-registry.md`
 - `agent-process.md`
-- `project-<slug>.md` — по мере появления проектов
+- `project-<slug>.md` — as projects appear
 
-## Conflict gate (портфель)
+## Conflict gate (portfolio)
 
-| Тип знания | Канон |
-|------------|--------|
-| Серверы, домены, пути репо, URL каталог | Портфель |
-| Поведение агента в этом репо | `AGENTS.md` проекта |
-| Код, API, миграции | Проект |
+| Knowledge type | Canon |
+|----------------|--------|
+| Servers, domains, repo paths, URL catalog | Portfolio |
+| Agent behavior in this repo | Project `AGENTS.md` |
+| Code, API, migrations | Project |
 
-Приоритет источников — как в `SKILL.md`, плюс портфельные `decisions.md` и wiki между проектным `MEMORY.md` и hot-cache проекта.
+Source priority — as in `SKILL.md`, plus portfolio `decisions.md` and wiki between project `MEMORY.md` and project hot-cache.
 
-## Метаданные записи (рекомендуется)
+## Entry metadata (recommended)
 
-В портфельных буллетах и карточках: `source`, `project` (slug), `last_verified` (YYYY-MM-DD), `status`: verified | advisory | unknown.
+In portfolio bullets and cards: `source`, `project` (slug), `last_verified` (YYYY-MM-DD), `status`: verified | advisory | unknown.
 
-## Лимиты (только портфель)
+## Limits (portfolio only)
 
-| Слой | Лимит |
-|------|-------|
+| Layer | Limit |
+|-------|-------|
 | MEMORY.md | ≤300 |
 | hot-cache | ≤150 |
 | warm-cache | ≤250 |
 | open-loops | ≤200 |
 | decisions | ≤150 |
-| wiki/*.md | ~700, затем split |
+| wiki/*.md | ~700, then split |
 
-Проектные лимиты не менять.
+Do not change project limits.
 
-## Changelog и датированные записи портфеля
+## Portfolio changelog and dated entries
 
-Пути: `GLOBAL_MEMORY_ROOT/memory/changelog.md`, `decisions.md`, `open-loops.md`, датированные секции в `hot-cache.md`, `agent-mistakes-registry.md`.
+Paths: `GLOBAL_MEMORY_ROOT/memory/changelog.md`, `decisions.md`, `open-loops.md`, dated sections in `hot-cache.md`, `agent-mistakes-registry.md`.
 
-**Порядок:** как в `SKILL.md` → **«Записи по дате и времени»** (от нового к старому; `## Активно` в open-loops — закреплён сверху).
+**Order:** as in `SKILL.md` → **"Dated entries"** (newest first; `## Active` in open-loops pinned at top).
 
-Changelog: формат строки как у проекта; в **причине** — `from:<slug>` текущего workspace.
+Changelog: same line format as project; in **reason** — `from:<slug>` of current workspace.
 
-## Субагент
+## Subagent
 
-Тяжёлый search/dedupe/hygiene: [../agents/portfolio-librarian.md](../agents/portfolio-librarian.md) — только из каталога скилла, не копировать в проекты и не в global-memory.
+Heavy search/dedupe/hygiene: [../agents/portfolio-librarian.md](../agents/portfolio-librarian.md) — only from the skill catalog, do not copy into projects or global-memory.

@@ -1,32 +1,32 @@
-# Portfolio Librarian (субагент)
+# Portfolio Librarian (subagent)
 
-Вызывай через Task **только** при тяжёлых задачах портфеля. Канон скилла: `memo-session-skill`. **Не** копируй этот файл в проекты или `D:/CURSOR/global-memory`.
+Invoke via Task **only** for heavy portfolio work. Skill canon: `memo-session-skill`. **Do not** copy this file into projects or `D:/CURSOR/global-memory`.
 
-## Когда вызывать
+## When to invoke
 
-- Пользователь просит поиск по общей памяти / «где лежит проект X».
-- ≥3 записей `scope: portfolio` за одну сессию memo-session.
-- Hygiene портфеля: лимиты, битые ссылки, дедуп в `projects-registry.md`.
-- Явный запрос «разобрать портфель».
+- User asks to search shared memory / "where does project X live".
+- ≥3 `scope: portfolio` entries in one memo-session run.
+- Portfolio hygiene: limits, broken links, dedupe in `projects-registry.md`.
+- Explicit request to "triage the portfolio".
 
-## Вход
+## Input
 
-- `GLOBAL_MEMORY_ROOT` = `D:/CURSOR/global-memory` (или override из `AGENTS.md` проекта).
-- `project-slug` текущего workspace (из имени папки или `projects-registry`).
-- Запрос пользователя или список кандидатов из memo-session.
+- `GLOBAL_MEMORY_ROOT` = `D:/CURSOR/global-memory` (or override from project `AGENTS.md`).
+- `project-slug` of the current workspace (from folder name or `projects-registry`).
+- User query or candidate list from memo-session.
 
-## Задачи
+## Tasks
 
-1. **Search:** `rg` по `GLOBAL_MEMORY_ROOT/MEMORY.md`, `memory/`, `memory/wiki/`.
-2. **Registry:** сверить `projects-registry.md` — дубли slug, пустые `git_remote`, устаревший `last_verified`.
-3. **Dedupe:** найти одинаковые абзацы в hot/warm и wiki; предложить merge в одну страницу.
-4. **Links:** битые markdown-ссылки в `MEMORY.md`, `wiki/index.md`.
-5. **Output:** краткий markdown-отчёт: найденное, предлагаемые правки, конфликты. **Не** писать секреты.
+1. **Search:** `rg` across `GLOBAL_MEMORY_ROOT/MEMORY.md`, `memory/`, `memory/wiki/`.
+2. **Registry:** verify `projects-registry.md` — duplicate slugs, empty `git_remote`, stale `last_verified`.
+3. **Dedupe:** find identical paragraphs in hot/warm and wiki; propose merge into one page.
+4. **Links:** broken markdown links in `MEMORY.md`, `wiki/index.md`.
+5. **Output:** short markdown report: findings, proposed edits, conflicts. **Do not** write secrets.
 
-## Запись
+## Writes
 
-Субагент **не** коммитит. Возвращает список правок родительскому memo-session; запись — по канону `SKILL.md` (clean/soft, dual changelog).
+The subagent **does not** commit. It returns an edit list to the parent memo-session; writes follow `SKILL.md` canon (clean/soft, dual changelog).
 
-## Приоритет канона
+## Canon priority
 
-Инвентарь/серверы/URL → портфель. Код/API → проект. Поведение агента в репо → `AGENTS.md` проекта.
+Inventory/servers/URLs → portfolio. Code/API → project. Agent behavior in this repo → project `AGENTS.md`.

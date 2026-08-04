@@ -1,17 +1,17 @@
-# Шаблон: блок «Память агента» в AGENTS.md проекта
+# Template: "Agent memory" block in project AGENTS.md
 
-Вставь в `AGENTS.md` проектного репозитория (5–10 строк). **Не** копируй сюда `memo-session-skill`.
+Insert into the project repository `AGENTS.md` (5–10 lines). **Do not** copy `memo-session-skill` here.
 
 ```markdown
-## Память агента
+## Agent memory
 
-**Проект:** `MEMORY.md` → `memory/hot-cache.md` → при необходимости `warm-cache`, `open-loops`, `decisions` → `memory/wiki/`.
+**Project:** `MEMORY.md` → `memory/hot-cache.md` → as needed `warm-cache`, `open-loops`, `decisions` → `memory/wiki/`.
 
-**Портфель (все проекты):** `D:/CURSOR/global-memory/MEMORY.md` → `memory/hot-cache.md` → `memory/wiki/projects-registry.md`.
+**Portfolio (all projects):** `D:/CURSOR/global-memory/MEMORY.md` → `memory/hot-cache.md` → `memory/wiki/projects-registry.md`.
 
-При `/memo-session-skill`: обновлять проектную память; факты с `scope: portfolio` — в портфель (без дублирования абзацев в hot-cache проекта).
+On `/memo-session-skill`: update project memory; facts with `scope: portfolio` go to portfolio (no duplicate paragraphs in project hot-cache).
 
-Override портфеля (редко): `GLOBAL_MEMORY_ROOT: <путь>`
+Portfolio override (rare): `GLOBAL_MEMORY_ROOT: <path>`
 ```
 
-После вставки при первом memo-session скилл проверит наличие блока в Preflight §1.6.
+After insertion, the first memo-session run checks for this block in Preflight §1.6.
