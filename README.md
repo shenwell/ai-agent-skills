@@ -171,7 +171,6 @@ README.md
 LICENSE
 CONTRIBUTING.md
 .gitignore
-assets/
 .github/ISSUE_TEMPLATE/
 skills/
 └── goal-mode/
@@ -183,8 +182,7 @@ That is all [skills.sh](https://skills.sh) needs. Everything for `goal-mode` liv
 
 ## Social preview (GitHub)
 
-Файл: [`assets/social-preview.png`](assets/social-preview.png) (1280×640).  
-**Загружен** в Settings → Social preview (2026-08-04). При замене файла в git — перезалить в Settings вручную.
+Картинка для **Settings → Social preview** загружена вручную (2026-08-04). В репозитории файла нет — при смене превью обновляй только в настройках GitHub.
 
 ## License
 

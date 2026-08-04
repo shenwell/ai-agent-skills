@@ -18,6 +18,9 @@ templates/
 goals/
 GOAL-MODE.md
 
+# Local dev tooling (not part of the published collection)
+/scripts/
+
 # Publish noise
 /tmp/
 *.tgz
