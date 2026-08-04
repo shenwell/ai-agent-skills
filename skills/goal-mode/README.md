@@ -4,6 +4,10 @@
   <img src="assets/banner.png" alt="GOAL MODE" width="1024" />
 </p>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
+[![skills.sh](https://skills.sh/b/shenwell/ai-agent-skills/goal-mode)](https://skills.sh/shenwell/ai-agent-skills/goal-mode)
+
 Keep the agent working until the goal is **verifiably done** (tests green, lint clean, build passing) — not after one attempt and a hopeful “done”.
 
 Durable `GOAL.md` contract · phased plans · worker ⇄ verifier · time budget · auto-resume.  
