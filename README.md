@@ -182,19 +182,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Repository layout
 
 ```
-skills/                      # ← this GitHub repo
+skills/                         # this GitHub repo (collection)
 ├── README.md
 ├── LICENSE
-├── docs/
+├── CONTRIBUTING.md
+├── docs/                       # install guides
 ├── skills/
-│   └── goal-mode/           # public skill packages (skills.sh entry)
-├── .cursor/                 # Cursor-native copy for maintainers
-├── templates/
-├── goals/                   # example goals
-├── install-global.ps1
-└── install.ps1
+│   └── goal-mode/              # ← the only skill package (add more here)
+├── install-global.ps1          # optional Cursor helper
+└── install.ps1                 # optional: bootstrap into a project
 ```
 
+Everything an agent needs to run `goal-mode` is inside `skills/goal-mode/` (scripts, agents, hooks scaffold, templates).
 ---
 
 ## Security

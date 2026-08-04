@@ -1,20 +1,23 @@
-# Dependencies / OS
+# OS / editor
 node_modules/
 .DS_Store
 Thumbs.db
 *.log
-
-# Local env
-.env
-.env.*
-
-# Editor
 .idea/
 *.swp
 
-# Goal runtime artifacts in this template repo (keep examples)
-# Consumer projects will have their own goals/
+# Secrets
+.env
+.env.*
 
-# Temp publish
+# Local Cursor workspace (not part of the public skills collection)
+.cursor/
+
+# Local runtime / duplicates (canonical copies live under skills/goal-mode/)
+templates/
+goals/
+GOAL-MODE.md
+
+# Publish noise
 /tmp/
 *.tgz
