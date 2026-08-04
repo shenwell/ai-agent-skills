@@ -4,7 +4,7 @@ Not to be confused with project or portfolio `memory/changelog.md`.
 
 ## 2026-08
 
-- 2026-08-04 | portable paths | references/global-memory.md, dry-run-checklist.md, agents-md-template.md, portfolio-schema.md, SKILL.md Preflight §1.5 | v1.0.2; remove maintainer-specific `D:/CURSOR/...` defaults; `GLOBAL_MEMORY_ROOT` only from AGENTS.md
+- 2026-08-04 | Socket audit hardening | SKILL.md Trust boundary, references/trust-boundary.md, goal-mode-integration.md | v1.0.3; standalone skill; no bundled install; explicit write allowlist
 - 2026-08-04 | public publish | skills/memo-session-skill/, goal-mode integration | v1.0.0 in shenwell/ai-agent-skills; references/goal-mode-integration.md; memory-checkpoints cross-link
 - 2026-08-04 | English translation | SKILL.md, README.md, references/, agents/ | v1.0.1; English-only triggers and protocol
 

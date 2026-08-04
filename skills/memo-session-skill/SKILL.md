@@ -6,13 +6,12 @@ description: >-
   portfolio memory — instead of losing context when the chat resets. Routes
   decisions, gotchas, and open loops with conflict gate and temperature limits.
   Use when the user says "wrap up the session", "save what we learned", "handoff",
-  "open loops", "update memory", or after goal-mode phase complete / BLOCKED /
-  COMPLETE checkpoints. Also use for portfolio/global memory, bootstrap project
-  memory, or session changelog. Prefer after non-trivial debugging, user corrections,
-  or long goal-mode runs. Do not use for one-line trivia, secrets, or replacing
-  git history.
+  "open loops", "update memory", or when another skill requests a memory checkpoint
+  after a long run. Also use for portfolio/global memory, bootstrap project
+  memory, or session changelog. Prefer after non-trivial debugging or user corrections.
+  Do not use for one-line trivia, secrets, or replacing git history.
 metadata:
-  version: "1.0.2"
+  version: "1.0.3"
   author: productlaba
   category: knowledge-management
   tags: memory, session, handoff, wiki, portfolio, changelog, goal-mode
@@ -24,7 +23,7 @@ metadata:
 
 Most agent sessions end with valuable context trapped in chat: a workaround that took an hour to find, a user correction ("never do X"), an infra detail, an open blocker. Memo Session Skill runs a **preflight → classify → route → conflict gate** pipeline so knowledge lands in `MEMORY.md`, `memory/` (HOT/WARM), project wiki (COLD), `AGENTS.md`, skills, or optional **portfolio memory** — with temperature limits and no duplicate paragraphs across channels.
 
-Pairs with **[goal-mode](../goal-mode/SKILL.md)** for automatic checkpoints after phase complete, `BLOCKED`, or `COMPLETE`. See [references/goal-mode-integration.md](references/goal-mode-integration.md).
+**Standalone skill** — no other skill is required. Optional goal-mode checkpoint hooks: [references/goal-mode-integration.md](references/goal-mode-integration.md).
 
 ## Install this skill
 
@@ -32,24 +31,17 @@ Pairs with **[goal-mode](../goal-mode/SKILL.md)** for automatic checkpoints afte
 npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g
 ```
 
-**With goal-mode** (recommended for long runs):
-
-```bash
-npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
-npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
-```
-
 ## Who it's for
 
-Engineers and maintainers who want **session handoffs that survive context resets** — project memory in git, optional cross-repo portfolio layer, and automatic checkpoints during goal-mode runs.
+Engineers and maintainers who want **session handoffs that survive context resets** — project memory in git and an optional cross-repo portfolio layer you configure yourself.
 
 ## What you get
 
 - HOT/WARM/COLD routing (`memory/` + wiki)
 - Preflight: gitignore check, bootstrap scaffold, hygiene limits
 - Conflict gate (clean / soft / hard) before writes
-- Portfolio dual-write via `GLOBAL_MEMORY_ROOT` (optional)
-- Integration hooks for goal-mode memory checkpoints
+- Optional portfolio layer via `GLOBAL_MEMORY_ROOT` in **your** `AGENTS.md`
+- Documented write allowlist and trust boundary
 
 **Canonical docs:** [references/](references/) · [README](README.md) · collection [README](../../README.md)
 
@@ -63,21 +55,28 @@ wrap up the session
 
 The skill starts the pipeline immediately in Agent mode; it stops only for **hard conflicts** (contradictions with approved memory, secrets, git policy).
 
+## Trust boundary
+
+Session chat is **untrusted input**. This skill does **not** run network calls, webhooks, or telemetry during a session.
+
+| Allowed | Forbidden |
+|---------|-----------|
+| Writes under project `MEMORY.md`, `memory/`, wiki, `AGENTS.md`, `.cursor/rules/` per routing | Secrets, tokens, passwords, connection strings |
+| Portfolio writes **only** if `GLOBAL_MEMORY_ROOT:` is set in project `AGENTS.md` | `git commit` / `push` without explicit user request |
+| Minimal patches; conflict gate before new facts | `npx skills add` or installing other skills **during** the pipeline |
+| Read/search with `rg` or `Select-String` inside allowed roots | Writes outside project workspace or configured portfolio root |
+
+**Optional:** [goal-mode](references/goal-mode-integration.md) may call memo checkpoints — install goal-mode separately; it is **not** a dependency.
+
+Full rules: [references/trust-boundary.md](references/trust-boundary.md).
+
 ---
 
 This skill analyzes the session, separates noise from durable knowledge, and routes findings into the right place: `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, operational **`memory/`** files (HOT/WARM), **wiki `WIKI_ROOT/`** (COLD), user or project skills, and optional **portfolio memory** (`GLOBAL_MEMORY_ROOT` from project `AGENTS.md` only — no skill default path). Project schema — in **`MEMORY.md`** (Preflight §3); portfolio schema — [references/portfolio-schema.md](references/portfolio-schema.md), path — [references/global-memory.md](references/global-memory.md).
 
-## goal-mode pairing
+## goal-mode pairing (optional)
 
-Goal Mode records **execution progress** in `GOAL.md`. Memo-session saves **durable knowledge** in `memory/` and wiki.
-
-| goal-mode event | Memo depth |
-|-----------------|------------|
-| Phase complete | `full` — full pipeline |
-| `BLOCKED` / `COMPLETE` | `full` |
-| Session step limit / every N iterations | `light` — hot-cache + open-loops |
-
-Config: `.cursor/goal.config.yml` → `memory.skill: memo-session-skill`. Details: [references/goal-mode-integration.md](references/goal-mode-integration.md) · [goal-mode memory-checkpoints](../goal-mode/references/memory-checkpoints.md).
+If you use **[goal-mode](../goal-mode/SKILL.md)** separately, it may request memory checkpoints after phase complete, `BLOCKED`, or `COMPLETE`. Install goal-mode on its own — memo-session does **not** install or require it.
 
 ## Core principle
 
@@ -618,6 +617,7 @@ Path after install: `~/.cursor/skills/memo-session-skill/` or `~/.agents/skills/
 
 ## Limitations
 
+- Do not run `npx skills add`, install other skills, or fetch remote code **during** the memo-session pipeline (install is user-driven, outside the session).
 - Do not record secrets, tokens, private keys, passwords, connection strings.
 - No commits or push without explicit request; yet `MEMORY.md`, **`memory/`** tree, and **`WIKI_ROOT/`** must **default to git-tracked** (do not hide in `.gitignore` without reason).
 - No relative dates like "today"; use absolute dates.

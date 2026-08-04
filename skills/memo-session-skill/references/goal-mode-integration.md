@@ -1,15 +1,19 @@
-# goal-mode integration
+# goal-mode integration (optional)
 
-**Skills:** `memo-session-skill` + `goal-mode` ([shenwell/ai-agent-skills](https://github.com/shenwell/ai-agent-skills))
+**Not a dependency.** Install [goal-mode](../../goal-mode/SKILL.md) separately if you want autonomous runs with memory checkpoints. Memo-session works standalone.
+
+**Skills:** `memo-session-skill` + optional `goal-mode` ([shenwell/ai-agent-skills](https://github.com/shenwell/ai-agent-skills))
 
 Goal Mode records **what happened** in `GOAL.md` (Progress Log, statuses, iterations). Memo-session saves **durable knowledge** — decisions, gotchas, workarounds — in `memory/` and wiki so the next agent turn (after summarization or stop-hook) does not lose project context.
 
-## Install the pair
+## Install the pair (only if you use both)
 
 ```bash
-npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
+npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 ```
+
+Install only what you need. Memo-session does not invoke `npx skills add` during its pipeline.
 
 After the first `/goal` in a project, bootstrap copies `.cursor/goal.config.yml` with `memory.checkpoints` → `skill: memo-session-skill`.
 
