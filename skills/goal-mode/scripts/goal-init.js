@@ -14,7 +14,7 @@ const SKILL_ROOT = path.resolve(__dirname, '..');
 function slugify(text) {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9а-яё\s-]/gi, '')
+    .replace(/[^a-z0-9\s-]/gi, '')
     .trim()
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')

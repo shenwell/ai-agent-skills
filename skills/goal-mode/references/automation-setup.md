@@ -1,18 +1,18 @@
 # Automation Setup
 
-Продлевает работу **за пределы лимита одной VM-сессии** Cloud Agent (8h+).
+Extends work **beyond a single Cloud Agent VM session limit** (8h+).
 
 ## Time budget across sessions
 
-Wall-clock время суммируется в `goals/{id}/time-log.json`. После каждой VM-сессии stop hook пишет сессию; automation перезапускает агента, пока `should_continue: true` и `over_time_budget: false`.
+Wall-clock time accumulates in `goals/{id}/time-log.json`. After each VM session the stop hook records the session; automation restarts the agent while `should_continue: true` and `over_time_budget: false`.
 
-Проверка:
+Check status:
 
 ```bash
 node .cursor/skills/goal-mode/scripts/goal-time.js status goals/{goal-id} --json
 ```
 
-Финальный отчёт: [time-tracking.md](time-tracking.md) → `SESSION_TIME_REPORT.md`.
+Final report: [time-tracking.md](time-tracking.md) → `SESSION_TIME_REPORT.md`.
 
 ## Status Check Script
 

@@ -1,9 +1,9 @@
 # Goal Mode — model pool and role defaults
-# Способ 1 (UI): откройте .cursor/agents/goal-*.md → поле model → выпадашка Cursor
-# Способ 2: меняйте defaults ниже; агенты без model в frontmatter возьмут отсюда
+# Method 1 (UI): open .cursor/agents/goal-*.md → model field → Cursor dropdown
+# Method 2: change defaults below; agents without model in frontmatter inherit from here
 
 models:
-  # Пул моделей проекта — можно выбирать в выпадашке агентов
+  # Project model pool — pick in agent dropdown
   available:
     - id: gpt-5.3-codex-high
       label: Codex 5.3 High
@@ -21,11 +21,11 @@ models:
       label: GPT-5.6 Sol Medium
       for: [intake, master_plan, phase_plan, verify]
 
-  # Defaults по группам (fallback)
+  # Group defaults (fallback)
   planning: gpt-5.3-codex-high
   coding: composer-2.5[fast=false]
 
-  # Тонкая настройка по шагу (переопределяет planning/coding)
+  # Per-step overrides (override planning/coding)
   intake: gpt-5.3-codex-high
   master_plan: gpt-5.3-codex-high
   phase_plan: gpt-5.3-codex-high

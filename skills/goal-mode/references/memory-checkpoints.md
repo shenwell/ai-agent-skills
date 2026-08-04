@@ -87,5 +87,5 @@ See `goal.config.yml` → `memory.checkpoints`. Defaults align with `execution.m
 User does not need to remember — parent agent runs checkpoints automatically. Manual override:
 
 ```
-/memo подведи итоги по цели
+/memo summarize goal progress
 ```

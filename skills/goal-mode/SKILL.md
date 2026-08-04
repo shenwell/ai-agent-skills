@@ -16,7 +16,7 @@ description: >-
   Do not use for one-shot Q&A or vague "make it better" without a measurable
   finish line.
 metadata:
-  version: "1.3.0"
+  version: "1.3.1"
   author: productlaba
   category: autonomous-execution
   tags: goal, autonomous, autonomous-coding-agent, verify-until-done, proof-loop,

@@ -1,31 +1,31 @@
 # Time Tracking
 
-Goal Mode отслеживает **wall-clock время** сессий и (опционально) **детализацию по активностям**.
+Goal Mode tracks **wall-clock session time** and (optionally) **per-activity breakdown**.
 
-## Что отслеживается автоматически
+## What is tracked automatically
 
-| Событие | Механизм | Файл |
-|---------|----------|------|
-| Старт сессии Cursor | `sessionStart` hook → `goal-time.js session-start` | `goals/{id}/time-log.json` |
-| Конец сессии / stop hook | `stop` hook → `goal-time.js session-end` | `time-log.json` |
-| Бюджет по часам | `goal-status.js` читает `time-log.json` | JSON status |
-| Финальный отчёт | `goal-time.js report` при терминальном статусе | `SESSION_TIME_REPORT.md` |
+| Event | Mechanism | File |
+|-------|-----------|------|
+| Cursor session start | `sessionStart` hook → `goal-time.js session-start` | `goals/{id}/time-log.json` |
+| Session end / stop hook | `stop` hook → `goal-time.js session-end` | `time-log.json` |
+| Hour budget | `goal-status.js` reads `time-log.json` | JSON status |
+| Final report | `goal-time.js report` on terminal status | `SESSION_TIME_REPORT.md` |
 
-## Детализация «на что потрачено»
+## Activity breakdown
 
-Parent agent **после каждого шага** вызывает:
+Parent agent **after each step** calls:
 
 ```bash
 node .cursor/skills/goal-mode/scripts/goal-time.js log goals/{id} \
   --activity worker --detail "phase-0 step 3: fix lint in Button.tsx"
 ```
 
-Типы активностей: `intake`, `master_plan`, `phase_plan`, `worker`, `verifier`, `verify_commands`, `memory_checkpoint`, `orchestration`, `other`.
+Activity types: `intake`, `master_plan`, `phase_plan`, `worker`, `verifier`, `verify_commands`, `memory_checkpoint`, `orchestration`, `other`.
 
-### Когда логировать
+### When to log
 
-| Этап | activity |
-|------|----------|
+| Stage | activity |
+|-------|----------|
 | goal-intake | `intake` |
 | goal-planner | `master_plan` |
 | goal-phase-planner | `phase_plan` |
@@ -34,55 +34,55 @@ node .cursor/skills/goal-mode/scripts/goal-time.js log goals/{id} \
 | `goal-verify.js` | `verify_commands` |
 | memo-session-skill | `memory_checkpoint` |
 
-## Команды
+## Commands
 
 ```bash
-# Статус бюджета времени
+# Time budget status
 node .cursor/skills/goal-mode/scripts/goal-time.js status goals/my-goal --json
 
-# Сгенерировать / обновить отчёт
+# Generate / refresh report
 node .cursor/skills/goal-mode/scripts/goal-time.js report goals/my-goal
 
-# JSON с полным отчётом
+# Full report as JSON
 node .cursor/skills/goal-mode/scripts/goal-time.js report goals/my-goal --format json
 ```
 
-## Отчёт после сессии
+## Post-session report
 
-Файл `goals/{id}/SESSION_TIME_REPORT.md` содержит:
+`goals/{id}/SESSION_TIME_REPORT.md` contains:
 
-- суммарное wall-clock время и остаток бюджета
-- разбивку по типам активностей (%)
-- список сессий (start → duration → reason)
-- последние 30 залогированных шагов
+- total wall-clock time and remaining budget
+- breakdown by activity type (%)
+- session list (start → duration → reason)
+- last 30 logged steps
 
-**Parent agent обязан** в конце терминальной сессии (`COMPLETE`, `BLOCKED`, `FAILED`, исчерпан бюджет часов):
+**Parent agent must** at the end of a terminal session (`COMPLETE`, `BLOCKED`, `FAILED`, or hour budget exhausted):
 
-1. Вызвать `goal-time.js report`
-2. Показать пользователю краткую сводку из отчёта (elapsed, top activities, путь к файлу)
+1. Call `goal-time.js report`
+2. Show the user a short summary from the report (elapsed, top activities, file path)
 
-## Бюджет 6+ часов
+## 6+ hour budget
 
-В `goal.config.yml`:
+In `goal.config.yml`:
 
 ```yaml
 budget:
-  max_hours: 8   # или 12, 24 — любое значение
+  max_hours: 8   # or 12, 24 — any value
 
 hooks:
-  max_continue_loops: 72   # ≥ max_iterations и ~4× max_hours
+  max_continue_loops: 72   # ≥ max_iterations and ~4× max_hours
 
 cloud_agent:
-  max_duration_hours: 8    # лимит одной VM; дальше — automation
+  max_duration_hours: 8    # single VM limit; automation continues beyond that
 ```
 
-Правила:
+Rules:
 
-- `should_continue` = false, когда `elapsed >= max_hours` (даже если iteration < max_iterations)
-- stop hook продолжает auto-continue, пока есть и iteration, и time budget
-- Cloud Agent: одна VM ≤ `max_duration_hours`; для 12h+ включите [automation-setup.md](automation-setup.md) (hourly re-trigger)
+- `should_continue` = false when `elapsed >= max_hours` (even if iteration < max_iterations)
+- stop hook keeps auto-continue while both iteration and time budget remain
+- Cloud Agent: one VM ≤ `max_duration_hours`; for 12h+ enable [automation-setup.md](automation-setup.md) (hourly re-trigger)
 
-## Формат time-log.json
+## time-log.json format
 
 ```json
 {

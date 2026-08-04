@@ -28,7 +28,7 @@ See [intake-protocol.md](intake-protocol.md). Agent only. No code.
 
 Rules:
 
-- Phases from project docs when user says "все фазы" / "all phases"
+- Phases from project docs when user says "all phases"
 - Else derive logical milestones from objective
 - One row per completion criterion
 - `planning_level: master` in frontmatter

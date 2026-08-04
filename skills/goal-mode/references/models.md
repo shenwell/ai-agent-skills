@@ -1,38 +1,38 @@
 # Model Routing
 
-Два способа задать модель. Можно комбинировать.
+Two ways to set the model. You can combine them.
 
-## Способ 1 — выпадашка в `.cursor/agents/*.md` (рекомендуется)
+## Method 1 — dropdown in `.cursor/agents/*.md` (recommended)
 
-Cursor показывает **model picker** в UI при редактировании файла субагента.
+Cursor shows a **model picker** in the UI when editing a subagent file.
 
-Откройте, например, [goal-planner.md](../../agents/goal-planner.md) и выберите модель в поле `model:`:
+Open, for example, [goal-planner.md](../../agents/goal-planner.md) and pick a model in the `model:` field:
 
 ```yaml
 ---
 name: goal-planner
 description: ...
-model: gpt-5.3-codex-high   # ← клик → выпадашка всех доступных моделей
+model: gpt-5.3-codex-high   # ← click → dropdown of available models
 ---
 ```
 
-| Файл агента | Роль | Модель по умолчанию |
-|-------------|------|---------------------|
-| `goal-intake.md` | Критерии из репо | Codex 5.3 High |
-| `goal-planner.md` | Мастер-план | Codex 5.3 High |
-| `goal-phase-planner.md` | План фазы | Codex 5.3 High |
-| `goal-worker.md` | Код | Composer 2.5 |
+| Agent file | Role | Default model |
+|------------|------|---------------|
+| `goal-intake.md` | Criteria from repo | Codex 5.3 High |
+| `goal-planner.md` | Master plan | Codex 5.3 High |
+| `goal-phase-planner.md` | Phase plan | Codex 5.3 High |
+| `goal-worker.md` | Code | Composer 2.5 |
 | `goal-verifier.md` | Verify | Composer 2.5 |
 
-При вызове `mcp_task(subagent_type="goal-planner", ...)` Cursor **сам** возьмёт `model` из frontmatter агента.
+When calling `mcp_task(subagent_type="goal-planner", ...)`, Cursor **automatically** uses `model` from the agent frontmatter.
 
-## Способ 2 — пул и defaults в config
+## Method 2 — pool and defaults in config
 
-Файл [goal.models.yml](../../goal.models.yml) (или секция `models` в `goal.config.yml`):
+File [goal.models.yml](../../goal.models.yml) (or `models` section in `goal.config.yml`):
 
 ```yaml
 models:
-  available:          # справочник: какие модели для каких ролей
+  available:          # catalog: which models for which roles
     - id: gpt-5.3-codex-high
       label: Codex 5.3 High
       for: [master_plan, phase_plan]
@@ -43,47 +43,47 @@ models:
   coding: composer-2.5[fast=false]
 ```
 
-Проверка:
+Verify:
 
 ```bash
 node .cursor/skills/goal-mode/scripts/goal-models.js
 node .cursor/skills/goal-mode/scripts/goal-models.js --json master_plan
 ```
 
-## Приоритет
+## Priority
 
 ```
-1. model в frontmatter агента (.cursor/agents/*.md)  ← UI dropdown
-2. models.<step> в goal.models.yml / goal.config.yml
-3. models.planning / models.coding (группа)
-4. inherit (модель родительской сессии)
+1. model in agent frontmatter (.cursor/agents/*.md)  ← UI dropdown
+2. models.<step> in goal.models.yml / goal.config.yml
+3. models.planning / models.coding (group)
+4. inherit (parent session model)
 ```
 
-## Несколько моделей на выбор
+## Multiple models to choose from
 
-- В **available** перечислите все модели, которые допустимы в проекте
-- В каждом агенте через **выпадашку** выберите одну из пула
-- Для A/B: дублируйте агента, например `goal-worker-fast.md` с `composer-2.5-fast`
+- In **available**, list all models allowed in the project
+- In each agent, use the **dropdown** to pick one from the pool
+- For A/B: duplicate an agent, e.g. `goal-worker-fast.md` with `composer-2.5-fast`
 
-## Параметры модели (bracket syntax)
+## Model parameters (bracket syntax)
 
 ```yaml
-model: composer-2.5[fast=false]     # не fast-вариант
+model: composer-2.5[fast=false]     # non-fast variant
 model: claude-opus-4-8[effort=high]
 ```
 
-## mcp_task model (опционально)
+## mcp_task model (optional)
 
-Если frontmatter задан — **не дублируйте** `model` в mcp_task.
+If frontmatter is set — **do not duplicate** `model` in mcp_task.
 
-Если нужно переопределить разово:
+To override once:
 
 ```
 mcp_task(subagent_type="goal-worker", model="composer-2.5-fast", ...)
 ```
 
-## Ограничения Cursor
+## Cursor limitations
 
-- На legacy-планах subagents могут форситься на Composer — нужен Max Mode
-- Баги: frontmatter иногда игнорируется — см. troubleshooting.md
-- Cloud Agent: модель выбирается в UI при запуске VM
+- On legacy plans subagents may be forced to Composer — Max Mode required
+- Bugs: frontmatter sometimes ignored — see troubleshooting.md
+- Cloud Agent: model chosen in UI when launching the VM

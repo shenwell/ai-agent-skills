@@ -1,6 +1,6 @@
 # Cloud Agent Setup
 
-Для работы **6+ часов** без ноутбука.
+For **6+ hour** runs without keeping your laptop open.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@
 | Branch | `goal/{goal-id}` — isolated from main |
 | Long-running | **ON** (critical — else ~30 min timeout) |
 | Auto-run | **ON** |
-| Max duration | 8 hours (или больше; automation продлевает дальше) |
+| Max duration | 8 hours (or more; automation extends beyond that) |
 | Skill | `goal-mode` |
 | Checkpoints | Enabled |
 

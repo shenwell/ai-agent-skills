@@ -280,9 +280,9 @@ function buildMarkdownReport(goalArg, meta) {
     '',
     '## Notes',
     '',
-    '- **Wall-clock** — время между session-start и session-end (хуки Cursor).',
-    '- **Activities** — детализация, если parent agent вызывал `goal-time.js log` после шагов.',
-    '- Для продолжения после лимита Cloud Agent (6h) используйте automation — см. automation-setup.md.',
+    '- **Wall-clock** — time between session-start and session-end (Cursor hooks).',
+    '- **Activities** — breakdown when parent agent called `goal-time.js log` after steps.',
+    '- To continue past the Cloud Agent limit (6h), use automation — see automation-setup.md.',
     ''
   );
 

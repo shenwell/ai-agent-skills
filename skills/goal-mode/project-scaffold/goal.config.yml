@@ -1,7 +1,7 @@
-# Goal Mode — конфигурация проекта
-# Скопируй и адаптируй verify-команды под свой стек
+# Goal Mode — project configuration
+# Copy and adapt verify commands for your stack
 
-active_goal: null  # путь к активной цели, напр. goals/my-goal
+active_goal: null  # path to active goal, e.g. goals/my-goal
 
 verify:
   test:
@@ -21,7 +21,7 @@ verify:
     required: false
     timeout_seconds: 300
 
-# Примеры для других стеков (раскомментируй нужное):
+# Examples for other stacks (uncomment as needed):
 # verify:
 #   test: { command: "pytest", required: true }
 #   lint: { command: "ruff check .", required: true }
@@ -29,8 +29,8 @@ verify:
 
 budget:
   max_iterations: 50
-  max_hours: 8          # wall-clock бюджет (6+ часов); enforced через time-log + hooks
-  max_tokens_hint: 2000000  # подсказка агенту, не hard limit
+  max_hours: 8          # wall-clock budget (6+ hours); enforced via time-log + hooks
+  max_tokens_hint: 2000000  # hint for agent, not a hard limit
 
 execution:
   mode: run_until_complete   # single_iteration | run_until_complete
@@ -38,12 +38,12 @@ execution:
   stop_on: [COMPLETE, BLOCKED, FAILED, PAUSED]
 
 drift:
-  allowed_paths: []  # пусто = любые пути из плана; иначе whitelist префиксов
+  allowed_paths: []  # empty = any paths from plan; else prefix whitelist
 
 hooks:
   auto_continue_on_stop: true
   inject_goal_on_session_start: true
-  max_continue_loops: 72     # ≥ budget.max_iterations; для 8h ≈ 32+ loops
+  max_continue_loops: 72     # ≥ budget.max_iterations; for 8h ≈ 32+ loops
 
 memory:
   skill: memo-session-skill
@@ -59,14 +59,14 @@ memory:
 
 time_tracking:
   enabled: true
-  report_on_terminal: true       # SESSION_TIME_REPORT.md при COMPLETE/FAILED/BLOCKED/budget
-  report_on_session_end: true    # обновлять отчёт при каждом stop-hook (промежуточно)
-  log_activities: true           # parent логирует worker/verifier/planning через goal-time.js
+  report_on_terminal: true       # SESSION_TIME_REPORT.md on COMPLETE/FAILED/BLOCKED/budget
+  report_on_session_end: true    # refresh report on each stop-hook (interim)
+  log_activities: true           # parent logs worker/verifier/planning via goal-time.js
 
 cloud_agent:
   long_running: true
   auto_run: true
-  max_duration_hours: 8          # лимит одной VM-сессии; automation продлевает дальше
+  max_duration_hours: 8          # single VM session limit; automation extends beyond that
   branch_prefix: "goal/"
 
-# Модели: .cursor/goal.models.yml | UI: .cursor/agents/goal-*.md → model:
+# Models: .cursor/goal.models.yml | UI: .cursor/agents/goal-*.md → model:
