@@ -27,7 +27,7 @@
 
 **Public [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.**  
 - **`goal-mode`** — autonomous coding agent, **verify until done**: verifiable finish line, worker⇄verifier proof loop (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for Cursor).  
-- **`memo-session-skill`** — turn session knowledge into durable `memory/`, wiki, and handoffs; pairs with goal-mode checkpoints.
+- **`memo-session-skill`** — **persistent AI agent memory** for coding sessions: cross-session knowledge survives context resets via git-tracked `memory/`, wiki, and handoffs; pairs with goal-mode checkpoints.
 
 Stops the common failure mode: the agent tries once, claims “done,” and leaves a red build.
 
@@ -35,7 +35,7 @@ Stops the common failure mode: the agent tries once, claims “done,” and leav
 shenwell/ai-agent-skills
 └── skills/
     ├── goal-mode/              ← keep going until tests/lint/build are green
-    ├── memo-session-skill/     ← session → memory/wiki/handoff
+    ├── memo-session-skill/     ← persistent agent memory · session → memory/wiki/handoff
     └── <next-skill>/
 ```
 
@@ -164,9 +164,9 @@ memory:
 
 ---
 
-### `memo-session-skill` — session knowledge → memory
+### `memo-session-skill` — persistent AI agent memory
 
-Analyze the work session and route durable knowledge into `MEMORY.md`, `memory/` (HOT/WARM), project wiki, `AGENTS.md`, skills, and optional portfolio memory — with conflict gate and temperature limits.
+**Cross-session persistence** for coding agents: consolidate session knowledge and route it into `MEMORY.md`, `memory/` (HOT/WARM/COLD), project wiki, `AGENTS.md`, skills, and optional portfolio memory — git-tracked write-path memory with conflict gate and temperature limits. Complements RAG and managed platforms (Mem0, Zep); does not replace them.
 
 Package: [`skills/memo-session-skill/`](skills/memo-session-skill/) · skill README: [`skills/memo-session-skill/README.md`](skills/memo-session-skill/README.md)
 

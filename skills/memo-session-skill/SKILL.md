@@ -1,29 +1,46 @@
 ---
 name: memo-session-skill
 description: >-
-  Analyze the work session and extract durable knowledge into the right channel —
-  MEMORY.md, memory/ HOT/WARM layers, project wiki, AGENTS.md, skills, and optional
-  portfolio memory — instead of losing context when the chat resets. Routes
-  decisions, gotchas, and open loops with conflict gate and temperature limits.
-  Use when the user says "wrap up the session", "save what we learned", "handoff",
-  "open loops", "update memory", or when another skill requests a memory checkpoint
-  after a long run. Also use for portfolio/global memory, bootstrap project
+  Persistent AI agent memory for coding sessions — cross-session knowledge that
+  survives context window resets. Consolidates session noise into durable facts and
+  routes them via memory routing into MEMORY.md, memory/ HOT/WARM/COLD layers,
+  project wiki, AGENTS.md, skills, and optional portfolio memory — git-tracked,
+  with conflict gate and temperature limits. Stateful handoff when volatile chat
+  context is lost; complements vector RAG or managed memory platforms, does not
+  replace them. Use when the user says "wrap up the session", "save what we learned",
+  "handoff", "open loops", "update memory", "agent memory", "persistent memory",
+  "cross-session persistence", "how to give my agent memory", or when another skill
+  requests a memory checkpoint. Also for portfolio/global memory, bootstrap project
   memory, or session changelog. Prefer after non-trivial debugging or user corrections.
-  Do not use for one-line trivia, secrets, or replacing git history.
+  Do not use for one-line trivia, secrets, managed vector memory setup, or replacing
+  git history.
 metadata:
-  version: "1.0.3"
+  version: "1.0.4"
   author: productlaba
   category: knowledge-management
-  tags: memory, session, handoff, wiki, portfolio, changelog, goal-mode
+  tags: ai-agent-memory, persistent-memory, cross-session, memory-routing,
+    memory-consolidation, context-engineering, coding-agent, cursor, session,
+    handoff, wiki, portfolio, goal-mode
 ---
 
 # Memo Session Skill
 
-**Turn session noise into durable knowledge** — decisions, gotchas, workarounds, and handoffs — routed into the right place instead of lost when context resets.
+**Persistent AI agent memory for coding agents** — decisions, gotchas, workarounds, and open loops survive **context window resets** because they live in git-tracked files, not volatile chat.
 
-Most agent sessions end with valuable context trapped in chat: a workaround that took an hour to find, a user correction ("never do X"), an infra detail, an open blocker. Memo Session Skill runs a **preflight → classify → route → conflict gate** pipeline so knowledge lands in `MEMORY.md`, `memory/` (HOT/WARM), project wiki (COLD), `AGENTS.md`, skills, or optional **portfolio memory** — with temperature limits and no duplicate paragraphs across channels.
+The context window is **working memory**: it clears when the session ends. **Cross-session persistence** needs a write path — **memory consolidation** and **memory routing** into typed layers. Memo Session Skill runs **preflight → consolidate → classify → route → conflict gate** so knowledge lands in `MEMORY.md`, `memory/` (HOT/WARM/COLD), project wiki, `AGENTS.md`, skills, or optional **portfolio memory** — with temperature limits and no duplicate paragraphs across channels.
 
-**Standalone skill** — no other skill is required. Optional goal-mode checkpoint hooks: [references/goal-mode-integration.md](references/goal-mode-integration.md).
+**Standalone skill** — no vector database, no managed platform, no network calls during sessions. Optional goal-mode checkpoint hooks: [references/goal-mode-integration.md](references/goal-mode-integration.md).
+
+## How this differs
+
+| This skill | Not this |
+|------------|----------|
+| Git-tracked **persistent memory** for coding sessions | Mem0, Zep, Letta — managed vector/graph memory platforms |
+| **Write-path memory consolidation** from live sessions | RAG — read-heavy static knowledge corpora |
+| **Typed memory architecture** (HOT/WARM/COLD in `memory/` + wiki) | Embedding stores, hybrid retrieval pipelines |
+| **Cross-session continuity** and session handoff | Enterprise customer-memory or contact-center products |
+
+Complements RAG and managed memory layers; does not replace them.
 
 ## Install this skill
 
@@ -33,17 +50,30 @@ npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g
 
 ## Who it's for
 
-Engineers and maintainers who want **session handoffs that survive context resets** — project memory in git and an optional cross-repo portfolio layer you configure yourself.
+Engineers and maintainers building **stateful coding agents** in Cursor who need **long-term memory** and **session handoffs that survive context resets** — project memory in git, optional cross-repo portfolio layer, and **context engineering** without standing up a vector database.
 
 ## What you get
 
-- HOT/WARM/COLD routing (`memory/` + wiki)
-- Preflight: gitignore check, bootstrap scaffold, hygiene limits
+- **Typed memory architecture**: HOT/WARM/COLD routing (`memory/` + wiki) — working, medium, and durable layers
+- **Memory consolidation**: session digest → quality filter → durable facts (not a command diary)
+- **Memory routing**: classify findings and route to the right channel (`AGENTS.md`, wiki, skills, portfolio)
+- Preflight: gitignore check, bootstrap scaffold, hygiene limits, **memory compaction** at thresholds
 - Conflict gate (clean / soft / hard) before writes
 - Optional portfolio layer via `GLOBAL_MEMORY_ROOT` in **your** `AGENTS.md`
 - Documented write allowlist and trust boundary
 
 **Canonical docs:** [references/](references/) · [README](README.md) · collection [README](../../README.md)
+
+## Context window vs persistent memory
+
+| Layer | Analogy | In this skill |
+|-------|---------|---------------|
+| Context window | Volatile RAM — token budget, lost when chat resets | Session chat (untrusted input) |
+| Working memory | Recent turns, immediate task context | Session digest before routing |
+| Persistent memory | Disk — survives sessions | `MEMORY.md`, `memory/`, wiki in git |
+| Long-term memory | Cross-session facts and procedures | HOT/WARM/COLD + optional portfolio |
+
+Use this skill at session end to move knowledge from volatile context into **persistent, git-tracked agent memory**.
 
 ## Quick start
 
@@ -52,6 +82,8 @@ After a non-trivial session:
 ```
 wrap up the session
 ```
+
+Also works: `save what we learned`, `handoff`, `update agent memory`, `persistent memory checkpoint`.
 
 The skill starts the pipeline immediately in Agent mode; it stops only for **hard conflicts** (contradictions with approved memory, secrets, git policy).
 
@@ -72,7 +104,7 @@ Full rules: [references/trust-boundary.md](references/trust-boundary.md).
 
 ---
 
-This skill analyzes the session, separates noise from durable knowledge, and routes findings into the right place: `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, operational **`memory/`** files (HOT/WARM), **wiki `WIKI_ROOT/`** (COLD), user or project skills, and optional **portfolio memory** (`GLOBAL_MEMORY_ROOT` from project `AGENTS.md` only — no skill default path). Project schema — in **`MEMORY.md`** (Preflight §3); portfolio schema — [references/portfolio-schema.md](references/portfolio-schema.md), path — [references/global-memory.md](references/global-memory.md).
+This skill implements a **write-manage-read loop** for **coding agent session memory**: analyze the session, **consolidate** noise into durable knowledge, and **route** findings into the right place — `AGENTS.md`, `.cursor/rules/`, `tests/`, `MEMORY.md`, operational **`memory/`** files (HOT/WARM), **wiki `WIKI_ROOT/`** (COLD), user or project skills, and optional **portfolio memory** (`GLOBAL_MEMORY_ROOT` from project `AGENTS.md` only — no skill default path). This is **write-path agent memory** (session-specific, mutable, git-tracked), not a RAG corpus or managed vector store. Project schema — in **`MEMORY.md`** (Preflight §3); portfolio schema — [references/portfolio-schema.md](references/portfolio-schema.md), path — [references/global-memory.md](references/global-memory.md).
 
 ## goal-mode pairing (optional)
 
@@ -80,7 +112,7 @@ If you use **[goal-mode](../goal-mode/SKILL.md)** separately, it may request mem
 
 ## Core principle
 
-Pipeline order: **context → preflight (project + portfolio) → digest → filter and scope → classify → route → conflict gate (project, then portfolio) → write (clean/soft) → project and optional portfolio changelog → report and handoff**.
+Pipeline order: **context → preflight (project + portfolio) → session digest (consolidation) → filter and scope → classify (temperature + scope) → memory routing → conflict gate (project, then portfolio) → write (clean/soft) → project and optional portfolio changelog → report and handoff**.
 
 If `GLOBAL_MEMORY_ROOT` is unavailable — **degraded mode**: project pipeline without portfolio writes; report "Portfolio skipped".
 
@@ -100,9 +132,12 @@ Use this skill explicitly or automatically when the user asks to:
 - save what we learned;
 - update docs, memory, or skills after work;
 - produce a handoff for the next session;
-- decide what from the chat is worth recording.
+- decide what from the chat is worth recording;
+- give the agent persistent memory, cross-session persistence, or long-term memory;
+- build stateful agents, fix context loss, or checkpoint session knowledge;
+- route decisions and open loops into project memory.
 
-Suggest the skill yourself if the session had non-trivial debugging, a workaround, user correction, new process rule, repeatable manual procedure, architectural decision, open blocker, or regression bug.
+Suggest the skill yourself if the session had non-trivial debugging, a workaround, user correction, new process rule, repeatable manual procedure, architectural decision, open blocker, or regression bug — especially when **context window pressure** or a **new session** would lose that knowledge.
 
 ## Step 1: Understand context
 
@@ -219,9 +254,9 @@ Limits and conflict gate: **memo-session-skill**.
 - [Wiki — entry](memory/wiki/index.md)
 ```
 
-## Step 2: Session digest
+## Step 2: Session digest (memory consolidation)
 
-Produce a short human-readable summary:
+**Memory consolidation** step: distill volatile session context into a short human-readable summary before routing:
 
 - what was done;
 - what was learned;
@@ -248,6 +283,14 @@ Sixth criterion is mandatory: **`scope`** — `project` | `portfolio` | `both` |
 
 ## Step 4: Temperature classification
 
+Typed **memory architecture** — map each finding to temperature (and optionally cognitive role):
+
+| Temperature | Cognitive role (informative) | Storage |
+|-------------|------------------------------|---------|
+| HOT | Episodic / working — next 1–3 sessions | `memory/hot-cache.md` |
+| WARM | Medium recall — still active, not urgent | `memory/warm-cache.md` |
+| COLD | Semantic / procedural — stable transferable knowledge | **`WIKI_ROOT/`** (flat wiki) |
+
 For each finding choose class:
 
 - `session-only` — useful for report, do not save.
@@ -261,9 +304,9 @@ For each finding choose class:
 
 For each saved finding specify **`scope`** (required). HOT/WARM/COLD temperature applies **within** chosen channel (project or portfolio).
 
-## Step 5: Routing
+## Step 5: Memory routing
 
-Choose destination by audience and lifetime:
+**Memory routing** — choose destination by audience, lifetime, and scope:
 
 - `AGENTS.md` — stack, architecture, terminology, project best practices, API gotchas, safety rules.
 - `.cursor/rules/*.md` — agent behavior rules in this repository.
@@ -310,7 +353,9 @@ Do not manually edit `~/.cursor/skills-cursor/`. If a system skill was wrong, re
 
 **`MEMORY.md`:** full memory schema and agent workflow — **in repository** (Preflight §3 template). On bootstrap and empty file create/supplement per template. Do not duplicate full table in skill — only normative reference to `MEMORY.md`. After new wiki pages update link map and `WIKI_ROOT/index.md`.
 
-### Temperatures: HOT, WARM, COLD
+### Temperatures: HOT, WARM, COLD (typed memory layers)
+
+Three-tier **persistent memory** inside the project repo — promotion and demotion are the **memory compaction** path when limits are exceeded:
 
 - **HOT → WARM:** `hot-cache` overflow or item unused in HOT for long — move to `warm-cache`, one link line in HOT if needed.
 - **WARM → COLD (wiki):** end-to-end process, ADR, reference, investigation after stabilization — flat page `WIKI_ROOT/<kebab>.md`.
@@ -389,9 +434,9 @@ After any new or renamed files in `memory/` or under `WIKI_ROOT/` update **`MEMO
 - **Minimum:** session with skill edits — **at least one** meaningful line; otherwise do not touch file.
 - **Meta:** do not confuse with **`references/changelog.md`** of this skill — project/portfolio journal **only** `memory/changelog.md`.
 
-## Temperature limits
+## Temperature limits (memory compaction)
 
-Thresholds **do not block** the pipeline alone. On exceed add **`Memory hygiene`** block: demote HOT→WARM, promote WARM→wiki, compress index.
+Thresholds **do not block** the pipeline alone. On exceed add **`Memory hygiene`** block — automatic **memory compaction**: demote HOT→WARM, promote WARM→wiki, compress index.
 
 | Layer | Place | Limit | On exceed |
 |-------|-------|-------|-----------|
@@ -413,9 +458,9 @@ Thresholds **do not block** the pipeline alone. On exceed add **`Memory hygiene`
 | Decisions | `memory/decisions.md` | ≤150 | ADR → `adr-*.md` |
 | COLD | `memory/wiki/*.md` | ~700/file | split |
 
-## Git: MEMORY.md and wiki
+## Git: MEMORY.md and wiki (persistent memory)
 
-**Default policy for project workspace:**
+**Default policy for project workspace** — git is the **persistent memory** substrate (not a vector store):
 
 1. **`MEMORY.md`** at project root, **entire `memory/` tree** (including **`memory/changelog.md`** and default wiki **`memory/wiki/`**) and **`WIKI_ROOT/`** (if legacy outside `memory/`) must be **inside project git repo** and intended for **GitHub or functional equivalent** (GitLab, Gitea, Forgejo, Bitbucket, Azure DevOps, etc.).
 2. **`WIKI_ROOT`** set in `AGENTS.md` or `README.md`. If unset, default — **`memory/wiki/`**. Do not spawn multiple unrelated "wikis" without explicit doc decision.
@@ -574,9 +619,9 @@ If user asks analysis only, use:
 
 ## Handoff
 
-At end of large session provide short handoff:
+At end of large session provide short handoff for **cross-session continuity**:
 
-- `HOT`: what to keep in mind right now.
+- `HOT`: what to keep in mind right now (working memory for next session).
 - `Open loops`: open tasks and blockers.
 - `Decisions`: approved and advisory decisions separately.
 - `Next actions`: 1–5 concrete next steps.
@@ -617,6 +662,8 @@ Path after install: `~/.cursor/skills/memo-session-skill/` or `~/.agents/skills/
 
 ## Limitations
 
+- **Not** a Mem0/Zep/Letta replacement, vector database, graph memory, or hybrid retrieval stack — no embeddings, no managed memory API.
+- **Not** RAG — does not index static corpora for semantic search; use RAG for read-heavy knowledge bases, this skill for **session write-path memory**.
 - Do not run `npx skills add`, install other skills, or fetch remote code **during** the memo-session pipeline (install is user-driven, outside the session).
 - Do not record secrets, tokens, private keys, passwords, connection strings.
 - No commits or push without explicit request; yet `MEMORY.md`, **`memory/`** tree, and **`WIKI_ROOT/`** must **default to git-tracked** (do not hide in `.gitignore` without reason).
