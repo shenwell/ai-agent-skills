@@ -227,10 +227,6 @@ That is all [skills.sh](https://skills.sh) needs. Everything for `goal-mode` liv
 
 ---
 
-## Social preview (GitHub)
-
-Картинка для **Settings → Social preview** загружена вручную (2026-08-04). В репозитории файла нет — при смене превью обновляй только в настройках GitHub.
-
 ## License
 
 MIT — [LICENSE](LICENSE). Not affiliated with Anthropic or Claude Code.
