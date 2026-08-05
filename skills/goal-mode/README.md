@@ -8,9 +8,9 @@
 ║  ╚██████╔╝╚██████╔╝██║  ██║███████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝███████╗  ║
 ║  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
 ║                                                                              ║
-║   Autonomous coding agent — verify until done · verifiable finish line         ║
-║      Claude Code /goal alternative · Cursor · Codex · Cloud Agent            ║
-║                          v1.3.1 · August 2026 · MIT                          ║
+║     Autonomous coding agent - verify until done - verifiable finish line     ║
+║         Claude Code /goal alternative - Cursor - Codex - Cloud Agent         ║
+║                          v1.3.1 - August 2026 - MIT                          ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```

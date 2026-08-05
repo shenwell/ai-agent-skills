@@ -15,8 +15,9 @@
 ║  ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝                  ║
 ║                                                               ║
 ║       Public Agent Skills collection for coding agents        ║
-║    Cursor · Claude Code · Codex · Windsurf · and more ...     ║
-║   goal-mode · memo-session-skill · npx skills add shenwell/ai-agent-skills · MIT   ║
+║    Cursor - Claude Code - Codex - Windsurf - and more ...     ║
+║          goal-mode - memo-session-skill - MIT License         ║
+║            npx skills add shenwell/ai-agent-skills            ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 ```
