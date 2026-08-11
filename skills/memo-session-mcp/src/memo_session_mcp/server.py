@@ -272,6 +272,7 @@ async def _on_call_tool(
             {
                 "indexed_files": result.indexed_files,
                 "skipped_files": result.skipped_files,
+                "pruned_files": result.pruned_files,
                 "chunk_count": result.chunk_count,
                 "errors": result.errors,
             },
@@ -284,6 +285,7 @@ async def _on_call_tool(
             {
                 "indexed_files": result.indexed_files,
                 "skipped_files": result.skipped_files,
+                "pruned_files": result.pruned_files,
                 "chunk_count": result.chunk_count,
                 "errors": result.errors,
             },

@@ -15,8 +15,19 @@ from .store import MemoryIndex
 class IngestResult:
     indexed_files: int = 0
     skipped_files: int = 0
+    pruned_files: int = 0
     chunk_count: int = 0
     errors: list[str] | None = None
+
+
+def prune_missing_files(index: MemoryIndex) -> int:
+    """Remove index rows whose files no longer exist on disk."""
+    pruned = 0
+    for path in index.list_indexed_paths():
+        if not Path(path).is_file():
+            index.delete_file(path)
+            pruned += 1
+    return pruned
 
 
 def _glob_files(root: Path, patterns: list[str]) -> list[Path]:
@@ -123,8 +134,10 @@ def ingest_all(config: Config, index: MemoryIndex) -> IngestResult:
     all_items.extend(collect_project_files(config, entries))
     all_items.extend(collect_knowledge_files(config.knowledge_sources))
 
-    seen: set[Path] = set()
     result = IngestResult(errors=[])
+    result.pruned_files = prune_missing_files(index)
+
+    seen: set[Path] = set()
     for path, collection, slug in all_items:
         if path in seen:
             continue
