@@ -1,0 +1,10 @@
+# Local index (created at runtime)
+index/
+*.db
+
+# Python
+__pycache__/
+*.egg-info/
+.venv/
+dist/
+build/

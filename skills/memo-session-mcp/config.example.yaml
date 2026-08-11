@@ -1,0 +1,20 @@
+# Copy to ~/.config/memo-session-mcp/config.yaml (or set MEMO_SESSION_MCP_CONFIG)
+#
+# Paths support ~ and ${GLOBAL_MEMORY_ROOT} expansion.
+
+global_memory_root: ~/global-memory
+index_dir: ~/.local/share/memo-session-mcp
+
+# Optional: extra document roots (PDF/XLSX need: pip install memo-session-mcp[documents])
+# knowledge_sources:
+#   - id: trassir-vms
+#     path: ~/projects/trassir-work/Источники для проекта МЕТА_PM_VMS
+#     collection: documents
+#     patterns: ["**/*.pdf", "**/*.xlsx", "**/*.pptx"]
+
+# Index all registered projects' MEMORY.md + memory/ (from projects-registry.md)
+index_project_memories: true
+
+# Chunking
+chunk_max_chars: 1800
+chunk_overlap_chars: 200

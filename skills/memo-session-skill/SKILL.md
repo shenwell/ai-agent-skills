@@ -10,12 +10,13 @@ description: >-
   replace them. Use when the user says "wrap up the session", "save what we learned",
   "handoff", "open loops", "update memory", "agent memory", "persistent memory",
   "cross-session persistence", "how to give my agent memory", or when another skill
-  requests a memory checkpoint. Also for portfolio/global memory, bootstrap project
-  memory, or session changelog. Prefer after non-trivial debugging or user corrections.
+  requests a memory checkpoint. Also for   portfolio/global memory, bootstrap project
+  memory, or session changelog. When memo-session-mcp is connected, use search_all
+  for portfolio/project lookup and reindex_changed after writes. Prefer after non-trivial debugging or user corrections.
   Do not use for one-line trivia, secrets, managed vector memory setup, or replacing
   git history.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   author: productlaba
   category: knowledge-management
   tags: ai-agent-memory, persistent-memory, cross-session, memory-routing,
@@ -202,6 +203,16 @@ Follow [conflict-gate.md](references/conflict-gate.md). Journal order: [dated-en
 
 Follow [report-formats.md](references/report-formats.md).
 
+### Step 7: Reindex search (when memo-session-mcp connected)
+
+After successful writes, call MCP **`reindex_changed`** with absolute paths of all modified memory/wiki/portfolio files. In report add line: `Index: reindexed N files` or `Index: skipped (MCP offline)`.
+
+Details: [mcp-integration.md](references/mcp-integration.md).
+
+## Portfolio search (read path)
+
+See [portfolio-search.md](references/portfolio-search.md). Prefer MCP `search_all` when connected; fallback `rg`.
+
 ## portfolio-librarian subagent
 
 Optional, see [agents/portfolio-librarian.md](agents/portfolio-librarian.md). Invoke for ≥3 portfolio entries, dedupe, portfolio hygiene, explicit search. **Do not** copy prompt into projects or `GLOBAL_MEMORY_ROOT`. Parent memo-session performs writes after subagent report.
@@ -239,8 +250,8 @@ Path after install: `~/.cursor/skills/memo-session-skill/` or `~/.agents/skills/
 
 ## Limitations
 
-- **Not** a Mem0/Zep/Letta replacement, vector database, graph memory, or hybrid retrieval stack — no embeddings, no managed memory API.
-- **Not** RAG — does not index static corpora for semantic search; use RAG for read-heavy knowledge bases, this skill for **session write-path memory**.
+- **Not** a Mem0/Zep/Letta replacement or managed memory API — no cloud memory platform.
+- **Not** a full RAG stack by itself — optional **[memo-session-mcp](../memo-session-mcp/)** adds FTS search over portfolio/project markdown and optional document corpora; this skill remains the **write path**.
 - Do not run `npx skills add`, install other skills, or fetch remote code **during** the memo-session pipeline (install is user-driven, outside the session).
 - Do not record secrets, tokens, private keys, passwords, connection strings.
 - No commits or push without explicit request; yet `MEMORY.md`, **`memory/`** tree, and **`WIKI_ROOT/`** must **default to git-tracked** (do not hide in `.gitignore` without reason).

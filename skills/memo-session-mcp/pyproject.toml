@@ -1,0 +1,34 @@
+[project]
+name = "memo-session-mcp"
+version = "0.1.0"
+description = "MCP server for portfolio and project memory search (memo-session-skill companion)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "shenwell" }]
+dependencies = [
+  "mcp>=1.0.0",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+semantic = [
+  "fastembed>=0.4.0",
+  "numpy>=1.24.0",
+]
+documents = [
+  "pymupdf>=1.24.0",
+  "openpyxl>=3.1.0",
+  "python-pptx>=0.6.23",
+]
+
+[project.scripts]
+memo-session-mcp = "memo_session_mcp.server:main_cli"
+memo-session-index = "memo_session_mcp.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

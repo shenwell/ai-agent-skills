@@ -16,7 +16,7 @@
 ║                                                               ║
 ║       Public Agent Skills collection for coding agents        ║
 ║    Cursor - Claude Code - Codex - Windsurf - and more ...     ║
-║   goal-mode - memo-session-skill - article-to-habr - MIT     ║
+║   goal-mode - memo-session-skill - memo-session-mcp - article-to-habr - MIT     ║
 ║            npx skills add shenwell/ai-agent-skills            ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
@@ -29,6 +29,7 @@
 **Public [Agent Skills](https://agentskills.io/) for Cursor, Claude Code, Codex, Windsurf, and more.**  
 - **`goal-mode`** — autonomous coding agent, **verify until done**: verifiable finish line, worker⇄verifier proof loop (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for Cursor).  
 - **`memo-session-skill`** — **persistent AI agent memory** for coding sessions: cross-session knowledge survives context resets via git-tracked `memory/`, wiki, and handoffs; pairs with goal-mode checkpoints.  
+- **`memo-session-mcp`** — **MCP search companion** for memo-session: FTS index over portfolio `global-memory`, project memories, and optional PDF/Excel corpora — use from any Cursor chat.  
 - **`article-to-habr`** — **Habr technical articles** end-to-end: topic drive-list, Mainpointschema writing, pre-publish review; bundled methodology for [habr.com](https://habr.com).
 
 Stops the common failure mode: the agent tries once, claims “done,” and leaves a red build.
@@ -38,6 +39,7 @@ shenwell/ai-agent-skills
 └── skills/
     ├── goal-mode/              ← keep going until tests/lint/build are green
     ├── memo-session-skill/     ← persistent agent memory · session → memory/wiki/handoff
+    ├── memo-session-mcp/       ← MCP FTS search · portfolio + project memory + docs
     ├── article-to-habr/      ← Habr articles · topics · Mainpointschema · review
     └── <next-skill>/
 ```
@@ -70,6 +72,15 @@ List skills: `npx skills add shenwell/ai-agent-skills --list`
 npx skills add shenwell/ai-agent-skills --skill goal-mode -g -a cursor -y
 npx skills add shenwell/ai-agent-skills --skill memo-session-skill -g -a cursor -y
 ```
+
+**Optional — memo-session-mcp** (search portfolio + project memory from any chat):
+
+```bash
+cd skills/memo-session-mcp && pip install -e .
+memo-session-index reindex   # after setting GLOBAL_MEMORY_ROOT
+```
+
+Register in `~/.cursor/mcp.json` — see [skills/memo-session-mcp/README.md](skills/memo-session-mcp/README.md).
 
 
 ### 2. First run (in any project)
