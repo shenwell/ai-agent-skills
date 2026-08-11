@@ -2,13 +2,13 @@
 #
 # Paths support ~ and ${GLOBAL_MEMORY_ROOT} expansion.
 
-global_memory_root: ~/global-memory
+global_memory_root: ~/portfolio-memory
 index_dir: ~/.local/share/memo-session-mcp
 
 # Optional: extra document roots (PDF/XLSX need: pip install memo-session-mcp[documents])
 # knowledge_sources:
-#   - id: trassir-vms
-#     path: ~/projects/trassir-work/Источники для проекта МЕТА_PM_VMS
+#   - id: my-docs
+#     path: ~/projects/my-repo/sources
 #     collection: documents
 #     patterns: ["**/*.pdf", "**/*.xlsx", "**/*.pptx"]
 

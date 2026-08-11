@@ -84,7 +84,7 @@ def load_config(config_path: Path | None = None) -> Config:
             break
 
     gm_raw = os.environ.get("GLOBAL_MEMORY_ROOT") or data.get(
-        "global_memory_root", "~/global-memory"
+        "global_memory_root", "~/portfolio-memory"
     )
     idx_raw = os.environ.get("MEMO_SESSION_MCP_INDEX_DIR") or data.get(
         "index_dir", "~/.local/share/memo-session-mcp"

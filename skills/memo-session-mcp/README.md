@@ -1,6 +1,6 @@
 # Memo Session MCP
 
-**Companion MCP server for [memo-session-skill](../memo-session-skill/)** — read-path search over portfolio memory (`global-memory`), registered project `MEMORY.md` / `memory/`, and optional document corpora (PDF, Excel, PPTX).
+**Companion MCP server for [memo-session-skill](../memo-session-skill/)** — read-path search over portfolio memory (`GLOBAL_MEMORY_ROOT`), registered project `MEMORY.md` / `memory/`, and optional document corpora (PDF, Excel, PPTX).
 
 | Layer | Role |
 |-------|------|
@@ -19,12 +19,16 @@ MIT · part of [shenwell/ai-agent-skills](https://github.com/shenwell/ai-agent-s
 
 ## Quickstart
 
-### 1. Clone global-memory (portfolio)
+### 1. Portfolio root (`GLOBAL_MEMORY_ROOT`)
+
+Create or point to your portfolio memory directory (see [memo-session-skill: global-memory](../memo-session-skill/references/global-memory.md)). Example:
 
 ```bash
-git clone https://github.com/shenwell/global-memory.git ~/global-memory
-# or use your own portfolio root
+export GLOBAL_MEMORY_ROOT=~/portfolio-memory
+# must contain MEMORY.md and memory/wiki/projects-registry.md (bootstrap via memo-session-skill if missing)
 ```
+
+Set the same path in each project `AGENTS.md` as `GLOBAL_MEMORY_ROOT: …`.
 
 ### 2. Install MCP package
 
@@ -46,7 +50,7 @@ cp config.example.yaml ~/.config/memo-session-mcp/config.yaml
 Or set environment variables only:
 
 ```bash
-export GLOBAL_MEMORY_ROOT=~/global-memory
+export GLOBAL_MEMORY_ROOT=~/portfolio-memory
 export MEMO_SESSION_MCP_INDEX_DIR=~/.local/share/memo-session-mcp
 ```
 
@@ -73,7 +77,7 @@ Add to `~/.cursor/mcp.json`:
         "memo-session-mcp"
       ],
       "env": {
-        "GLOBAL_MEMORY_ROOT": "/ABSOLUTE/PATH/TO/global-memory"
+        "GLOBAL_MEMORY_ROOT": "/ABSOLUTE/PATH/TO/portfolio-memory"
       }
     }
   }
@@ -88,7 +92,7 @@ Without `uv`, use pip entry point:
     "memo-session-mcp": {
       "command": "memo-session-mcp",
       "env": {
-        "GLOBAL_MEMORY_ROOT": "/ABSOLUTE/PATH/TO/global-memory"
+        "GLOBAL_MEMORY_ROOT": "/ABSOLUTE/PATH/TO/portfolio-memory"
       }
     }
   }
@@ -159,7 +163,7 @@ Markdown stays canonical. The index is disposable — rebuild anytime with `rein
 ## Self-test
 
 ```bash
-GLOBAL_MEMORY_ROOT=~/global-memory python -m memo_session_mcp.server --test
+GLOBAL_MEMORY_ROOT=~/portfolio-memory python -m memo_session_mcp.server --test
 ```
 
 Or bootstrap script:

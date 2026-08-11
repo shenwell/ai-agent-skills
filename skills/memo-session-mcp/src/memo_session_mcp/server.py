@@ -3,14 +3,14 @@
 Memo Session MCP Server
 
 Companion to memo-session-skill: hybrid FTS search over portfolio memory
-(global-memory), registered project MEMORY.md / memory/, and optional document
+(GLOBAL_MEMORY_ROOT), registered project MEMORY.md / memory/, and optional document
 corpora (PDF/XLSX via optional extras).
 
 Setup:
     pip install -e "path/to/skills/memo-session-mcp"
     # optional: pip install -e "path/to/skills/memo-session-mcp[documents]"
 
-    export GLOBAL_MEMORY_ROOT=~/global-memory
+    export GLOBAL_MEMORY_ROOT=~/portfolio-memory
     memo-session-index reindex
 
 Cursor ~/.cursor/mcp.json:
@@ -22,7 +22,7 @@ Cursor ~/.cursor/mcp.json:
         "memo-session-mcp"
       ],
       "env": {
-        "GLOBAL_MEMORY_ROOT": "/path/to/global-memory"
+        "GLOBAL_MEMORY_ROOT": "/path/to/portfolio-memory"
       }
     }
 """

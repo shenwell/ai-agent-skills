@@ -4,7 +4,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 MCP_DIR="$REPO_ROOT/skills/memo-session-mcp"
-GLOBAL_MEMORY="${GLOBAL_MEMORY_ROOT:-$HOME/global-memory}"
+GLOBAL_MEMORY="${GLOBAL_MEMORY_ROOT:-$HOME/portfolio-memory}"
 INDEX_DIR="${MEMO_SESSION_MCP_INDEX_DIR:-$HOME/.local/share/memo-session-mcp}"
 CONFIG_DIR="$HOME/.config/memo-session-mcp"
 
@@ -13,7 +13,7 @@ pip install -e "$MCP_DIR"
 
 mkdir -p "$CONFIG_DIR"
 if [[ ! -f "$CONFIG_DIR/config.yaml" ]]; then
-  sed "s|~/global-memory|$GLOBAL_MEMORY|g" "$MCP_DIR/config.example.yaml" > "$CONFIG_DIR/config.yaml"
+  sed "s|~/portfolio-memory|$GLOBAL_MEMORY|g" "$MCP_DIR/config.example.yaml" > "$CONFIG_DIR/config.yaml"
   echo "Wrote $CONFIG_DIR/config.yaml"
 fi
 

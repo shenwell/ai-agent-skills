@@ -3,14 +3,19 @@ $ErrorActionPreference = "Stop"
 
 $McpDir = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) "skills\memo-session-mcp"
 if (-not (Test-Path $McpDir)) {
-    $McpDir = "D:\CURSOR\goals-productlaba\skills\memo-session-mcp"
+    throw "Cannot find memo-session-mcp at $McpDir. Run this script from the ai-agent-skills repo."
 }
 
-$GlobalMemory = if ($env:GLOBAL_MEMORY_ROOT) { $env:GLOBAL_MEMORY_ROOT } else { "D:\CURSOR\global-memory" }
+$GlobalMemory = if ($env:GLOBAL_MEMORY_ROOT) {
+    $env:GLOBAL_MEMORY_ROOT
+} else {
+    Join-Path $env:USERPROFILE "portfolio-memory"
+}
 $IndexDir = if ($env:MEMO_SESSION_MCP_INDEX_DIR) { $env:MEMO_SESSION_MCP_INDEX_DIR } else { "$env:USERPROFILE\.local\share\memo-session-mcp" }
 $ConfigDir = Join-Path $env:USERPROFILE ".config\memo-session-mcp"
 
 Write-Host "MCP package: $McpDir"
+Write-Host "Portfolio root: $GlobalMemory"
 Write-Host "Using uv run (recommended) or: pip install -e `"$McpDir`""
 
 New-Item -ItemType Directory -Force -Path $ConfigDir | Out-Null

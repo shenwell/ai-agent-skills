@@ -1,6 +1,6 @@
 [project]
 name = "memo-session-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for portfolio and project memory search (memo-session-skill companion)"
 readme = "README.md"
 requires-python = ">=3.10"
