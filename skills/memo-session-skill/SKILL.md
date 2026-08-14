@@ -11,17 +11,18 @@ description: >-
   "handoff", "open loops", "update memory", "agent memory", "persistent memory",
   "cross-session persistence", "how to give my agent memory", or when another skill
   requests a memory checkpoint. Also for   portfolio/global memory, bootstrap project
-  memory, or session changelog. When memo-session-mcp is connected, use search_all
+  memory, session changelog, `/inbox`, process inbox, or ingest files from
+  memory/inbox. When memo-session-mcp is connected, use search_all
   for portfolio/project lookup and reindex_changed after writes. Prefer after non-trivial debugging or user corrections.
   Do not use for one-line trivia, secrets, managed vector memory setup, or replacing
   git history.
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
   author: productlaba
   category: knowledge-management
   tags: ai-agent-memory, persistent-memory, cross-session, memory-routing,
     memory-consolidation, context-engineering, coding-agent, cursor, session,
-    handoff, wiki, portfolio, goal-mode
+    handoff, wiki, portfolio, goal-mode, inbox
 ---
 
 # Memo Session Skill
@@ -58,7 +59,8 @@ Engineers and maintainers building **stateful coding agents** in Cursor who need
 - **Typed memory architecture**: HOT/WARM/COLD routing (`memory/` + wiki) — working, medium, and durable layers
 - **Memory consolidation**: session digest → quality filter → durable facts (not a command diary)
 - **Memory routing**: classify findings and route to the right channel (`AGENTS.md`, wiki, skills, portfolio)
-- Preflight: gitignore check, bootstrap scaffold, hygiene limits, **memory compaction** at thresholds
+- Preflight: gitignore check, bootstrap scaffold (including `memory/inbox/` and wiki), hygiene limits, **memory compaction** at thresholds
+- **Inbox intake**: `/inbox` ingest queue → wiki extracts; source originals → `memory/archive/`
 - Conflict gate (clean / soft / hard) before writes
 - Optional portfolio layer via `GLOBAL_MEMORY_ROOT` in **your** `AGENTS.md`
 - Documented write allowlist and trust boundary
@@ -87,6 +89,14 @@ wrap up the session
 Also works: `save what we learned`, `handoff`, `update agent memory`, `persistent memory checkpoint`.
 
 The skill starts the pipeline immediately in Agent mode; it stops only for **hard conflicts** (contradictions with approved memory, secrets, git policy).
+
+To ingest dropped files (not a chat wrap-up):
+
+```
+/inbox
+```
+
+Also works: `process inbox`, `ingest inbox`. Protocol: [inbox-protocol.md](references/inbox-protocol.md).
 
 ## Trust boundary
 
@@ -129,6 +139,8 @@ On every invocation in **Agent mode**, after Step 1 read these references **in o
 5. [dated-entries.md](references/dated-entries.md) — before any journal write
 6. [report-formats.md](references/report-formats.md) — before final report
 
+**Inbox trigger** (`/inbox`, process inbox): after Step 1 read [preflight-protocol.md](references/preflight-protocol.md), then [inbox-protocol.md](references/inbox-protocol.md), then conflict-gate, dated-entries, report-formats. Skip consolidation-protocol (no session digest).
+
 Also read [temperature-limits.md](references/temperature-limits.md) when hygiene scan runs. If portfolio active: [portfolio-schema.md](references/portfolio-schema.md). Trust boundary: [trust-boundary.md](references/trust-boundary.md).
 
 **Ask/Plan mode:** read preflight + conflict-gate only; no writes.
@@ -146,7 +158,8 @@ Use this skill explicitly or automatically when the user asks to:
 - decide what from the chat is worth recording;
 - give the agent persistent memory, cross-session persistence, or long-term memory;
 - build stateful agents, fix context loss, or checkpoint session knowledge;
-- route decisions and open loops into project memory.
+- route decisions and open loops into project memory;
+- `/inbox`, process inbox, ingest documents or notes dropped in `memory/inbox/`.
 
 Suggest the skill yourself if the session had non-trivial debugging, a workaround, user correction, new process rule, repeatable manual procedure, architectural decision, open blocker, or regression bug — especially when **context window pressure** or a **new session** would lose that knowledge.
 
@@ -155,6 +168,7 @@ Suggest the skill yourself if the session had non-trivial debugging, a workaroun
 | Trigger | Action |
 |---------|--------|
 | wrap up / handoff / save what we learned / update memory | Full pipeline (Steps 1–6) |
+| `/inbox` / process inbox / ingest inbox | [inbox-protocol.md](references/inbox-protocol.md); skip session digest |
 | analysis only / what is worth saving | [report-formats.md](references/report-formats.md) § Analysis-only; no writes |
 | search portfolio / find in global memory | [portfolio-search.md](references/portfolio-search.md); read-only |
 | ≥3 portfolio entries, dedupe, portfolio hygiene | [agents/portfolio-librarian.md](agents/portfolio-librarian.md) optional subagent |

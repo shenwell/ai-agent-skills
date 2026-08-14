@@ -11,6 +11,8 @@ Choose destination by audience, lifetime, and scope — after [consolidation-pro
 - `MEMORY.md` — **agent instruction** + memory map (see [preflight-protocol.md](preflight-protocol.md) §3 bootstrap); **in git**.
 - **`WIKI_ROOT/`** — **COLD**: transferable articles (see § Wiki: flat structure); **in git**.
 - `memory/hot-cache.md`, `memory/warm-cache.md` — HOT and WARM; `memory/open-loops.md`, `memory/decisions.md`, `memory/changelog.md` — tasks, decisions, skill session journal.
+- `memory/inbox/` — ingest queue; `/inbox` per [inbox-protocol.md](inbox-protocol.md).
+- `memory/archive/` — source originals after inbox (not wiki articles).
 - `docs/` — **not** default channel; only explicit request or canon in `AGENTS.md` (see § docs/ and wiki).
 - `.cursor/skills/` or `~/.cursor/skills/` — user and project skills.
 - **`GLOBAL_MEMORY_ROOT`** (only when set in `AGENTS.md`) — for `scope: portfolio` or body for `scope: both`:
@@ -46,6 +48,7 @@ Do not manually edit `~/.cursor/skills-cursor/`. If a system skill was wrong, re
 | `memory/warm-cache.md` | WARM: medium memory (demote from HOT) |
 | `memory/open-loops.md` | Open tasks (not a temperature) |
 | `memory/decisions.md` | Short decision log; ADR → wiki `adr-*.md` |
+| `memory/inbox/README.md` | Ingest queue (`/inbox`) |
 
 **`MEMORY.md`:** full memory schema and agent workflow — **in repository** (preflight §3 template). On bootstrap and empty file create/supplement per template. Do not duplicate full table in skill — only normative reference to `MEMORY.md`. After new wiki pages update link map and `WIKI_ROOT/index.md`.
 
@@ -56,13 +59,13 @@ Three-tier **persistent memory** inside the project repo — promotion and demot
 - **HOT → WARM:** `hot-cache` overflow or item unused in HOT for long — move to `warm-cache`, one link line in HOT if needed.
 - **WARM → COLD (wiki):** end-to-end process, ADR, reference, investigation after stabilization — flat page `WIKI_ROOT/<kebab>.md`.
 - **HOT → COLD:** immediately if topic is large — wiki page + one line in HOT.
-- **Stale wiki:** prefix `archived-*.md` or delete (git keeps history); no separate `archive/` folder.
+- **Stale wiki:** prefix `archived-*.md` or delete (git keeps history). Wiki articles do **not** live in `memory/archive/`; that path is **source originals** from inbox intake ([inbox-protocol.md](inbox-protocol.md)).
 
 After any new or renamed files in `memory/` or under `WIKI_ROOT/` update **`MEMORY.md`** if it has index links to those paths.
 
 ### Wiki: flat structure and content (COLD)
 
-**Wiki = COLD layer** — only place for transferable articles and references (replaces former `memory/projects/`, `references/`, `archive/`).
+**Wiki = COLD layer** — only place for transferable **articles** (replaces former `memory/projects/`, `references/` used as a wiki). Source binaries and full transcripts after `/inbox` go to `memory/archive/`, not into wiki pages.
 
 **Structure:** all pages — only **at root** of `WIKI_ROOT` (required **`index.md`**; journal — **`memory/changelog.md`**, not in wiki). No nested directories for new topics. Names — **`kebab-case.md`**. Do not touch legacy tree under old `WIKI_ROOT` without user request.
 

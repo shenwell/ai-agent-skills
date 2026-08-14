@@ -76,3 +76,18 @@ At end of large session provide short handoff for **cross-session continuity**:
 - `Memory hygiene`: preflight summary (gitignore, broken links, bootstrap) and temperature limit actions.
 - `Changelog`: project and portfolio — updated / skipped (why).
 - `Portfolio HOT` / `Portfolio open loops` / `Portfolio hygiene` — if portfolio available.
+
+## Inbox intake
+
+When the trigger is `/inbox` (not a session wrap-up), use:
+
+```markdown
+## Inbox intake
+
+| Item | Type | Wiki | Archive | Status |
+|------|------|------|---------|--------|
+
+Index: reindexed N files | skipped (MCP offline)
+```
+
+Empty queue: one line, then stop. Include a **Where to look** navigation table if the project requires source citations.

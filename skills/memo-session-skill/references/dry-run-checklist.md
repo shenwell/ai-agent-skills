@@ -9,6 +9,7 @@ Verification after enabling optional portfolio memory.
 - [ ] `$ROOT/MEMORY.md` exists
 - [ ] `$ROOT/memory/changelog.md` exists
 - [ ] `$ROOT/memory/wiki/projects-registry.md` contains `local_path` and `git_remote`
+- [ ] Project `memory/inbox/README.md` exists after first Agent-mode preflight
 - [ ] Installed skill `references/global-memory.md` documents resolution from `AGENTS.md` only (no maintainer-specific default path)
 - [ ] `SKILL.md` contains Agent execution contract, routing table, Steps 1–6 with links to `references/`
 - [ ] `references/preflight-protocol.md` contains §1.5, §1.6; `references/report-formats.md` contains portfolio report §6

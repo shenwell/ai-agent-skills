@@ -57,13 +57,17 @@ In your project after a non-trivial session:
 wrap up the session
 ```
 
-The skill runs preflight (gitignore, bootstrap `memory/` scaffold), **memory consolidation**, classification, **memory routing**, and writes automatically. Commit only on explicit request.
+The skill runs preflight (gitignore, bootstrap `memory/` scaffold including `memory/inbox/`), **memory consolidation**, classification, **memory routing**, and writes automatically. Commit only on explicit request.
+
+To ingest dropped files: `/inbox` (see [inbox-protocol.md](references/inbox-protocol.md)).
 
 Collection: [AI Agent Skills](../../README.md) · protocol: [`SKILL.md`](SKILL.md)
 
 ## When to use
 
 - "wrap up the session", "save what we learned", "handoff", "open loops"
+- `/inbox`, "process inbox" — ingest files dropped in `memory/inbox/`
+- "agent memory", "persistent memory", "cross-session persistence"
 - "agent memory", "persistent memory", "cross-session persistence"
 - After debugging, workarounds, user corrections, architectural decisions
 - When **context window** pressure would lose knowledge before the next session
@@ -85,8 +89,9 @@ Collection: [AI Agent Skills](../../README.md) · protocol: [`SKILL.md`](SKILL.m
 
 ```
 SKILL.md              ← pipeline skeleton + Agent execution contract (~280 lines)
-references/           ← normative protocol (preflight, routing, conflict gate, …)
+references/           ← normative protocol (preflight, inbox, routing, conflict gate, …)
   README.md           ← index: step → reference file
+commands/             ← `/inbox` slash command (copy to ~/.cursor/commands/)
 agents/               ← portfolio-librarian (optional subagent)
 ```
 

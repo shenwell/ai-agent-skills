@@ -6,7 +6,7 @@ Optional read-path companion: [memo-session-mcp](../../memo-session-mcp/README.m
 
 1. **Preflight / context (Step 1):** after resolving `GLOBAL_MEMORY_ROOT`, prefer `search_portfolio` or `search_all` over raw `rg` when the MCP server `memo-session-mcp` is connected.
 2. **Portfolio search** (read-only): use MCP tools instead of shell `rg` — see [portfolio-search.md](portfolio-search.md).
-3. **After writes (end of pipeline):** call MCP `reindex_changed` with the list of files modified in this session (project + portfolio). If MCP unavailable, note in report: `Index: skipped (MCP offline)`.
+3. **After writes (end of pipeline):** call MCP `reindex_changed` with the list of files modified in this session (project + portfolio + inbox-ingested wiki/manifests). If a new PDF/XLSX/PPTX landed under `knowledge_sources`, include that path or run `reindex`. If MCP unavailable, note in report: `Index: skipped (MCP offline)`.
 4. **Do not** route session writes through MCP — writes stay in this skill (conflict gate, scope, hygiene).
 
 ## Degraded mode

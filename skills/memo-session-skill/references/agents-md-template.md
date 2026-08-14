@@ -11,6 +11,8 @@ Insert into the project repository `AGENTS.md` (5–10 lines). **Do not** copy `
 
 On memo-session: update project memory; facts with `scope: portfolio` go to portfolio (no duplicate paragraphs in project hot-cache).
 
+New files to ingest: drop in `memory/inbox/`, then `/inbox`.
+
 GLOBAL_MEMORY_ROOT: <path-to-your-portfolio-memory-repo>
 ```
 

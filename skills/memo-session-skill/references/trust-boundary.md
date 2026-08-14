@@ -20,6 +20,8 @@ In **Agent mode**, may create or update only:
 | `MEMORY.md` | Memory index |
 | `memory/hot-cache.md`, `warm-cache.md`, `open-loops.md`, `decisions.md`, `changelog.md` | Operational memory |
 | `memory/wiki/**` or configured `WIKI_ROOT/**` | Wiki (COLD) |
+| `memory/inbox/**` | Queue README; **delete** processed tickets (not README) |
+| `memory/archive/**` | Source originals + optional manifests (not wiki articles) |
 | `AGENTS.md` | Agent memory-flow block or project rules (minimal patch) |
 | `.cursor/rules/**` | Repository behavior rules |
 | `.cursor/skills/**` | Project skill updates when routing = `skill-update` |

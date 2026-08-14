@@ -5,6 +5,7 @@ Progressive disclosure: `SKILL.md` is the pipeline skeleton; these files are nor
 | Step | File | Purpose |
 |------|------|---------|
 | Preflight | [preflight-protocol.md](preflight-protocol.md) | gitignore, hygiene, portfolio root, AGENTS.md, bootstrap |
+| Inbox | [inbox-protocol.md](inbox-protocol.md) | `/inbox` queue → wiki + `memory/archive/` originals |
 | Consolidate | [consolidation-protocol.md](consolidation-protocol.md) | digest, quality filter, temperature |
 | Route | [routing-and-canon.md](routing-and-canon.md) | channels, wiki canon, git policy, skill analysis |
 | Limits | [temperature-limits.md](temperature-limits.md) | HOT/WARM/COLD thresholds and compaction |

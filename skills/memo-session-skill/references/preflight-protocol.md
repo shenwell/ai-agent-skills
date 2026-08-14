@@ -9,10 +9,10 @@ Read `.gitignore` (and if needed `.git/info/exclude`). If **`MEMORY.md`**, **`me
 ## 2. Hygiene scan
 
 - Count lines in `MEMORY.md`, `memory/hot-cache.md`, `memory/warm-cache.md`, `memory/open-loops.md`, `memory/decisions.md` (if files exist).
-- Check for **`memory/changelog.md`** (see [dated-entries.md](dated-entries.md)) and **`WIKI_ROOT/index.md`**.
+- Check for **`memory/changelog.md`** (see [dated-entries.md](dated-entries.md)), **`WIKI_ROOT/index.md`**, and **`memory/inbox/README.md`**.
 - If `MEMORY.md` or `WIKI_ROOT/index.md` has markdown links to paths inside the repo — flag broken links (missing file), including link to **`memory/changelog.md`** if present.
 - **Legacy:** if old journal `WIKI_ROOT/changelog.md` or `wiki/changelog.md` exists with accepted canon **`memory/changelog.md`** — do not delete without explicit request; add one line to **Memory hygiene** "migrate entries to `memory/changelog.md`".
-- **Legacy:** if `memory/feedback/`, `memory/projects/`, `memory/references/`, `memory/archive/` exist — do not delete; propose moving content to `WIKI_ROOT/*.md` and link from `index.md` (line at top of changelog after user decision).
+- **Legacy:** if `memory/feedback/`, `memory/projects/`, `memory/references/` exist — do not delete; propose moving **wiki articles** to `WIKI_ROOT/*.md` and link from `index.md`. If `memory/archive/` holds markdown articles that belong in wiki — same proposal. Keep PDFs, Office files, and full transcripts in `archive/` as **source originals** ([inbox-protocol.md](inbox-protocol.md)).
 
 See [temperature-limits.md](temperature-limits.md) for thresholds. Exceeding limits **does not block** the pipeline: add **`Memory hygiene`** block — demote HOT→WARM, promote WARM→wiki, compress index.
 
@@ -40,7 +40,17 @@ If `GLOBAL_MEMORY_ROOT` available — same checks as §2 for portfolio; limits �
 
 ## 3. Bootstrap scaffold (Agent mode only)
 
-If any required canon element is missing — **create missing** with short template (heading + 2–5 lines of purpose). **Do not** overwrite existing files wholesale. **Do not** create `memory/feedback/`, `projects/`, `references/`, `archive/` — durable knowledge only in wiki (COLD).
+If any required canon element is missing — **create missing** with short template (heading + 2–5 lines of purpose). **Do not** overwrite existing files wholesale. **Do not** create `memory/feedback/`, `projects/`, `references/` as a wiki substitute. **Do** create `memory/inbox/` (ingest queue). Do **not** put wiki articles in `memory/archive/`; that tree is **source originals** after inbox intake — create it on first document/transcript ingest, not as a second wiki. Durable articles stay in wiki (COLD).
+
+For **`memory/inbox/README.md`** on create:
+
+```markdown
+# Inbox
+
+Drop materials here for the agent to ingest (`/inbox` or "process inbox").
+
+After processing: extracts go to wiki / memory layers; originals that are not wiki pages go to `memory/archive/`; the ticket is deleted. This README stays.
+```
 
 For **`memory/warm-cache.md`** on create:
 
@@ -88,6 +98,7 @@ Demote down (HOT→WARM), promote to wiki (WARM→COLD). WARM — bullets and li
 4. Stable / process / ADR / long text → wiki page + link in `index.md` / here.
 5. Behavior rules ("never do X") → `AGENTS.md` / `.cursor/rules/`, not warm-cache.
 6. After skill edits → [changelog](memory/changelog.md) and other journals with date — **at top** (see [dated-entries.md](dated-entries.md)). Commit — only on user request.
+7. New material to ingest → `memory/inbox/` then `/inbox`.
 
 Limits and conflict gate: **memo-session-skill**.
 
@@ -95,5 +106,5 @@ Limits and conflict gate: **memo-session-skill**.
 
 - [changelog](memory/changelog.md) · [hot-cache](memory/hot-cache.md) · [warm-cache](memory/warm-cache.md)
 - [open-loops](memory/open-loops.md) · [decisions](memory/decisions.md)
-- [Wiki — entry](memory/wiki/index.md)
+- [Wiki — entry](memory/wiki/index.md) · [inbox](memory/inbox/README.md)
 ```

@@ -4,6 +4,7 @@ Not to be confused with project or portfolio `memory/changelog.md`.
 
 ## 2026-08
 
+- 2026-08-14 | inbox intake | SKILL.md, references/inbox-protocol.md, commands/inbox.md, preflight, routing, trust-boundary | v1.3.0; bootstrap `memory/inbox/`; `/inbox` extracts to wiki; source originals → `memory/archive/`
 - 2026-08-04 | progressive disclosure refactor | SKILL.md, references/*.md | v1.1.0; split protocol into preflight, consolidation, routing-and-canon, dated-entries, temperature-limits, conflict-gate, report-formats, portfolio-search, references/README.md; SKILL.md ~280 lines
 - 2026-08-04 | README cleanup | README.md | v1.0.5; remove skills.sh audit table from README (trust boundary stays in references/)
 - 2026-08-04 | Socket audit hardening | SKILL.md Trust boundary, references/trust-boundary.md, goal-mode-integration.md | v1.0.3; standalone skill; no bundled install; explicit write allowlist
