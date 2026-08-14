@@ -4,6 +4,7 @@ Not to be confused with project or portfolio `memory/changelog.md`.
 
 ## 2026-08
 
+- 2026-08-14 | inbox protocol from practice | references/inbox-protocol.md, commands/inbox.md | classify by content (DOCX meetings); search before write; no hub dumps; UTF-8/scratch; manifests for paginated sources; transcript YAML + ASR note
 - 2026-08-14 | inbox command completeness | commands/inbox.md | autonomy rule, inline pipeline fallback, Agent vs Ask/Plan; protocol paths relative to skill (`../references/…`)
 - 2026-08-14 | inbox intake | SKILL.md, references/inbox-protocol.md, commands/inbox.md, preflight, routing, trust-boundary | v1.3.0; bootstrap `memory/inbox/`; `/inbox` extracts to wiki; source originals → `memory/archive/`
 - 2026-08-04 | progressive disclosure refactor | SKILL.md, references/*.md | v1.1.0; split protocol into preflight, consolidation, routing-and-canon, dated-entries, temperature-limits, conflict-gate, report-formats, portfolio-search, references/README.md; SKILL.md ~280 lines
