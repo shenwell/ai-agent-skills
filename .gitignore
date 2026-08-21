@@ -12,6 +12,7 @@ Thumbs.db
 
 # Local Cursor workspace (not part of the public skills collection)
 .cursor/
+!skills/software-factory/.cursor/
 
 # Local runtime / duplicates (canonical copies live under skills/goal-mode/)
 templates/
