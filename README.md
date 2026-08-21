@@ -17,6 +17,7 @@
 ║       Public Agent Skills collection for coding agents        ║
 ║    Cursor - Claude Code - Codex - Windsurf - and more ...     ║
 ║    goal-mode - memo-session-skill - memo-session-mcp - MIT    ║
+║         software-factory - multi-agent pipeline for Cursor    ║
 ║            npx skills add shenwell/ai-agent-skills            ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
@@ -30,6 +31,7 @@
 - **`goal-mode`** — autonomous coding agent, **verify until done**: verifiable finish line, worker⇄verifier proof loop (open alternative to [Claude Code `/goal`](https://code.claude.com/docs/en/goal) for Cursor).  
 - **`memo-session-skill`** — **persistent AI agent memory** for coding sessions: cross-session knowledge survives context resets via git-tracked `memory/`, wiki, and handoffs; pairs with goal-mode checkpoints.  
 - **`memo-session-mcp`** — **MCP search companion** for memo-session: FTS index over portfolio `global-memory`, project memories, and optional PDF/Excel corpora — use from any Cursor chat.
+- **`software-factory`** — **multi-agent software pipeline** for Cursor: classifier → analyst → implementer → reviewer moves chat or GitHub issues to a feature branch and PR, with optional researcher/designer stations and a station board.
 
 Stops the common failure mode: the agent tries once, claims “done,” and leaves a red build.
 
@@ -39,6 +41,7 @@ shenwell/ai-agent-skills
     ├── goal-mode/              ← keep going until tests/lint/build are green
     ├── memo-session-skill/     ← persistent agent memory · session → memory/wiki/handoff
     ├── memo-session-mcp/       ← MCP FTS search · portfolio + project memory + docs
+    ├── software-factory/         ← multi-agent pipeline · /factory → branch + PR
     └── <next-skill>/
 ```
 
@@ -207,6 +210,37 @@ Integration with goal-mode: [memo-session goal-mode-integration](skills/memo-ses
 
 ---
 
+### `software-factory` — multi-agent pipeline for Cursor
+
+Four stations (classifier, analyst, implementer, reviewer) plus optional researcher and designer. Work enters from chat or a labeled GitHub issue; the pipeline opens a feature branch and pull request. Merge stays with you.
+
+Package: [`skills/software-factory/`](skills/software-factory/) · kit README: [`skills/software-factory/README.md`](skills/software-factory/README.md)
+
+This is a **workspace kit**, not a single `npx skills add` drop-in. Copy `skills/software-factory/` into your project root, or open that folder as the Cursor workspace when developing the kit itself.
+
+```powershell
+git clone https://github.com/shenwell/ai-agent-skills.git $env:TEMP\ai-agent-skills
+$src = "$env:TEMP\ai-agent-skills\skills\software-factory"
+$dst = "D:\path\to\my-project"
+Copy-Item "$src\.cursor" "$dst\.cursor" -Recurse
+Copy-Item "$src\AGENTS.md", "$src\factory.config.json" $dst
+Copy-Item "$src\factory" "$dst\factory" -Recurse
+New-Item -ItemType Directory -Force -Path "$dst\.github\workflows" | Out-Null
+Copy-Item "$src\.github\workflows\factory-intake.yml" "$dst\.github\workflows\"
+```
+
+Then in Cursor: `/factory-setup`, then `/factory <task>` or `/factory #N`.
+
+| Command | What it does |
+|---------|----------------|
+| `/factory <text>` | Run the pipeline on a chat work item |
+| `/factory #12` | Run on GitHub issue #12 |
+| `/factory sync` / `next` | Pull labeled issues and run the oldest queued job |
+| `/factory-setup` | First-time GitHub and workspace checks |
+| `/factory-upgrade` | Refresh kit files from `shenwell/ai-agent-skills` |
+
+---
+
 ## Add another skill
 
 ```
@@ -233,7 +267,8 @@ CONTRIBUTING.md
 skills/
 ├── goal-mode/
 ├── memo-session-skill/
-└── memo-session-mcp/
+├── memo-session-mcp/
+└── software-factory/
 ```
 
 That is all [skills.sh](https://skills.sh) needs. Everything for `goal-mode` lives under `skills/goal-mode/`.

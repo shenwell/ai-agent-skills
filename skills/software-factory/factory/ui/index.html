@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factory line</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --concrete: #c5c9c2;
+        --rail: #5f675f;
+        --ink: #1c1c1a;
+        --ticket: #fbf3e3;
+        --ticket-edge: #e6d7b8;
+        --stamp: #3d4a3f;
+        --oxide: #9e2a2b;
+        --machine: #245c45;
+        --queued: #6d5a32;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--concrete);
+        color: var(--ink);
+        font-family: "IBM Plex Sans", sans-serif;
+      }
+
+      body {
+        background-image: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 47px,
+          rgba(28, 28, 26, 0.04) 47px,
+          rgba(28, 28, 26, 0.04) 48px
+        );
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1.5rem;
+        padding: 1.25rem 1.5rem 0.75rem;
+        border-bottom: 4px solid var(--ink);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .meta {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--stamp);
+      }
+
+      .line {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(11rem, 1fr));
+        gap: 0;
+        min-height: calc(100vh - 4.5rem);
+      }
+
+      .station {
+        border-right: 1px solid var(--rail);
+        padding: 0.85rem 0.7rem 1.5rem;
+      }
+
+      .station:last-child {
+        border-right: 0;
+      }
+
+      .station h2 {
+        margin: 0 0 0.85rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--stamp);
+      }
+
+      .station h2 span {
+        display: block;
+        margin-top: 0.2rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--ink);
+      }
+
+      .ticket {
+        background: var(--ticket);
+        border: 1px solid var(--ticket-edge);
+        border-left: 6px solid var(--queued);
+        padding: 0.7rem 0.7rem 0.55rem;
+        margin-bottom: 0.65rem;
+      }
+
+      .ticket.blocked {
+        border-left-color: var(--oxide);
+      }
+
+      .ticket.done {
+        border-left-color: var(--machine);
+      }
+
+      .ticket.active {
+        border-left-color: var(--stamp);
+      }
+
+      .ticket a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .ticket a:hover {
+        text-decoration: underline;
+      }
+
+      .job-id {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.04em;
+        color: var(--stamp);
+      }
+
+      .title {
+        margin: 0.35rem 0 0.5rem;
+        font-size: 0.92rem;
+        line-height: 1.25;
+        font-weight: 500;
+      }
+
+      .traveler {
+        display: flex;
+        gap: 0.28rem;
+        margin-top: 0.45rem;
+      }
+
+      .punch {
+        flex: 1;
+        height: 0.45rem;
+        background: rgba(28, 28, 26, 0.12);
+      }
+
+      .punch.on {
+        background: var(--ink);
+      }
+
+      .foot {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        color: var(--stamp);
+        margin-top: 0.4rem;
+      }
+
+      .empty-line {
+        padding: 2rem 1.5rem;
+        max-width: 36rem;
+      }
+
+      .empty-line p {
+        margin: 0 0 0.7rem;
+        font-size: 1rem;
+        line-height: 1.45;
+      }
+
+      code {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.85em;
+      }
+
+      @media (max-width: 900px) {
+        .line {
+          grid-template-columns: 1fr;
+        }
+
+        .station {
+          border-right: 0;
+          border-bottom: 1px solid var(--rail);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Factory line</h1>
+      <div class="meta" id="meta">No board data yet</div>
+    </header>
+    <main id="root"></main>
+    <script>
+      window.FACTORY_BOARD = {
+        generatedAt: null,
+        repo: null,
+        label: "factory",
+        jobs: [],
+      };
+    </script>
+    <script src="./data.empty.js"></script>
+    <script src="./data.js"></script>
+    <script>
+      const STATIONS = [
+        ["queued", "Queued", "Waiting on /factory"],
+        ["classifier", "Classifier", "Triage"],
+        ["analyst", "Analyst", "Plan"],
+        ["implementer", "Implementer", "Build"],
+        ["reviewer", "Reviewer", "Verdict"],
+        ["done", "Done", "PR or hold"],
+      ];
+
+      const PUNCHES = ["classifier", "analyst", "implementer", "reviewer"];
+
+      const board = window.FACTORY_BOARD || { jobs: [] };
+      const jobs = Array.isArray(board.jobs) ? board.jobs : [];
+
+      const meta = document.getElementById("meta");
+      const parts = [];
+      if (board.repo) parts.push(board.repo);
+      if (board.label) parts.push("label " + board.label);
+      if (board.generatedAt) parts.push(board.generatedAt.replace("T", " ").replace("Z", " UTC"));
+      meta.textContent = parts.length ? parts.join(" · ") : "Local board · run /factory sync";
+
+      const root = document.getElementById("root");
+
+      if (jobs.length === 0) {
+        root.innerHTML =
+          '<div class="empty-line"><p>Nothing on the line.</p><p>Label a GitHub issue <code>factory</code>, then in Cursor run <code>/factory sync</code> or <code>/factory #N</code>.</p><p>Chat jobs appear here after a pipeline starts.</p></div>';
+      } else {
+        const line = document.createElement("div");
+        line.className = "line";
+        for (const [key, name, hint] of STATIONS) {
+          const col = document.createElement("section");
+          col.className = "station";
+          const h = document.createElement("h2");
+          h.innerHTML = name + "<span>" + hint + "</span>";
+          col.appendChild(h);
+          const colJobs = jobs.filter((j) => columnFor(j.station) === key);
+          for (const job of colJobs) col.appendChild(ticket(job));
+          line.appendChild(col);
+        }
+        root.appendChild(line);
+      }
+
+      function columnFor(station) {
+        if (station === "researcher" || station === "designer") return "analyst";
+        if (station === "blocked") return "done";
+        if (STATIONS.some(([k]) => k === station)) return station;
+        return "queued";
+      }
+
+      function ticket(job) {
+        const el = document.createElement("article");
+        el.className = "ticket";
+        if (job.station === "blocked") el.classList.add("blocked");
+        else if (job.station === "done") el.classList.add("done");
+        else if (job.station && job.station !== "queued") el.classList.add("active");
+
+        const id = document.createElement("div");
+        id.className = "job-id";
+        id.textContent = job.id || "job";
+        el.appendChild(id);
+
+        const title = document.createElement("p");
+        title.className = "title";
+        if (job.url) {
+          const a = document.createElement("a");
+          a.href = job.url;
+          a.textContent = job.title || job.id;
+          title.appendChild(a);
+        } else {
+          title.textContent = job.title || job.id;
+        }
+        el.appendChild(title);
+
+        const traveler = document.createElement("div");
+        traveler.className = "traveler";
+        traveler.title = "Station traveler";
+        const reached = PUNCHES.indexOf(
+          job.station === "done"
+            ? "reviewer"
+            : job.station === "researcher" || job.station === "designer"
+              ? "classifier"
+              : job.station
+        );
+        for (let i = 0; i < PUNCHES.length; i++) {
+          const punch = document.createElement("span");
+          punch.className = "punch" + (i <= reached ? " on" : "");
+          traveler.appendChild(punch);
+        }
+        el.appendChild(traveler);
+
+        const bits = [];
+        if (job.kind && job.kind !== "task") bits.push(job.kind);
+        if (job.parentId) bits.push("↳ " + job.parentId);
+        if (job.type) bits.push(job.type);
+        if (job.station === "researcher" || job.station === "designer") bits.push(job.station);
+        if (job.station === "blocked" && job.blockedReason) bits.push(job.blockedReason);
+        if (job.branch) bits.push(job.branch);
+        if (job.prUrl) bits.push("PR");
+        if (bits.length) {
+          const foot = document.createElement("div");
+          foot.className = "foot";
+          if (job.prUrl) {
+            foot.innerHTML = "";
+            const text = document.createElement("span");
+            text.textContent = bits.filter((b) => b !== "PR").join(" · ");
+            foot.appendChild(text);
+            const a = document.createElement("a");
+            a.href = job.prUrl;
+            a.textContent = (text.textContent ? " · " : "") + "PR";
+            foot.appendChild(a);
+          } else {
+            foot.textContent = bits.join(" · ");
+          }
+          el.appendChild(foot);
+        }
+        return el;
+      }
+    </script>
+  </body>
+</html>

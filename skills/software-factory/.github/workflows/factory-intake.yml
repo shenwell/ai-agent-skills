@@ -1,0 +1,56 @@
+name: Factory intake
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  acknowledge:
+    if: github.event.label.name == 'factory'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check labeler permission
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENDER: ${{ github.event.sender.login }}
+        run: |
+          ROLE=$(gh api "repos/${{ github.repository }}/collaborators/${SENDER}/permission" --jq '.role_name // .permission' || true)
+          echo "role=${ROLE}" >> "$GITHUB_OUTPUT"
+          case "$ROLE" in
+            admin|maintain|write|triage) echo "ok=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "ok=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Comment (ignored)
+        if: steps.gate.outputs.ok != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body "$(cat <<'EOF'
+          <!-- factory:progress -->
+          The `factory` label was ignored: it has to be applied by someone with triage access or above. A reporter cannot enqueue their own issue that way.
+          EOF
+          )"
+
+      - name: Comment (queued)
+        if: steps.gate.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NUMBER="${{ github.event.issue.number }}"
+          gh issue comment "$NUMBER" --repo "${{ github.repository }}" --body "$(cat <<EOF
+          <!-- factory:progress -->
+          This issue is labeled \`factory\`. Open the repo in Cursor and run:
+
+          \`\`\`
+          /factory #${NUMBER}
+          \`\`\`
+
+          Or \`/factory sync\` then \`/factory next\`. A label does not start Cursor by itself; the pipeline runs in the workspace. Watch the station board at \`factory/ui/index.html\` after a sync.
+          EOF
+          )"

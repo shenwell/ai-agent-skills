@@ -1,0 +1,32 @@
+{
+  "name": "software-factory",
+  "intake": ["cursor-chat", "github"],
+  "chat": {
+    "autoStart": true
+  },
+  "branchPrefix": "factory/",
+  "revisionCycles": 2,
+  "stations": ["classifier", "analyst", "implementer", "reviewer"],
+  "optionalStations": ["researcher", "designer"],
+  "github": {
+    "label": "factory",
+    "commentProgress": true,
+    "ensureIssue": "agent",
+    "decomposeIssue": "user"
+  },
+  "setup": {
+    "kitRepo": "shenwell/ai-agent-skills",
+    "kitPath": "skills/software-factory",
+    "kitRef": "main",
+    "defaultRepoVisibility": "private",
+    "repoNameSource": "workspaceFolder"
+  },
+  "policy": {
+    "commit": "agent",
+    "pushBranch": "agent",
+    "openPullRequest": "agent",
+    "merge": "user",
+    "pushDefaultBranch": false,
+    "deploy": "user"
+  }
+}
