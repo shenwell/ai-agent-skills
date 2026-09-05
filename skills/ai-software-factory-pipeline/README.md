@@ -1,4 +1,26 @@
-# Software Factory
+```
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  ███████╗ ██████╗ ████████╗ ██████╗ ██████╗ ██╗   ██╗         ║
+║  ██╔════╝██╔═══██╗╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝         ║
+║  █████╗  ██║   ██║   ██║   ██║   ██║██████╔╝ ╚████╔╝          ║
+║  ██╔══╝  ██║   ██║   ██║   ██║   ██║██╔══██╗  ╚██╔╝           ║
+║  ██║     ╚██████╔╝   ██║   ╚██████╔╝██║  ██║   ██║            ║
+║  ╚═╝      ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝            ║
+║                                                               ║
+║        AI Software Factory Pipeline — kit for Cursor          ║
+║    Chat or GitHub issue → feature branch → pull request       ║
+║    classifier · analyst · implementer · reviewer              ║
+║    /factory · /factory-setup · /factory-upgrade               ║
+║    skills/ai-software-factory-pipeline · MIT                  ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-black)](https://agentskills.io/)
+
+# AI Software Factory Pipeline
 
 A Cursor-native software factory. Specialized agents handle triage, planning, implementation, and review. You keep merge and deploy. Policy is a file in the repo.
 
@@ -17,13 +39,13 @@ The kit vendors `frontend-design` and `ui-ux-pro-max` under `.cursor/skills/`. T
 
 ## Install
 
-`.cursor/`, `AGENTS.md`, and `factory.config.json` must sit in the **workspace root** Cursor has open. A nested `software-factory/` folder will not register `/factory`.
+`.cursor/`, `AGENTS.md`, and `factory.config.json` must sit in the **workspace root** Cursor has open. A nested `ai-software-factory-pipeline/` folder will not register `/factory`.
 
 **Start a new project.** Copy the factory kit into a new folder, open it in Cursor, run setup. If there is no GitHub repo for this workspace yet, setup **asks** whether to create a private repo named like the folder (`-2`, `-3`, … if the name is taken) and sets it as `origin`.
 
 ```bash
 git clone https://github.com/shenwell/ai-agent-skills.git $env:TEMP\ai-agent-skills
-$src = "$env:TEMP\ai-agent-skills\skills\software-factory"
+$src = "$env:TEMP\ai-agent-skills\skills\ai-software-factory-pipeline"
 $dst = "D:\path\to\my-project"
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 Copy-Item "$src\.cursor" "$dst\.cursor" -Recurse
@@ -39,7 +61,7 @@ Or open the kit folder directly as the workspace (for kit development):
 git clone https://github.com/shenwell/ai-agent-skills.git
 ```
 
-Then in Cursor: File → Open Folder → `ai-agent-skills/skills/software-factory`.
+Then in Cursor: File → Open Folder → `ai-agent-skills/skills/ai-software-factory-pipeline`.
 
 UI jobs also need **Python 3** on PATH (`python`, `python3`, or `py -3`) so the designer can run `.cursor/skills/ui-ux-pro-max/scripts/search.py`. No extra Python packages.
 
@@ -53,11 +75,11 @@ Setup checks the workspace, `gh` auth, label, workflow, and Python. When `origin
 
 **Kit development** uses the same flow from a clone of the kit repository: run `/factory-setup`, answer **no** to creating a new repo, and keep `origin` on the kit.
 
-**Drop the factory into another repo.** Copy the kit *contents* from `skills/software-factory/` into that repo's root. Do not clone `ai-agent-skills` inside it (that creates `your-app/ai-agent-skills/` and commands fail).
+**Drop the factory into another repo.** Copy the kit *contents* from `skills/ai-software-factory-pipeline/` into that repo's root. Do not clone `ai-agent-skills` inside it (that creates `your-app/ai-agent-skills/` and commands fail).
 
 ```powershell
 git clone https://github.com/shenwell/ai-agent-skills.git $env:TEMP\ai-agent-skills
-$src = "$env:TEMP\ai-agent-skills\skills\software-factory"
+$src = "$env:TEMP\ai-agent-skills\skills\ai-software-factory-pipeline"
 $dst = "D:\path\to\your-app"
 Copy-Item "$src\.cursor" "$dst\.cursor" -Recurse
 Copy-Item "$src\AGENTS.md", "$src\factory.config.json" $dst
@@ -66,7 +88,7 @@ New-Item -ItemType Directory -Force -Path "$dst\.github\workflows" | Out-Null
 Copy-Item "$src\.github\workflows\factory-intake.yml" "$dst\.github\workflows\"
 ```
 
-If you already cloned into the target and have a nested `software-factory\` folder, move those contents up one level, then delete the nested folder.
+If you already cloned into the target and have a nested `ai-software-factory-pipeline\` folder, move those contents up one level, then delete the nested folder.
 
 Edit `factory.config.json` in the target repo (policy, `github.label`). If the target already has `AGENTS.md`, merge the factory sections instead of overwriting.
 

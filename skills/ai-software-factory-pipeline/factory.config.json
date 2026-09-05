@@ -1,5 +1,5 @@
 {
-  "name": "software-factory",
+  "name": "ai-software-factory-pipeline",
   "intake": ["cursor-chat", "github"],
   "chat": {
     "autoStart": true
@@ -16,7 +16,7 @@
   },
   "setup": {
     "kitRepo": "shenwell/ai-agent-skills",
-    "kitPath": "skills/software-factory",
+    "kitPath": "skills/ai-software-factory-pipeline",
     "kitRef": "main",
     "defaultRepoVisibility": "private",
     "repoNameSource": "workspaceFolder"

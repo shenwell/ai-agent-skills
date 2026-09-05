@@ -20,7 +20,7 @@ Load `.cursor/skills/writing-quality/SKILL.md` before the final summary for the 
 - Fresh install in a new folder
 - Factory files copied into an existing project
 - `gh` errors during `/factory sync` or ensure-issue
-- Nested `software-factory/` folder under another repo root
+- Nested `ai-software-factory-pipeline/` folder under another repo root
 
 Re-running setup is safe. Refresh checks and update `factory/setup.json`.
 
@@ -56,7 +56,7 @@ Example question (Russian or user's language is fine):
 
 When `origin` is the kit template, also offer the alternative in the same message:
 
-> Или использовать текущий репозиторий `shenwell/ai-agent-skills` (папка `skills/software-factory`) без создания нового (для доработки кита).
+> Или использовать текущий репозиторий `shenwell/ai-agent-skills` (папка `skills/ai-software-factory-pipeline`) без создания нового (для доработки кита).
 
 Wait for yes/no. On **yes** → `create`. On **no** and origin is the kit → `existing` with the kit repo. On **no** and there is no usable repo → stop and ask which repo to use.
 
@@ -76,7 +76,7 @@ The workspace root Cursor has open must contain:
 - `AGENTS.md`
 - `factory/brain.md`
 
-If those files are missing at the root but exist under `software-factory/` (or another single child folder), set `nestedClone: true` in the report. Tell the user to either File → Open Folder on that child folder, or move kit contents up one level per README Install. Do not continue GitHub steps until layout is fixed or the user explicitly opened the nested folder as the workspace.
+If those files are missing at the root but exist under `ai-software-factory-pipeline/` (or another single child folder), set `nestedClone: true` in the report. Tell the user to either File → Open Folder on that child folder, or move kit contents up one level per README Install. Do not continue GitHub steps until layout is fixed or the user explicitly opened the nested folder as the workspace.
 
 ## Step 2 — Git
 

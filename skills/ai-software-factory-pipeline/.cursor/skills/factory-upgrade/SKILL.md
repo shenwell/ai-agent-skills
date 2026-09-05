@@ -17,7 +17,7 @@ Load `.cursor/skills/writing-quality/SKILL.md` before the final summary.
 Upstream source:
 
 - `factory.config.json` → `setup.kitRepo` (default `shenwell/ai-agent-skills`)
-- `factory.config.json` → `setup.kitPath` (default `skills/software-factory`; missing key: copy from repo root)
+- `factory.config.json` → `setup.kitPath` (default `skills/ai-software-factory-pipeline`; missing key: copy from repo root)
 - `factory.config.json` → `setup.kitRef` (default `main`; missing key: `main`)
 
 ## When to run
