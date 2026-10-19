@@ -2,6 +2,10 @@
 
 Not to be confused with project or portfolio `memory/changelog.md`.
 
+## 2026-09
+
+- 2026-09-22 | batch past chats | SKILL.md routing | trigger: dialogs where the skill was not run; quality filter, skip chats already in project changelog
+
 ## 2026-08
 
 - 2026-08-14 | inbox protocol from practice | references/inbox-protocol.md, commands/inbox.md | classify by content (DOCX meetings); search before write; no hub dumps; UTF-8/scratch; manifests for paginated sources; transcript YAML + ASR note

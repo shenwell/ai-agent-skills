@@ -168,6 +168,7 @@ Suggest the skill yourself if the session had non-trivial debugging, a workaroun
 | Trigger | Action |
 |---------|--------|
 | wrap up / handoff / save what we learned / update memory | Full pipeline (Steps 1–6) |
+| past chats where this skill was not run | Same pipeline over those transcripts: quality filter, no command diary; skip chats already covered by `memory/changelog.md` |
 | `/inbox` / process inbox / ingest inbox | [inbox-protocol.md](references/inbox-protocol.md); skip session digest |
 | analysis only / what is worth saving | [report-formats.md](references/report-formats.md) § Analysis-only; no writes |
 | search portfolio / find in global memory | [portfolio-search.md](references/portfolio-search.md); read-only |
